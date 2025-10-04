@@ -1,13 +1,88 @@
 {
-  "menu": {
+	"general_menu": {
+		"options": {
+			"exit": "Exit",
+			"back": "Back",
+			"create": "Create {misc}",
+			"edit": "Edit {misc}",
+			"list": "List {misc}",
+			"delete": "Delete {misc}"
+		}
+	},
+	"main_menu": {
     "title": "Main Menu",
     "options": {
-      "list": "List items",
-      "add": "Add item",
-      "remove": "Remove item",
-      "exit": "Exit"
+      "gear": "Gear",
+      "kit": "Kit",
+      "trips": "Trips",
+			"reports": "Reports",
+			"settings": "Settings"
     }
   },
+	"gear_menu": {
+		"title": "Gear Menu",
+		"options": {
+			"category": "List category"
+		},
+		"misc": {
+			"gear": "Gear"
+		}
+	},
+	"kit_menu": {
+		"title": "Kit menu",
+		"options": {
+		},
+		"misc": {
+			"kit": "Kit"
+		}
+	},
+	"trips_menu": {
+		"title": "Trips menu",
+		"options": {
+			"tags": "List Tags"
+		},
+		"misc": {
+			"trips": "Trips"
+		}
+	},
+	"reports_menu": {
+		"title": "Reports Menu",
+		"options": {
+			"expired": "List expired",
+			"unchecked": "List not checked",
+			"export": "Export"
+		},
+		"misc": {
+			"reports": "Reports"
+		}
+	},
+	"settings_menu": {
+		"title": "Settings Menu",
+		"options": {
+			"create_db": "Create database",
+			"set_db": "Set databasde",
+			"language": "Select language",
+			"edit": "Edit base"
+		},
+		"misc": {
+			"settings": "Settings"
+		}
+	},
+	"edit_base_submenu": {
+		"title": "Edit Base Submenu",
+		"options": {
+			"addbrand": "Add Brand",
+			"editbrand": "Edit Brand",
+			"addcategory": "Add Category",
+			"editcategory": "Edit Category",
+			"addconsumable": "Add Consumable",
+			"editconsumable": "Edit Consumable"
+		}
+	},
+
+
+
+
   "prompt": {
     "choice": "Select an option:",
     "name": "Item name:",

@@ -1,5 +1,5 @@
 {
-    "language": "de",
+    "language": "en",
     "database_path": "data/app.db",
     "theme": "dark",
     "debug": true

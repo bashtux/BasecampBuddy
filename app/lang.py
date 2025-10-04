@@ -25,7 +25,6 @@ class Language:
                 value = value[part]
         except (KeyError, TypeError):
             return f"\033[91m{key}\033[0m"  # red text
-#            return key  # fallback if key is missing
 
         # If placeholders are provided, format the string
         if kwargs:

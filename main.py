@@ -7,7 +7,7 @@ from app.cli.menu import main_menu
 config = ConfigManager(Path(__file__).parent / "app" / "config")
 
 # Initialize language
-lang = Language(config.get("language", "en"))
+#lang = Language(config.get("language", "en"))
 
 # Start main menu
 if __name__ == "__main__":
