@@ -1,0 +1,7 @@
+{
+    "language": "en",
+    "database_path": "data/app.db",
+    "theme": "default",
+    "debug": false
+}
+

@@ -1,0 +1,23 @@
+{
+  "menu": {
+    "title": "Main Menu",
+    "options": {
+      "list": "List items",
+      "add": "Add item",
+      "remove": "Remove item",
+      "exit": "Exit"
+    }
+  },
+  "prompt": {
+    "choice": "Select an option:",
+    "name": "Item name:",
+    "lifespan": "Lifespan (years):",
+    "press_enter": "Press Enter to continue..."
+  },
+  "msg": {
+    "added": "✅ Item added successfully!",
+    "invalid_choice": "Invalid choice, try again.",
+    "goodbye": "Goodbye!"
+  }
+}
+
