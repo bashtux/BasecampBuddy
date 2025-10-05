@@ -1,5 +1,5 @@
 from app.lang import Language
-from app.cli.functions import input_category
+from app.cli.functions import input_category, list_categories
 
 # Initialize language
 lang = Language("en")
@@ -88,6 +88,10 @@ def gear_menu():
         match choice:
             case "1":
                 print(lang.t("general_menu.options.create"))
+                break
+            case "4":
+                list_categories()
+                gear_menu()
                 break
             case "B":
                 main_menu()
