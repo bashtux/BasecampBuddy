@@ -9,6 +9,7 @@ class ConfigManager:
         self.config_file = self.config_dir / "config.json"
         self.default_file = self.config_dir / "defaults.json"
         self.config_dir.mkdir(parents=True, exist_ok=True)
+        self.config = self._load_config()
 
         self.config = self._load_config()
 

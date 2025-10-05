@@ -81,12 +81,20 @@
 	},
 
 
+   "program_db": {
+      "category_name": "Category Name",
+      "category_description": "Description",
+      "category_added": "Category '{category_name}' added successfully!"
+  },
+  "msg": {
+      "invalid_choice": "Invalid input, please try again."
+  },
+
+
 
 
   "prompt": {
     "choice": "Select an option:",
-    "name": "Item name:",
-    "lifespan": "Lifespan (years):",
     "press_enter": "Press Enter to continue..."
   },
   "msg": {
@@ -94,5 +102,6 @@
     "invalid_choice": "Invalid choice, try again.",
     "goodbye": "Goodbye!"
   }
+
 }
 

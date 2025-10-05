@@ -1,4 +1,5 @@
 from app.lang import get_lang
+from app.cli.functions import input_category
 
 # initialize selected language
 lang = get_lang()
@@ -228,6 +229,10 @@ def edit_base_submenu():
         match choice:
             case "1":
                 print(lang.t("general_menu.options.create"))
+                break
+            case "3":
+                input_category()
+                edit_base_submenu()
                 break
             case "B":
                 settings_menu()
