@@ -1,7 +1,9 @@
 {
-    "language": "en",
-    "database_path": "data/app.db",
-    "theme": "default",
-    "debug": false
+  "language": "en",
+  "paths": {
+    "data_folder": "data",
+    "program_db": "data/program.sqlite",
+    "user_db": "data/user.sqlite"
+  }
 }
 
