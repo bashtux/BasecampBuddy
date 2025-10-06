@@ -1,7 +1,7 @@
-from app.lang import Language
+from app.lang import get_lang
 
-# Initialize language
-lang = Language("en")
+# initialize selected language
+lang = get_lang()
 
 # ====================================================
 # Print Menu function

@@ -2,10 +2,12 @@ import json
 from pathlib import Path
 
 class ConfigManager:
-    def __init__(self, config_dir: Path):
-        self.config_dir = config_dir
-        self.config_file = config_dir / "config.json"
-        self.default_file = config_dir / "defaults.json"
+    def __init__(self, config_dir=None):
+        if config_dir is None:
+            config_dir = "app/config"  # default path
+        self.config_dir = Path(config_dir)
+        self.config_file = self.config_dir / "config.json"
+        self.default_file = self.config_dir / "defaults.json"
         self.config_dir.mkdir(parents=True, exist_ok=True)
 
         self.config = self._load_config()

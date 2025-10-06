@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from app.config_manager import ConfigManager
 
 class Language:
     def __init__(self, lang_code="en"):
@@ -34,3 +35,18 @@ class Language:
                 print(f"⚠️ Missing placeholder in key '{key}': {e}")
         return value
 
+# ------------------------
+# Global instance
+# ------------------------
+_config = ConfigManager()
+_lang_instance = Language(_config.get("language", "en"))
+
+def get_lang():
+    """Return the current global Language instance."""
+    return _lang_instance
+
+def reload_lang():
+    """Reload language if config changes."""
+    global _lang_instance
+    new_code = _config.get("language", "en")
+    _lang_instance = Language(new_code)
