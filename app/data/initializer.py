@@ -31,7 +31,11 @@ def ensure_program_db_initialized():
         conn.close()
 
     if not tables_exist(db_path, PROGRAM_TABLES):
+<<<<<<< HEAD
         print(lang.t("initialize_db.program_db_missing"))
+=======
+        print("Program DB tables missing. Initializing program DB...")
+>>>>>>> 711de1e3f5174fdabe25dcb5f07c2e694c99f79b
         program_data.init_program_db(db_path)
 
 def ensure_user_db_initialized():
@@ -43,7 +47,11 @@ def ensure_user_db_initialized():
         conn.close()
 
     if not tables_exist(db_path, USER_TABLES):
+<<<<<<< HEAD
         print(lang.t("initialize_db.user_db_missing"))
+=======
+        print("User DB tables missing. Initializing user DB...")
+>>>>>>> 711de1e3f5174fdabe25dcb5f07c2e694c99f79b
         user_db.init_user_db(db_path)
 
 def initialize_all():
