@@ -86,10 +86,10 @@
       "category_description": "Description",
       "category_added": "Category '{category_name}' added successfully!"
   },
-  "msg": {
-      "invalid_choice": "Invalid input, please try again."
-  },
-
+	"initialize_db": {
+		"program_db_missing": "Progam DB table missing. Initializing program DB...",
+		"user_db_missing": "User DB table missing. Initializing user DB..."
+	},
 
 
 

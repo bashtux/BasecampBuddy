@@ -1,6 +1,8 @@
 import sqlite3
+
 from pathlib import Path
 from app.config_manager import ConfigManager  # assuming you have this
+from app.lang import get_lang
 
 # Load config once
 config = ConfigManager()  # reads defaults + user config

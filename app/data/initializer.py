@@ -1,7 +1,12 @@
 from pathlib import Path
 import sqlite3
+
 from app.config_manager import ConfigManager
 from app.data import program_data, user_db  # import your init functions here
+from app.lang import get_lang
+
+# Initialize selected language
+lang = get_lang()
 
 # Example: list of tables in each DB
 PROGRAM_TABLES = ["brand", "category", "consumables"]
@@ -26,7 +31,7 @@ def ensure_program_db_initialized():
         conn.close()
 
     if not tables_exist(db_path, PROGRAM_TABLES):
-        print("Program DB tables missing. Initializing program DB...")
+        print(lang.t("initialize_db.program_db_missing"))
         program_data.init_program_db(db_path)
 
 def ensure_user_db_initialized():
@@ -38,7 +43,7 @@ def ensure_user_db_initialized():
         conn.close()
 
     if not tables_exist(db_path, USER_TABLES):
-        print("User DB tables missing. Initializing user DB...")
+        print(lang.t("initialize_db.user_db_missing"))
         user_db.init_user_db(db_path)
 
 def initialize_all():

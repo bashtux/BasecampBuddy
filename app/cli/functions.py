@@ -2,14 +2,13 @@ import sqlite3
 from pathlib import Path
 from app.config_manager import ConfigManager
 from app.data.program_data import add_category
-from app.lang import Language
+from app.lang import get_lang
 
 # -----------------------------
 # Load config and language
 # -----------------------------
 config = ConfigManager()
-lang_code = config.get("language", "en")  # default to 'en' if not set
-lang = Language(lang_code)
+lang = get_lang()
 
 
 # -----------------------------
