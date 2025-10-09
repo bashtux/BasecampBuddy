@@ -2,7 +2,7 @@ from pathlib import Path
 import sqlite3
 
 from app.config_manager import ConfigManager
-from app.data import program_data, user_db  # import your init functions here
+from app.data import program_db, user_db  # import your init functions here
 from app.lang import get_lang
 
 # Initialize selected language
@@ -31,12 +31,8 @@ def ensure_program_db_initialized():
         conn.close()
 
     if not tables_exist(db_path, PROGRAM_TABLES):
-<<<<<<< HEAD
         print(lang.t("initialize_db.program_db_missing"))
-=======
-        print("Program DB tables missing. Initializing program DB...")
->>>>>>> 711de1e3f5174fdabe25dcb5f07c2e694c99f79b
-        program_data.init_program_db(db_path)
+        program_db.init_program_db(db_path)
 
 def ensure_user_db_initialized():
     db_path = Path(ConfigManager().get("paths.user_db", "app/data/user_db.sqlite"))
@@ -47,11 +43,7 @@ def ensure_user_db_initialized():
         conn.close()
 
     if not tables_exist(db_path, USER_TABLES):
-<<<<<<< HEAD
         print(lang.t("initialize_db.user_db_missing"))
-=======
-        print("User DB tables missing. Initializing user DB...")
->>>>>>> 711de1e3f5174fdabe25dcb5f07c2e694c99f79b
         user_db.init_user_db(db_path)
 
 def initialize_all():

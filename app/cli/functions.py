@@ -1,7 +1,7 @@
 import sqlite3
 from pathlib import Path
 from app.config_manager import ConfigManager
-from app.data.program_data import add_category
+from app.data.program_db import add_category
 from app.lang import get_lang
 
 # -----------------------------
