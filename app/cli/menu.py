@@ -1,8 +1,5 @@
-from app.lang import get_lang
-from app.cli.functions import input_category, list_categories
-
-# initialize selected language
-lang = get_lang()
+from app.lang import lang
+from app.cli.category_functions import input_category, list_categories
 
 # ====================================================
 # Print Menu function
@@ -25,7 +22,7 @@ def print_menu(options: dict, title_key: str, **placeholders):
     for key, label_key in options.items():
         print(f"{key}. {lang.t(label_key, **resolved_placeholders)}")
 
-    choice = input(f"{lang.t('prompt.choice', **resolved_placeholders)} ").strip()
+    choice = input(f"{lang.t('menu.cli.prompt', **resolved_placeholders)} ").strip()
     return choice
 
 # ====================================================
@@ -35,19 +32,19 @@ def main_menu():
     """ Display main menu """
     # key -> label_key
     commands = {
-        "1": "main_menu.options.gear",
-        "2": "main_menu.options.kit",
-        "3": "main_menu.options.trips",
-        "4": "main_menu.options.reports",
-        "5": "main_menu.options.settings",
-        "E": "general_menu.options.exit"
+        "1": "menu.main_menu.options.gear",
+        "2": "menu.main_menu.options.kit",
+        "3": "menu.main_menu.options.trips",
+        "4": "menu.main_menu.options.reports",
+        "5": "menu.main_menu.options.settings",
+        "E": "menu.general_menu.options.exit"
     }
     while True:
-            choice = print_menu(commands, "main_menu.title")
+            choice = print_menu(commands, "menu.main_menu.title")
 
             match choice:
                 case "E":
-                    print(lang.t("msg.goodbye"))
+                    print(lang.t("menu.msg.goodbye"))
                     break
                 case "1":
                     gear_menu()
@@ -65,7 +62,7 @@ def main_menu():
                     settings_menu()
                     break
                 case _:
-                    print(lang.t("msg.invalid_choice"))
+                    print(lang.t("menu.error.invalid_choice"))
 
 
 # ====================================================
@@ -75,19 +72,19 @@ def gear_menu():
     """ Displays gear menu """
     # key -> label_key
     commands = {
-            "1": "general_menu.options.create",
-            "2": "general_menu.options.edit",
-            "3": "general_menu.options.list",
-            "4": "gear_menu.options.category",
-            "D": "general_menu.options.delete",
-            "B": "general_menu.options.back"
+            "1": "menu.general_menu.options.create",
+            "2": "menu.general_menu.options.edit",
+            "3": "menu.general_menu.options.list",
+            "4": "menu.gear_menu.options.category",
+            "D": "menu.general_menu.options.delete",
+            "B": "menu.general_menu.options.back"
             }
     while True:
-        choice = print_menu(commands, "gear_menu.title", misc="gear_menu.misc.gear")
+        choice = print_menu(commands, "menu.gear_menu.title", misc="menu.gear_menu.misc.gear")
 
         match choice:
             case "1":
-                print(lang.t("general_menu.options.create"))
+                print(lang.t("menu.general_menu.options.create"))
                 break
             case "4":
                 list_categories()
@@ -97,7 +94,7 @@ def gear_menu():
                 main_menu()
                 break
             case _:
-                print(lang.t("msg.invalid_choice"))
+                print(lang.t("menu.error.invalid_choice"))
 
 
 # ====================================================
@@ -107,24 +104,24 @@ def kit_menu():
     """ Displays kit menu """
     # key -> label_key
     commands = {
-            "1": "general_menu.options.create",
-            "2": "general_menu.options.edit",
-            "3": "general_menu.options.list",
-            "D": "general_menu.options.delete",
-            "B": "general_menu.options.back"
+            "1": "menu.general_menu.options.create",
+            "2": "menu.general_menu.options.edit",
+            "3": "menu.general_menu.options.list",
+            "D": "menu.general_menu.options.delete",
+            "B": "menu.general_menu.options.back"
             }
     while True:
-        choice = print_menu(commands, "kit_menu.title", misc="kit_menu.misc.kit")
+        choice = print_menu(commands, "menu.kit_menu.title", misc="menu.kit_menu.misc.kit")
 
         match choice:
             case "1":
-                print(lang.t("general_menu.options.create"))
+                print(lang.t("menu.general_menu.options.create"))
                 break
             case "B":
                 main_menu()
                 break
             case _:
-                print(lang.t("msg.invalid_choice"))
+                print(lang.t("menu.error.invalid_choice"))
 
 
 # ====================================================
@@ -134,25 +131,25 @@ def trips_menu():
     """ Displays trips menu """
     # key -> label_key
     commands = {
-            "1": "general_menu.options.create",
-            "2": "general_menu.options.edit",
-            "3": "general_menu.options.list",
-            "4": "trips_menu.options.tags",
-            "D": "general_menu.options.delete",
-            "B": "general_menu.options.back"
+            "1": "menu.general_menu.options.create",
+            "2": "menu.general_menu.options.edit",
+            "3": "menu.general_menu.options.list",
+            "4": "menu.trips_menu.options.tags",
+            "D": "menu.general_menu.options.delete",
+            "B": "menu.general_menu.options.back"
             }
     while True:
-        choice = print_menu(commands, "trips_menu.title", misc="trips_menu.misc.trips")
+        choice = print_menu(commands, "menu.trips_menu.title", misc="menu.trips_menu.misc.trips")
 
         match choice:
             case "1":
-                print(lang.t("general_menu.options.create"))
+                print(lang.t("menu.general_menu.options.create"))
                 break
             case "B":
                 main_menu()
                 break
             case _:
-                print(lang.t("msg.invalid_choice"))
+                print(lang.t("menu.error.invalid_choice"))
 
 
 # ====================================================
@@ -162,23 +159,23 @@ def reports_menu():
     """ Displays reports menu """
     # key -> label_key
     commands = {
-            "1": "reports_menu.options.expired",
-            "2": "reports_menu.options.unchecked",
-            "3": "reports_menu.options.export",
-            "B": "general_menu.options.back"
+            "1": "menu.reports_menu.options.expired",
+            "2": "menu.reports_menu.options.unchecked",
+            "3": "menu.reports_menu.options.export",
+            "B": "menu.general_menu.options.back"
             }
     while True:
-        choice = print_menu(commands, "reports_menu.title", misc="reports_menu.misc.reports")
+        choice = print_menu(commands, "menu.reports_menu.title", misc="menu.reports_menu.misc.reports")
 
         match choice:
             case "1":
-                print(lang.t("general_menu.options.create"))
+                print(lang.t("menu.general_menu.options.create"))
                 break
             case "B":
                 main_menu()
                 break
             case _:
-                print(lang.t("msg.invalid_choice"))
+                print(lang.t("menu.error.invalid_choice"))
 
 
 # ====================================================
@@ -188,18 +185,18 @@ def settings_menu():
     """ Displays settings menu """
     # key -> label_key
     commands = {
-            "1": "settings_menu.options.create_db",
-            "2": "settings_menu.options.set_db",
-            "3": "settings_menu.options.language",
-            "4": "settings_menu.options.edit",
-            "B": "general_menu.options.back"
+            "1": "menu.settings_menu.options.create_db",
+            "2": "menu.settings_menu.options.set_db",
+            "3": "menu.settings_menu.options.language",
+            "4": "menu.settings_menu.options.edit",
+            "B": "menu.general_menu.options.back"
             }
     while True:
-        choice = print_menu(commands, "settings_menu.title", misc="settings_menu.misc.settings")
+        choice = print_menu(commands, "menu.settings_menu.title", misc="menu.settings_menu.misc.settings")
 
         match choice:
             case "1":
-                print(lang.t("general_menu.options.create"))
+                print(lang.t("menu.general_menu.options.create"))
                 break
             case "4":
                 edit_base_submenu()
@@ -208,7 +205,7 @@ def settings_menu():
                 main_menu()
                 break
             case _:
-                print(lang.t("msg.invalid_choice"))
+                print(lang.t("menu.error.invalid_choice"))
 
 
 # ====================================================
@@ -218,21 +215,21 @@ def edit_base_submenu():
     """ Displays Edit Base submenu """
     # key -> label_key
     commands = {
-            "1": "edit_base_submenu.options.addbrand",
-            "2": "edit_base_submenu.options.editbrand",
-            "3": "edit_base_submenu.options.addcategory",
-            "4": "edit_base_submenu.options.editcategory",
-            "5": "edit_base_submenu.options.addconsumable",
-            "6": "edit_base_submenu.options.editconsumable",
-            "B": "general_menu.options.back",
-            "M": "main_menu.title"
+            "1": "menu.edit_base_submenu.options.addbrand",
+            "2": "menu.edit_base_submenu.options.editbrand",
+            "3": "menu.edit_base_submenu.options.addcategory",
+            "4": "menu.edit_base_submenu.options.editcategory",
+            "5": "menu.edit_base_submenu.options.addconsumable",
+            "6": "menu.edit_base_submenu.options.editconsumable",
+            "B": "menu.general_menu.options.back",
+            "M": "menu.main_menu.title"
             }
     while True:
-        choice = print_menu(commands, "settings_menu.title", misc="settings_menu.misc.settings")
+        choice = print_menu(commands, "menu.settings_menu.title", misc="menu.settings_menu.misc.settings")
 
         match choice:
             case "1":
-                print(lang.t("general_menu.options.create"))
+                print(lang.t("menu.general_menu.options.create"))
                 break
             case "3":
                 input_category()
@@ -245,6 +242,6 @@ def edit_base_submenu():
                 main_menu()
                 break
             case _:
-                print(lang.t("msg.invalid_choice"))
+                print(lang.t("menu.error.invalid_choice"))
 
 

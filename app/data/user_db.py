@@ -1,8 +1,24 @@
 import sqlite3
 from pathlib import Path
 
-DB_PATH = Path("user.db")
+from app.config_manager import ConfigManager
+from app.lang import lang
 
+# Load config
+config = ConfigManager()
+
+# Get path to user DB, default fallback
+user_db_path = config.get("paths.user_db", "app/data/user_db.sqlite")
+DB_PATH = Path(user_db_path)
+
+# Ensure parent folder exists
+DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+# Create empty SQLite file if it doesn't exist
+if not DB_PATH.exists():
+    # Connecting to SQLite will create the file automatically
+    conn = sqilte3.connect(DB_PATH)
+    conn.close()
 
 def init_user_db(db_path: str = DB_PATH):
     conn = sqlite3.connect(db_path)
@@ -99,5 +115,5 @@ def init_user_db(db_path: str = DB_PATH):
 
     conn.commit()
     conn.close()
-    print(f"User database initialized at {db_path}")
+    print(lang.t("user_db.msg.db_initialized", db_path=db_path))
 

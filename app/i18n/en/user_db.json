@@ -1,0 +1,17 @@
+{
+	"title": {
+	},
+
+	"cli": {
+		"spacer": "=================================================="
+	},
+
+	"msg": {
+		"db_initialized": "User database initialized at: {db_path}"
+	},
+
+	"error": {
+		"invalid_coice": "Invalid choice, try again!",
+		"no_er_db": "User database not found"
+	}
+}

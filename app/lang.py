@@ -3,50 +3,57 @@ from pathlib import Path
 from app.config_manager import ConfigManager
 
 class Language:
-    def __init__(self, lang_code="en"):
+    def __init__(self, lang_code: str = "en"):
         self.lang_code = lang_code
-        self.lang_dir = Path(__file__).parent / "i18n"
-        self.translations = self._load_language(lang_code)
+        self.lang_dir = Path("app/i18n")
+        # load selected language and fallback language (English)
+        self.translations = self._load_all_files(self.lang_code)
+        if self.lang_code != "en":
+            self.fallback_translations = self._load_all_files("en")
+        else:
+            self.fallback_translations = {}
 
-    def _load_language(self, lang_code):
-        lang_file = self.lang_dir / f"{lang_code}.json"
-        if not lang_file.exists():
-            print(f"⚠️ Language file '{lang_code}' not found. Falling back to English.")
-            lang_file = self.lang_dir / "en.json"
+    def _load_all_files(self, lang_code: str) -> dict:
+        merged = {}
+        lang_path = self.lang_dir / lang_code
+        if not lang_path.exists():
+            raise FileNotFoundError(f"Language folder {lang_path} not found")
 
-        with open(lang_file, "r", encoding="utf-8") as f:
-            return json.load(f)
+        for file in lang_path.glob("*.json"):
+            key_prefix = file.stem  # use filename as top-level key
+            with open(file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+
+            merged[key_prefix] = data
+        return merged
 
     def t(self, key: str, **kwargs) -> str:
-        """Translate a text key using dot notation and format placeholders."""
-        parts = key.split(".")
-        value = self.translations
-        try:
-            for part in parts:
-                value = value[part]
-        except (KeyError, TypeError):
-            return f"\033[91m{key}\033[0m"  # red text
-
-        # If placeholders are provided, format the string
-        if kwargs:
-            try:
-                value = value.format(**kwargs)
-            except KeyError as e:
-                print(f"⚠️ Missing placeholder in key '{key}': {e}")
+        """
+        Translate a key using dot notation: 'file.topkey.subkey'.
+        kwargs can be used for dynamic replacements: lang.t("messages.hello", name="Joe").
+        Falls back to English if key is missing in selected language.
+        """
+        value = self._get_from_dict(self.translations, key)
+        if value is None:
+            value = self._get_from_dict(self.fallback_translations, key)
+            if value is None:
+                return f"[MISSING: {key}]"
+        if isinstance(value, str) and kwargs:
+            return value.format(**kwargs)
         return value
 
-# ------------------------
-# Global instance
-# ------------------------
-_config = ConfigManager()
-_lang_instance = Language(_config.get("language", "en"))
+    @staticmethod
+    def _get_from_dict(d: dict, key: str):
+        parts = key.split(".")
+        node = d
+        try:
+            for part in parts:
+                node = node[part]
+            return node
+        except (KeyError, TypeError):
+            return None
 
-def get_lang():
-    """Return the current global Language instance."""
-    return _lang_instance
-
-def reload_lang():
-    """Reload language if config changes."""
-    global _lang_instance
-    new_code = _config.get("language", "en")
-    _lang_instance = Language(new_code)
+# --- initialize using config ---
+_config = ConfigManager()       # reads defaults + user config
+user_lang = _config.get("general.language", "en")
+lang = Language(user_lang)

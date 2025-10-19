@@ -86,22 +86,18 @@
       "category_description": "Description",
       "category_added": "Category '{category_name}' added successfully!"
   },
-	"initialize_db": {
-		"program_db_missing": "Progam DB table missing. Initializing program DB...",
-		"user_db_missing": "User DB table missing. Initializing user DB..."
+
+	"cli": {
+		"prompt": "Select menu: "
 	},
 
-
-
-  "prompt": {
-    "choice": "Select an option:",
-    "press_enter": "Press Enter to continue..."
-  },
   "msg": {
-    "added": "✅ Item added successfully!",
-    "invalid_choice": "Invalid choice, try again.",
-    "goodbye": "Goodbye!"
-  }
+		"goodbye": "Till yout next adventuer!!"
+  },
+
+	"error": {
+    "invalid_choice": "Invalid choice, try again."
+	}
 
 }
 

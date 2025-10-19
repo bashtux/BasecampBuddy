@@ -1,0 +1,23 @@
+{
+	"title": {
+		"new_category": "\n=== Add New Categroy ===",
+		"list_categorie": "\n=== Available Categories ==="
+	},
+
+	"cli": {
+		"category_name": "Enter category name: ",
+		"category_description": "Enter category description: ",
+		"spacer": "=================================================="
+	},
+
+	"msg": {
+		"category_added": "Category '{category_name}' added successfully!"
+	},
+
+	"error": {
+		"invalid_coice": "Invalid choice, try again!",
+		"no_program_db": "Program database not found",
+		"no_category": "No categories found."
+
+	}
+}

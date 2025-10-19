@@ -1,7 +1,8 @@
 import sqlite3
 from pathlib import Path
+
 from app.config_manager import ConfigManager  # assuming you have this
-from app.lang import get_lang
+from app.lang import lang
 
 # Load config once
 config = ConfigManager()  # reads defaults + user config
@@ -69,7 +70,7 @@ def init_program_db(db_path: str | Path = DB_PATH):
 
     conn.commit()
     conn.close()
-    print(f"Program database initialized at {db_path}")
+    print(lang.t("program_db.msg.db_initialized", db_path=db_path))
 
 
 # Optional: helper function to insert sample data

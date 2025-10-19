@@ -1,0 +1,17 @@
+{
+	"title": {
+	},
+
+	"cli": {
+		"spacer": "=================================================="
+	},
+
+	"msg": {
+		"db_initialized": "Program database initialized at: {db_path}"
+	},
+
+	"error": {
+		"invalid_coice": "Invalid choice, try again!",
+		"no_program_db": "Program database not found"
+	}
+}
