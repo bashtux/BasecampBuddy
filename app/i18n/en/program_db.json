@@ -7,7 +7,8 @@
 	},
 
 	"msg": {
-		"db_initialized": "Program database initialized at: {db_path}"
+		"db_initialized": "Program database initialized at: {db_path}",
+		"program_db_found" :"Program database found at \n{db_path}"
 	},
 
 	"error": {

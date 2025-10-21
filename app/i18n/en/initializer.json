@@ -7,6 +7,11 @@
 	},
 
 	"msg": {
+		"program_db_created": "Program database created at:\n{db_path}",
+		"user_db_created": "User database created at:\n{db_path}",
+		"db_ready": "All databases are ready to use.",
+		"program_db_found": "Program database found at:\n{db_path}",
+		"user_db_found": "User database found at:\n{db_path}"
 	},
 
 	"error": {
