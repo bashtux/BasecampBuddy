@@ -1,5 +1,5 @@
 from app.lang import lang
-from app.cli.category_functions import input_category, list_categories
+from app.cli.category_functions import input_category, list_categories, edit_category
 
 # ====================================================
 # Print Menu function
@@ -233,6 +233,10 @@ def edit_base_submenu():
                 break
             case "3":
                 input_category()
+                edit_base_submenu()
+                break
+            case "4":
+                edit_category()
                 edit_base_submenu()
                 break
             case "B":

@@ -1,7 +1,7 @@
 import sqlite3
 from pathlib import Path
 from app.config_manager import ConfigManager
-from app.data.program_db import add_category
+from app.data.program_db import add_category, get_category_by_id, update_category, get_all_categories
 from app.lang import lang
 
 # -----------------------------
@@ -29,27 +29,36 @@ def input_category():
 
 def list_categories():
     """Print all available categories with description."""
-    config = ConfigManager()
-    db_path = Path(config.get("paths.program_db", "app/data/program_db.sqlite"))
-
-    if not db_path.exists():
-        print(lang.t("category_functions.error.no_program_db"))
+    categories = get_all_categories()
+    if not categories:
+        print(lang.t("category_functions.msg.no_category"))
         return
 
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
+    print(lang.t("category_functions.title.list_categories"))
+    for cat in categories:
+        print(f"{cat[0]:<3} | {cat[1]} — {cat[2]}")
 
-    cursor.execute("SELECT id_category, category, description FROM category ORDER BY category;")
-    rows = cursor.fetchall()
-    conn.close()
 
-    if not rows:
-        print(lang.t("category_functions.error.no_category"))
+def edit_category():
+    """Allow user to edit a category (name and description)."""
+    print(lang.t("category_functions.title.edit_category"))
+    list_categories()  # Reuse your existing function
+
+    try:
+        category_id = int(input(lang.t("category_functions.cli.select_id")))
+    except ValueError:
+        print(lang.t("category_functions.error.invalid_choice"))
         return
 
-    print(lang.t("category_functions.title.list_caegories"))
-    for row in rows:
-        print(f"{row[0]}: {row[1]} — {row[2]}")
-    print(lang.t("category_functions.cli.spacer"))
+    category = get_category_by_id(category_id)
+    if not category:
+        print(lang.t("category_functions.error.not_found"))
+        return
 
+    print(lang.t("category_functions.msg.current_values").format(name=category[1], desc=category[2]))
 
+    new_name = input(f"{lang.t('category_functions.cli.new_name')} ({category[1]}): ") or category[1]
+    new_description = input(f"{lang.t('category_functions.cli.new_desc')} ({category[2]}): ") or category[2]
+
+    update_category(category_id, new_name, new_description)
+    print(lang.t("category_functions.msg.success"))

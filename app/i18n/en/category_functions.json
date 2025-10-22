@@ -1,23 +1,30 @@
 {
 	"title": {
 		"new_category": "\n=== Add New Categroy ===",
-		"list_categorie": "\n=== Available Categories ==="
+		"list_categories": "\n=== Available Categories ===",
+		"edit_category": "\n=== Edit Category ==="
 	},
 
 	"cli": {
 		"category_name": "Enter category name: ",
 		"category_description": "Enter category description: ",
+		"select_id": "Select category ID to edit: ",
+		"new_name": "Enter new name, Enter for no changes: ",
+		"new_desc": "Enter new description, Enter for no changes: ",
 		"spacer": "=================================================="
 	},
 
 	"msg": {
-		"category_added": "Category '{category_name}' added successfully!"
+		"category_added": "Category '{category_name}' added successfully!",
+		"current_values": "Current values: ",
+		"success": "Succesfully updated entries!"
 	},
 
 	"error": {
 		"invalid_coice": "Invalid choice, try again!",
 		"no_program_db": "Program database not found",
-		"no_category": "No categories found."
+		"no_category": "No categories found.",
+		"not_found": "No category with this ID exixts."
 
 	}
 }

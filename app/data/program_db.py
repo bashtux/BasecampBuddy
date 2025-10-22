@@ -81,15 +81,9 @@ def init_program_db(db_path: Path | str = DB_PATH):
     if tables_created:
         print(lang.t("program_db.msg.db_initialized", db_path=db_path))
 
-
-# Optional: helper function to insert sample data
-def add_brand(name: str, url: str = "", db_path: str = DB_PATH):
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO Brand (name, url) VALUES (?, ?)", (name, url))
-    conn.commit()
-    conn.close()
-
+###############################################################################
+#               Category functions
+###############################################################################
 
 def add_category(category: str, description: str = "", db_path: str = DB_PATH):
     conn = sqlite3.connect(db_path)
@@ -99,15 +93,45 @@ def add_category(category: str, description: str = "", db_path: str = DB_PATH):
     conn.close()
 
 
-def add_consumable(name: str, description: str = "", weight: int = 0, db_path: str = DB_PATH):
-    conn = sqlite3.connect(db_path)
+def update_category(category_id: int, new_name: str, new_description: str):
+    """Update category name and description by ID."""
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute(
-        "INSERT INTO Consumables (name, description, weight) VALUES (?, ?, ?)",
-        (name, description, weight)
-    )
+    cursor.execute("""
+        UPDATE category
+        SET category = ?, description = ?
+        WHERE id_category = ?
+    """, (new_name, new_description, category_id))
     conn.commit()
     conn.close()
+
+
+def get_all_categories():
+    """Return a list of all categories."""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT id_category, category, description FROM category ORDER BY category")
+    results = cursor.fetchall()
+    conn.close()
+    return results
+
+
+def get_category_by_id(category_id: int):
+    """Return a single category by ID."""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT id_category, category, description FROM category WHERE id_category = ?", (category_id,))
+    result = cursor.fetchone()
+    conn.close()
+    return result
+
+###############################################################################
+#               Brand functions
+###############################################################################
+
+
+
+
 
 def check_initialized(db_path: Path = DB_PATH) -> bool:
     """
