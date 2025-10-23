@@ -1,5 +1,6 @@
 from app.lang import lang
 from app.cli.category_functions import input_category, list_categories, edit_category
+from app.cli.brand_functions import input_brand, list_brands
 
 # ====================================================
 # Print Menu function
@@ -76,6 +77,7 @@ def gear_menu():
             "2": "menu.general_menu.options.edit",
             "3": "menu.general_menu.options.list",
             "4": "menu.gear_menu.options.category",
+            "5": "menu.gear_menu.options.brand",
             "D": "menu.general_menu.options.delete",
             "B": "menu.general_menu.options.back"
             }
@@ -88,6 +90,10 @@ def gear_menu():
                 break
             case "4":
                 list_categories()
+                gear_menu()
+                break
+            case "5":
+                list_brands()
                 gear_menu()
                 break
             case "B":
@@ -229,7 +235,8 @@ def edit_base_submenu():
 
         match choice:
             case "1":
-                print(lang.t("menu.general_menu.options.create"))
+                input_brand()
+                edit_base_submenu()
                 break
             case "3":
                 input_category()

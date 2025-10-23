@@ -47,6 +47,7 @@ def init_program_db(db_path: Path | str = DB_PATH):
             CREATE TABLE Brand (
                 id_brand INTEGER PRIMARY KEY,  -- unique identifier for brand
                 name TEXT,                     -- brand name
+                description TEXT,              -- brand description
                 url TEXT                       -- brand website URL
             )
         """)
@@ -129,7 +130,21 @@ def get_category_by_id(category_id: int):
 #               Brand functions
 ###############################################################################
 
+def add_brand(name: str, description: str = "", url: str = "", db_path: str = DB_PATH):
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO Brand (name, description, url) VALUES (?, ?, ?)", (name, description, url))
+    conn.commit()
+    conn.close()
 
+def get_all_brands():
+    """ Return a list of all brands """
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT id_brand, name, description, url FROM brand ORDER BY name")
+    results = cursor.fetchall()
+    conn.close()
+    return results
 
 
 

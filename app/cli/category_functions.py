@@ -10,9 +10,6 @@ from app.lang import lang
 config = ConfigManager()
 
 
-# -----------------------------
-# category
-# -----------------------------
 def input_category():
     """
     Ask the user for a new category and insert it into the program DB.

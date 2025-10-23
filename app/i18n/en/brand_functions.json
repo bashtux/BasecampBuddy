@@ -1,0 +1,20 @@
+{
+	"title": {
+		"new_brand": "\n=== Add New Brand ===",
+		"list_brands": "\n=== List All Brands ==="
+	},
+
+	"cli": {
+		"brand_name": "Enter brand name: ",
+		"description": "Enter brand description: ",
+		"url": "Enter brand URL: "
+	},
+
+	"msg": {
+		"brand_added": "Brand '{brand_name}' added to database."
+	},
+
+	"error": {
+		"no_name": "No brand name provided, try again."
+	}
+}

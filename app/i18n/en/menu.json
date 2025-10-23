@@ -22,7 +22,8 @@
 	"gear_menu": {
 		"title": "Gear Menu",
 		"options": {
-			"category": "List category"
+			"category": "List Category",
+			"brand": "List Brand"
 		},
 		"misc": {
 			"gear": "Gear"
