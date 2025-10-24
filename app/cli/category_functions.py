@@ -28,7 +28,7 @@ def list_categories():
     """Print all available categories with description."""
     categories = get_all_categories()
     if not categories:
-        print(lang.t("category_functions.msg.no_category"))
+        print(lang.t("category_functions.error.no_category"))
         return
 
     print(lang.t("category_functions.title.list_categories"))

@@ -29,7 +29,7 @@ def input_brand():
         add_brand(brand_name, description, url)
         print(lang.t("brand_functions.msg.brand_added").format(brand_name=brand_name))
     else:
-        print(lang.t("brand_category.error.no_name"))
+        print(lang.t("brand_functions.error.no_name"))
 
 
 def list_brands():

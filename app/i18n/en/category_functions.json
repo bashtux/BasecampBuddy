@@ -21,7 +21,7 @@
 	},
 
 	"error": {
-		"invalid_coice": "Invalid choice, try again!",
+		"invalid_choice": "Invalid choice, try again!",
 		"no_program_db": "Program database not found",
 		"no_category": "No categories found.",
 		"not_found": "No category with this ID exixts."
