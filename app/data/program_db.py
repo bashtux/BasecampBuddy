@@ -137,6 +137,19 @@ def add_brand(name: str, description: str = "", url: str = "", db_path: str = DB
     conn.commit()
     conn.close()
 
+
+def update_brand(brand_id: int, new_name: str, new_description: str, new_url: str):
+    """Update brand name, description and URL by ID."""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("""
+        UPDATE brand
+        SET name = ?, description = ?, url = ?
+        WHERE id_brand = ?
+    """, (new_name, new_description, new_url, brand_id))
+    conn.commit()
+
+
 def get_all_brands():
     """ Return a list of all brands """
     conn = sqlite3.connect(DB_PATH)
@@ -146,6 +159,15 @@ def get_all_brands():
     conn.close()
     return results
 
+
+def get_brand_by_id(brand_id: int):
+    """Return a single brand by ID."""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT id_brand, name, description, url FROM brand WHERE id_brand = ?", (brand_id,))
+    result = cursor.fetchone()
+    conn.close()
+    return result
 
 
 def check_initialized(db_path: Path = DB_PATH) -> bool:

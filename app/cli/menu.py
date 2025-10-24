@@ -1,6 +1,6 @@
 from app.lang import lang
 from app.cli.category_functions import input_category, list_categories, edit_category
-from app.cli.brand_functions import input_brand, list_brands
+from app.cli.brand_functions import input_brand, list_brands, edit_brand
 
 # ====================================================
 # Print Menu function
@@ -236,6 +236,10 @@ def edit_base_submenu():
         match choice:
             case "1":
                 input_brand()
+                edit_base_submenu()
+                break
+            case "2":
+                edit_brand()
                 edit_base_submenu()
                 break
             case "3":

@@ -39,7 +39,7 @@ def list_categories():
 def edit_category():
     """Allow user to edit a category (name and description)."""
     print(lang.t("category_functions.title.edit_category"))
-    list_categories()  # Reuse your existing function
+    list_categories()
 
     try:
         category_id = int(input(lang.t("category_functions.cli.select_id")))
