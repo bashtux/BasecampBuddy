@@ -1,0 +1,14 @@
+{
+  "msg": {
+    "invalid_input": "Invalid input. Please try again.",
+    "invalid_url": "The URL you entered is not valid.",
+    "invalid_number": "Please enter a valid number."
+  },
+  "brand": {
+    "prompt": {
+      "name": "Enter brand name: ",
+      "url": "Enter brand website URL (optional): "
+    }
+  }
+}
+

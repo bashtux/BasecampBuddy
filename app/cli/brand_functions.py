@@ -1,6 +1,7 @@
 import sqlite3
 from pathlib import Path
 from app.config_manager import ConfigManager
+from app.core.utils.validation import prompt_validated_input, is_valid_url
 from app.data.program_db import add_brand, get_all_brands
 from app.lang import lang
 
@@ -17,7 +18,12 @@ def input_brand():
     print(lang.t("brand_functions.title.new_brand"))
     brand_name = input(f"{lang.t('brand_functions.cli.brand_name')}").strip()
     description = input(f"{lang.t('brand_functions.cli.description')}").strip()
-    url = input(f"{lang.t('brand_functions.cli.url')}").strip()
+    url = prompt_validated_input(
+        prompt_key="brand.prompt.url",
+        validator=is_valid_url,
+        allow_empty=True,
+        error_key="msg.invalid_url"
+    )
 
     if brand_name:
         add_brand(brand_name, description, url)

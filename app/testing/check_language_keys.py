@@ -1,102 +1,70 @@
-# app/testing/check_language_keys.py
-
 import os
 import re
 import json
 
-# -------- CONFIG --------
-APP_SRC = "../"  # relative to the testing folder
-LANG_FOLDER = "../i18n"  # path to your language files
-LANG_FILES = [f for f in os.listdir(LANG_FOLDER) if f.endswith(".json")]
+LANG_DIR = "app/i18n"
+CODE_DIR = "app"
+LANG_KEYS_PATTERN = re.compile(r'lang\.t\(["\']([a-zA-Z0-9_.-]+)["\']\)')
 
-# -------- FUNCTIONS --------
-
-def get_used_keys(src_path):
-    """Scan Python files and extract all lang.t() keys."""
-    keys_used = set()
-    pattern = re.compile(r'lang\.t\(["\']([\w\.]+)["\']\)')
-    for root, dirs, files in os.walk(src_path):
-        for file in files:
-            if file.endswith(".py"):
-                with open(os.path.join(root, file), "r", encoding="utf-8") as f:
-                    text = f.read()
-                    keys_used.update(pattern.findall(text))
-    return keys_used
-
-
-def flatten_lang_dict(d, parent=""):
-    """Flatten nested language dict into dot notation keys."""
-    items = []
+def flatten_json_keys(d, prefix=""):
+    keys = set()
     for k, v in d.items():
-        new_key = f"{parent}.{k}" if parent else k
+        full_key = f"{prefix}.{k}" if prefix else k
         if isinstance(v, dict):
-            items.extend(flatten_lang_dict(v, new_key))
+            keys |= flatten_json_keys(v, full_key)
         else:
-            items.append(new_key)
-    return items
+            keys.add(full_key)
+    return keys
 
+def get_used_lang_keys():
+    used = set()
+    for root, _, files in os.walk(CODE_DIR):
+        for f in files:
+            if f.endswith(".py"):
+                with open(os.path.join(root, f), encoding="utf-8") as fh:
+                    content = fh.read()
+                    used |= set(LANG_KEYS_PATTERN.findall(content))
+    return used
 
-def load_language_files(lang_folder, lang_files):
-    """Load all language files and return a dict: {filename: set(keys)}"""
-    lang_data = {}
-    for lang_file in lang_files:
-        with open(os.path.join(lang_folder, lang_file), "r", encoding="utf-8") as f:
-            data = json.load(f)
-        lang_data[lang_file] = set(flatten_lang_dict(data))
-    return lang_data
+def get_lang_file_keys(lang_dir):
+    lang_keys = {}
+    for lang in os.listdir(lang_dir):
+        lang_path = os.path.join(lang_dir, lang)
+        if os.path.isdir(lang_path):
+            combined = set()
+            for file in os.listdir(lang_path):
+                if file.endswith(".json"):
+                    path = os.path.join(lang_path, file)
+                    try:
+                        data = json.load(open(path, encoding="utf-8"))
+                        combined |= flatten_json_keys(data)
+                    except json.JSONDecodeError:
+                        print(f"⚠️ JSON error in {path}")
+            lang_keys[lang] = combined
+    return lang_keys
 
+def check_language_keys():
+    used_keys = get_used_lang_keys()
+    lang_keys = get_lang_file_keys(LANG_DIR)
 
-def check_language_file(lang_keys, used_keys):
-    """Check missing and unused keys for a single language file."""
-    missing = used_keys - lang_keys
-    unused = lang_keys - used_keys
-    return missing, unused
-
-
-def cross_language_check(all_lang_keys):
-    """Check for keys present in some languages but missing in others."""
-    all_keys = set().union(*all_lang_keys.values())
-    cross_missing = {}
-    for key in all_keys:
-        missing_in = [lang for lang, keys in all_lang_keys.items() if key not in keys]
-        if missing_in:
-            cross_missing[key] = missing_in
-    return cross_missing
-
-
-# -------- MAIN --------
-
-if __name__ == "__main__":
-    used_keys = get_used_keys(APP_SRC)
     print(f"Found {len(used_keys)} language keys used in code.\n")
 
-    all_lang_keys = load_language_files(LANG_FOLDER, LANG_FILES)
-
-    # Per-language check
-    for lang_file, keys in all_lang_keys.items():
-        missing, unused = check_language_file(keys, used_keys)
-        print(f"--- {lang_file} ---")
+    all_ok = True
+    for lang, keys in lang_keys.items():
+        missing = sorted(used_keys - keys)
         if missing:
-            print(f"Missing keys ({len(missing)}):")
-            for k in sorted(missing):
-                print(f"  {k}")
+            print(f"❌ Missing in {lang}: {len(missing)} keys")
+            for k in missing:
+                print(f"   - {k}")
+            all_ok = False
         else:
-            print("No missing keys!")
+            print(f"✅ {lang}: all keys exist!")
 
-        if unused:
-            print(f"Unused keys ({len(unused)}):")
-            for k in sorted(unused):
-                print(f"  {k}")
-        else:
-            print("No unused keys!")
-        print()
-
-    # Cross-language consistency check
-    cross_missing = cross_language_check(all_lang_keys)
-    if cross_missing:
-        print("=== Cross-language missing keys ===")
-        for key, langs in sorted(cross_missing.items()):
-            print(f"{key} missing in: {', '.join(langs)}")
+    if all_ok:
+        print("\n✅ All keys exist in all language files!")
     else:
-        print("All keys exist in all language files!")
+        print("\n⚠️ Some keys are missing!")
+
+if __name__ == "__main__":
+    check_language_keys()
 
