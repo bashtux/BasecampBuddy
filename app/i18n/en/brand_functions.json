@@ -1,7 +1,8 @@
 {
 	"title": {
 		"new_brand": "\n=== Add New Brand ===",
-		"list_brands": "\n=== List All Brands ==="
+		"list_brands": "\n=== List All Brands ===",
+		"edit_brand": "\n=== Edit Brand ==="
 	},
 
 	"cli": {
@@ -22,6 +23,8 @@
 
 	"error": {
 		"no_name": "No brand name provided, try again.",
-		"invalid_url": "Invalid URL, try again."
+		"invalid_url": "Invalid URL, try again.",
+		"invalid_choice": "Invalid choice, try again.",
+		"not_found": "Brand not found."
 	}
 }
