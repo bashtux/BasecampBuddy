@@ -1,0 +1,30 @@
+{
+	"title": {
+		"new_consumable": "\n=== Add New Consumable ===",
+		"list_consumables": "\n=== List All Consumables ===",
+		"edit_consumable": "\n=== Edit Consumable ==="
+	},
+
+	"cli": {
+		"consumable_name": "Enter consumable name: ",
+		"consumable_description": "Enter consumable description: ",
+		"consumable_weight": "Enter consumable weight [g]: ",
+		"select_id": "Select entry to edit by ID: ",
+		"new_name": "Enter new name, leave empty to keep value: ",
+		"new_description": "Enter new Description, leave empty to keep value: ",
+		"new_weight": "Enter new weight, leave empty to keep value: "
+	},
+
+	"msg": {
+		"consumable_added": "Consumable '{consumable_name}' added to database.",
+		"current_values": "Current Values",
+		"success": "Consumable is successfully updated."
+	},
+
+	"error": {
+		"no_name": "No consumable name provided, try again.",
+		"invalid_url": "Invalid URL, try again.",
+		"invalid_choice": "Invalid choice, try again.",
+		"not_found": "Consumable not found."
+	}
+}

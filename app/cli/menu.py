@@ -1,6 +1,7 @@
 from app.lang import lang
 from app.cli.category_functions import input_category, list_categories, edit_category
 from app.cli.brand_functions import input_brand, list_brands, edit_brand
+from app.cli.consumable_functions import input_consumable#, edit_consumable
 
 # ====================================================
 # Print Menu function
@@ -248,6 +249,10 @@ def edit_base_submenu():
                 break
             case "4":
                 edit_category()
+                edit_base_submenu()
+                break
+            case "5":
+                input_consumable()
                 edit_base_submenu()
                 break
             case "B":

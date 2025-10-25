@@ -35,7 +35,7 @@ def init_program_db(db_path: Path | str = DB_PATH):
     Tables:
     - Brand
     - Category
-    - Consumables
+    - Consumable
     Only creates tables if they do not exist already.
     """
     conn = sqlite3.connect(db_path)
@@ -64,10 +64,10 @@ def init_program_db(db_path: Path | str = DB_PATH):
         """)
         tables_created = True
 
-    # Create Consumables table if missing
-    if not table_exists(conn, "Consumables"):
+    # Create Consumable table if missing
+    if not table_exists(conn, "Consumable"):
         conn.execute("""
-            CREATE TABLE Consumables (
+            CREATE TABLE Consumable (
                 id_consumable INTEGER PRIMARY KEY,  -- unique identifier for consumable
                 name TEXT,                          -- consumable name
                 description TEXT,                   -- description of consumable
@@ -169,6 +169,53 @@ def get_brand_by_id(brand_id: int):
     result = cursor.fetchone()
     conn.close()
     return result
+
+###############################################################################
+#               Consumables functions
+###############################################################################
+
+def add_consumable(name: str, description: str = "", weight: int = 0, db_path: str = DB_PATH):
+    """Add new consumable to database."""
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO Consumable (name, description, weight) VALUES (?, ?, ?)", (name, description, weight))
+    conn.commit()
+    conn.close()
+
+
+def update_consumable(consumable_id: int, new_name: str, new_description: str, new_weight: str):
+    """Update consumable name, description and weightL by ID."""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("""
+        UPDATE Consumable
+        SET name = ?, description = ?, weight = ?
+        WHERE id_brand = ?
+    """, (new_name, new_description, new_weight, caonsumable_id))
+    conn.commit()
+    conn.close()
+
+
+def get_all_consumables():
+    """ Return a list of all consumables"""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT id_consumable, name, description, weight FROM Consumable ORDER BY name")
+    results = cursor.fetchall()
+    conn.close()
+    return results
+
+
+def get_consumable_by_id(consumable_id: int):
+    """Return a single consumable by ID."""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT id_consiumable, name, description, weight FROM Consumable WHERE id_consumable = ?", (consumable_id,))
+    result = cursor.fetchone()
+    conn.close()
+    return result
+
+
 
 
 def check_initialized(db_path: Path = DB_PATH) -> bool:
