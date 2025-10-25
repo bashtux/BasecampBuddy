@@ -7,14 +7,21 @@
 	"cli": {
 		"brand_name": "Enter brand name: ",
 		"description": "Enter brand description: ",
-		"url": "Enter brand URL: "
+		"url": "Enter brand URL: ",
+		"select_id": "Select entry to edit by ID: ",
+		"new_name": "Enter new name, leave empty to keep value: ",
+		"new_description": "Enter new Description, leave empty to keep value: ",
+		"new_url": "Enter new URL, leave empty to keep value: "
 	},
 
 	"msg": {
-		"brand_added": "Brand '{brand_name}' added to database."
+		"brand_added": "Brand '{brand_name}' added to database.",
+		"current_values": "Current Values",
+		"success": "Brand is successfully updated."
 	},
 
 	"error": {
-		"no_name": "No brand name provided, try again."
+		"no_name": "No brand name provided, try again.",
+		"invalid_url": "Invalid URL, try again."
 	}
 }

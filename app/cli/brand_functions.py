@@ -19,10 +19,10 @@ def input_brand():
     brand_name = input(f"{lang.t('brand_functions.cli.brand_name')}").strip()
     description = input(f"{lang.t('brand_functions.cli.description')}").strip()
     url = prompt_validated_input(
-        prompt_key="brand.prompt.url",
+        prompt_key="brand_functions.cli.url",
         validator=is_valid_url,
         allow_empty=True,
-        error_key="msg.invalid_url"
+        error_key="brand_functions.error.invalid_url"
     )
 
     if brand_name:
@@ -41,7 +41,7 @@ def list_brands():
 
     print(lang.t("brand_functions.title.list_brands"))
     for brand in brands:
-        print(f"{brand[0]:<3} | {brand[1]} - {brand[3]}")
+        print(f"{brand[0]:<3} | {brand[1]}: {brand[2]} \n- {brand[3]}")
 
 
 def edit_brand():
@@ -62,9 +62,18 @@ def edit_brand():
 
     print(lang.t("brand_functions.msg.current_values").format(name=brand[1], desc=brand[2], url=brand[3]))
 
-    new_name = input(f"{lang.t('brand_functions.cli.new_name')} ({brand[1]}): ") or brand[1]
-    new_description = input(f"{lang.t('brand_functions.cli.new_description')} ({brand[2]}): ") or brand[2]
-    new_url = input(f"{lang.t('brand_functions.cli.new_url')} ({brand[3]}): ") or brand[3]
+    new_name = input(f"({brand[1]})\n {lang.t('brand_functions.cli.new_name')}: ") or brand[1]
+    new_description = input(f"({brand[2]})\n {lang.t('brand_functions.cli.new_description')}: ") or brand[2]
+    print("("+brand[3]+")")
+    new_url = (
+        prompt_validated_input(
+            prompt_key="brand_functions.cli.new_url",
+            validator=is_valid_url,
+            allow_empty=True,
+            error_key="brand_functions.error.invalid_url"
+        )
+    or brand[3] 
+    )
 
     update_brand(brand_id, new_name, new_description, new_url)
     print(lang.t("brand_functions.msg.success"))

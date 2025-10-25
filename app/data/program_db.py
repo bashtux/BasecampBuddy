@@ -143,11 +143,12 @@ def update_brand(brand_id: int, new_name: str, new_description: str, new_url: st
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("""
-        UPDATE brand
+        UPDATE Brand
         SET name = ?, description = ?, url = ?
         WHERE id_brand = ?
     """, (new_name, new_description, new_url, brand_id))
     conn.commit()
+    conn.close()
 
 
 def get_all_brands():
