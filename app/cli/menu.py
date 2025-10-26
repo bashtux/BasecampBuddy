@@ -1,7 +1,7 @@
 from app.lang import lang
 from app.cli.category_functions import input_category, list_categories, edit_category
 from app.cli.brand_functions import input_brand, list_brands, edit_brand
-from app.cli.consumable_functions import input_consumable#, edit_consumable
+from app.cli.consumable_functions import input_consumable, edit_consumable, list_consumables
 
 # ====================================================
 # Print Menu function
@@ -224,10 +224,13 @@ def edit_base_submenu():
     commands = {
             "1": "menu.edit_base_submenu.options.addbrand",
             "2": "menu.edit_base_submenu.options.editbrand",
-            "3": "menu.edit_base_submenu.options.addcategory",
-            "4": "menu.edit_base_submenu.options.editcategory",
-            "5": "menu.edit_base_submenu.options.addconsumable",
-            "6": "menu.edit_base_submenu.options.editconsumable",
+            "3": "menu.gear_menu.options.brand",
+            "4": "menu.edit_base_submenu.options.addcategory",
+            "5": "menu.edit_base_submenu.options.editcategory",
+            "6": "menu.gear_menu.options.category",
+            "7": "menu.edit_base_submenu.options.addconsumable",
+            "8": "menu.edit_base_submenu.options.editconsumable",
+            "9": "menu.edit_base_submenu.options.listconsumable",
             "B": "menu.general_menu.options.back",
             "M": "menu.main_menu.title"
             }
@@ -244,15 +247,31 @@ def edit_base_submenu():
                 edit_base_submenu()
                 break
             case "3":
-                input_category()
+                list_brands()
                 edit_base_submenu()
                 break
             case "4":
-                edit_category()
+                input_category()
                 edit_base_submenu()
                 break
             case "5":
+                edit_category()
+                edit_base_submenu()
+                break
+            case "6":
+                list_categories()
+                edit_base_submenu()
+                break
+            case "7":
                 input_consumable()
+                edit_base_submenu()
+                break
+            case "8":
+                edit_consumable()
+                edit_base_submenu()
+                break
+            case "9":
+                list_consumables()
                 edit_base_submenu()
                 break
             case "B":

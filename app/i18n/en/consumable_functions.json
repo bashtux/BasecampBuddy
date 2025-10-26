@@ -17,7 +17,7 @@
 
 	"msg": {
 		"consumable_added": "Consumable '{consumable_name}' added to database.",
-		"current_values": "Current Values",
+		"current_values": "Current Values: {name}: {weight}:\n{desc}",
 		"success": "Consumable is successfully updated."
 	},
 

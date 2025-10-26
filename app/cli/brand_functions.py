@@ -77,3 +77,4 @@ def edit_brand():
 
     update_brand(brand_id, new_name, new_description, new_url)
     print(lang.t("brand_functions.msg.success"))
+    return

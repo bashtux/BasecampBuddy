@@ -190,8 +190,8 @@ def update_consumable(consumable_id: int, new_name: str, new_description: str, n
     cursor.execute("""
         UPDATE Consumable
         SET name = ?, description = ?, weight = ?
-        WHERE id_brand = ?
-    """, (new_name, new_description, new_weight, caonsumable_id))
+        WHERE id_consumable = ?
+    """, (new_name, new_description, new_weight, consumable_id))
     conn.commit()
     conn.close()
 
@@ -210,7 +210,7 @@ def get_consumable_by_id(consumable_id: int):
     """Return a single consumable by ID."""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("SELECT id_consiumable, name, description, weight FROM Consumable WHERE id_consumable = ?", (consumable_id,))
+    cursor.execute("SELECT id_consumable, name, description, weight FROM Consumable WHERE id_consumable = ?", (consumable_id,))
     result = cursor.fetchone()
     conn.close()
     return result
