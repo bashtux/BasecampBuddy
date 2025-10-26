@@ -1,6 +1,8 @@
 # app/data/initializer.py
 from pathlib import Path
-from app.data import program_db, user_db
+#from app.data import program_db, user_db
+from app.data import user_db
+from app.data import db
 from app.config_manager import ConfigManager
 from app.lang import lang
 
@@ -15,8 +17,8 @@ user_db_path.parent.mkdir(parents=True, exist_ok=True)
 
 def ensure_program_db_initialized():
     """Initialize the program database if required."""
-    if not program_db_path.exists() or not program_db.check_initialized(program_db_path):
-        program_db.init_program_db(program_db_path)
+    if not program_db_path.exists() or not db.check_initialized(program_db_path):
+        db.init_program_db(program_db_path)
         print(lang.t("initializer.msg.program_db_created").format(db_path=program_db_path))
     else:
         # Optional: only debug info, not standard user message

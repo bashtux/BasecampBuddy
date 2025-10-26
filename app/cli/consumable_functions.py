@@ -5,7 +5,8 @@ from app.config_manager import ConfigManager
 from app.lang import lang
 
 from app.core.utils.validation import prompt_validated_input, is_positive_number
-from app.data.program_db import add_consumable, get_all_consumables, get_consumable_by_id, update_consumable
+#from app.data.program_db import add_consumable, get_all_consumables, get_consumable_by_id, update_consumable
+from app.data import db
 
 #------------------------------
 # Load config and language
@@ -27,7 +28,7 @@ def input_consumable():
     )
 
     if name:
-        add_consumable(name, description, weight)
+        db.add_consumable(name, description, weight)
         print(lang.t("consumable_functions.msg.consumable_added").format(consumable_name=name))
     else:
         print(lang.t("consumable_functions.error.no_name"))
@@ -35,7 +36,7 @@ def input_consumable():
 
 def list_consumables():
     """Print all available consumables with weight and description."""
-    consumables = get_all_consumables()
+    consumables = db.get_all_consumables()
     if not consumables:
         print(lang.t("consumable_functions.error.not_found"))
         return
@@ -56,7 +57,7 @@ def edit_consumable():
         print(lang.t("consumable_functions.error.invalid_choice"))
         return
 
-    consumable = get_consumable_by_id(consumable_id)
+    consumable = db.get_consumable_by_id(consumable_id)
     if not consumable:
         print(lang.t("consumable_functions.error.not_found"))
         return
@@ -77,6 +78,6 @@ def edit_consumable():
     or consumable[3]
     )
 
-    update_consumable(consumable_id, new_name, new_description, new_weight)
+    db.update_consumable(consumable_id, new_name, new_description, new_weight)
     print(lang.t("consumable_functions.msg.success"))
     return
