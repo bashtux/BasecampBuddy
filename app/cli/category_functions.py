@@ -1,9 +1,10 @@
 import sqlite3
 from pathlib import Path
+
 from app.config_manager import ConfigManager
-#from app.data.program_db import add_category, get_category_by_id, update_category, get_all_categories
-from app.data import db
 from app.lang import lang
+
+from app.data import db
 
 # -----------------------------
 # Load config and language

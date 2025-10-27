@@ -8,7 +8,7 @@ from app.lang import lang
 config = ConfigManager()  # reads defaults + user config
 
 # Determine project root
-BASE_DIR = Path(__file__).resolve().parents[2]  # goes from app/data -> project root
+BASE_DIR = Path(__file__).resolve().parents[3]  # goes from app/data -> project root
 
 # Path to program DB from config, fallback to default
 program_db_rel = config.get("paths.program_db", "app/data/program_db.sqlite")

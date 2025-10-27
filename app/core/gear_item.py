@@ -10,16 +10,15 @@ class Gear:
 
     def __init__(
         self,
-        id_gear: int,
         name: str,
-        type: str,
-        brand: Optional[int] = None,
+        variant: str,
+        brand_id: Optional[int] = None,
         size: Optional[str] = None,
         mass_pcs: Optional[int] = None,
         price: Optional[float] = None,
         amount: int = 1,
         color: Optional[str] = None,
-        category: Optional[int] = None,
+        category_id: Optional[int] = None,
         comments: Optional[List[int]] = None,
         description: Optional[str] = None,
         prod_date: Optional[date] = None,
@@ -27,17 +26,18 @@ class Gear:
         last_checked: Optional[date] = None,
         lifespan: Optional[int] = None,
         kit_only: bool = False,
+        id_gear: int | None = None,
     ):
         self.id_gear = id_gear
         self.name = name
-        self.type = type
-        self.brand = brand
+        self.variant = variant
+        self.brand_id = brand_id
         self.size = size
         self.mass_pcs = mass_pcs
         self.price = price
         self.amount = amount
         self.color = color
-        self.category = category
+        self.category_id = category_id
         self.comments = comments or []
         self.description = description
         self.prod_date = prod_date
@@ -67,6 +67,7 @@ class Gear:
         """
         self.checked = True
         self.last_checked = date.today()
+
 
     # -----------------------------
     # Utility and representation

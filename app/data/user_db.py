@@ -47,14 +47,14 @@ def init_user_db(db_path: Path | str = DB_PATH):
             CREATE TABLE Gear (
                 id_gear INTEGER PRIMARY KEY,      -- unique identifier for gear
                 name TEXT,                         -- gear name
-                type TEXT,                         -- gear type/category
-                brand INTEGER,                     -- foreign key to Brand
+                variant TEXT,                         -- gear type/category
+                brand_id INTEGER,                     -- foreign key to Brand
                 size TEXT,                          -- gear size
                 mass_pcs INTEGER,                  -- mass per piece
                 price REAL,                        -- price per piece
                 amount INTEGER,                     -- number of items
                 color TEXT,                         -- color in HEX
-                category INTEGER,                   -- foreign key to Category
+                category_id INTEGER,                   -- foreign key to Category
                 comments TEXT,                      -- list of comment IDs
                 description TEXT,                   -- description of the gear
                 prod_date TEXT,                     -- production/manufacture date

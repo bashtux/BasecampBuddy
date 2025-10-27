@@ -2,7 +2,7 @@ import sqlite3
 from pathlib import Path
 from datetime import date
 
-from app.core import Gear
+from app.core.gear_item import Gear
 
 from app.config_manager import ConfigManager  # assuming you have this
 from app.lang import lang
@@ -27,11 +27,11 @@ def add_gear(gear: Gear) -> int:
     cursor = conn.cursor()
 
     cursor.execute("""
-        INSERT INTO gear_item (name, type, brand, size, mass_pcs, price, amount, color, category, comments, description, prod_date, checked, last_checked, lifespan, kit_only)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO Gear (name, variant, brand_id, size, mass_pcs, price, amount, color, category_id, description, prod_date, checked, last_checked, lifespan, kit_only)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         gear.name,
-        gear.type,
+        gear.variant,
         gear.brand_id,
         gear.size,
         gear.mass_pcs,
@@ -39,9 +39,8 @@ def add_gear(gear: Gear) -> int:
         gear.amount,
         gear.color,
         gear.category_id,
-        gear.comments,
         gear.description,
-        gear.prod_date.isoformat() if gear.purchase_date else None,
+        gear.prod_date.isoformat() if gear.prod_date else None,
         gear.checked,
         gear.last_checked,
         gear.lifespan,
