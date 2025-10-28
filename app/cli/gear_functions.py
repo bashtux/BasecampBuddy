@@ -5,7 +5,7 @@ from app.config_manager import ConfigManager
 from app.lang import lang
 from app.data import db
 
-from app.core.utils.validation import prompt_validated_input, is_positive_number
+from app.core.utils.validation import prompt_validated_input, is_positive_number, is_valid_date
 from app.core.gear_item import Gear
 
 #------------------------------
@@ -28,16 +28,21 @@ def input_gear():
     color = input(f"{lang.t('gear_functions.cli.gear_color')}").strip()
     category = input(f"{lang.t('gear_functions.cli.gear_category')}").strip()
     description = input(f"{lang.t('gear_functions.cli.gear_description')}").strip()
-    prod_date = input(f"{lang.t('gear_functions.cli.gear_prod_date')}").strip()
-    lifespan = input(f"{lang.t('gear_functions.cli.gear_lifespan')}").strip()
-    kit_only = input(f"{lang.t('gear_functions.cli.gear_kit_only')}").strip()
+    
+    prod_date = prompt_validated_input(
+        prompt_key="gear_functions.cli.gear_prod_date",
+        validator=is_valid_date,
+        allow_empty=True,
+        error_key="gear_functions.error.not_valid"
+    )
 
-#    url = prompt_validated_input(
-#        prompt_key="brand_functions.cli.url",
-#        validator=is_positive_number,
-#        allow_empty=True,
-#        error_key="brand_functions.error.invalid_url"
-#    )
+    lifespan = prompt_validated_input(
+            prompt_key="gear_functions.cli.gear_lifespan",
+            validator=is_positive_number,
+            allow_empty=True,
+            error_key="gear_functions.error.not_number"
+    )
+    kit_only = input(f"{lang.t('gear_functions.cli.gear_kit_only')}").strip()
 
     gear = Gear(
             name = name,

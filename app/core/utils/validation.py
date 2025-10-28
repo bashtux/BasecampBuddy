@@ -10,7 +10,7 @@ translations and configuration.
 
 from urllib.parse import urlparse
 from app.lang import lang
-
+from datetime import datetime
 
 # ---------------------------
 # URL Validation
@@ -35,7 +35,7 @@ def prompt_validated_input(
     validator,
     allow_empty: bool = True,
     error_key: str = 'msg.invalid_input'
-) -> str | None:
+    ) -> str | None:
 
     """
     Prompt the user for input and validate it using the given validator function.
@@ -49,13 +49,15 @@ def prompt_validated_input(
     Returns:
         str | None: The valid input string, or None if left empty
     """
+
     while True:
         value = input(lang.t(prompt_key)).strip()
         if not value and allow_empty:
             return None
-        if validator(value):
-            return value
-        print(lang.t(error_key))
+        try:
+            return validator(value)
+        except ValueError:
+            print(lang.t(error_key))
 
 
 # ---------------------------
@@ -77,4 +79,20 @@ def is_positive_number(value: str) -> bool:
 def is_yes_no(value: str) -> bool:
     """Checks if the value is a yes/no response (localized variants can be added)."""
     return value.lower() in ("y", "yes", "n", "no")
+
+
+def is_valid_date(value: str) -> datetime.date:
+    """
+    Validate and convert a date string to a date object.
+    Supports multiple common formats.
+    """
+    if not value:
+        raise ValueError("Empty date not allowed")
+
+    for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%d-%m-%Y"):
+        try:
+            return datetime.strptime(value, fmt).date()
+        except ValueError:
+            continue
+    raise ValueError("Invalid date format")
 
