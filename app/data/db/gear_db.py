@@ -27,7 +27,7 @@ def add_gear(gear: Gear) -> int:
     cursor = conn.cursor()
 
     cursor.execute("""
-        INSERT INTO Gear (name, variant, brand_id, size, mass_pcs, price, amount, color, category_id, description, prod_date, checked, last_checked, lifespan, kit_only)
+        INSERT INTO Gear (name, variant, brand_id, size, mass_pcs, price_cents, amount, color, category_id, description, prod_date, checked, last_checked, lifespan, kit_only)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         gear.name,
@@ -35,7 +35,7 @@ def add_gear(gear: Gear) -> int:
         gear.brand_id,
         gear.size,
         gear.mass_pcs,
-        gear.price,
+        gear._price_cents,
         gear.amount,
         gear.color,
         gear.category_id,

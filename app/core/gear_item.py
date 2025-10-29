@@ -12,10 +12,10 @@ class Gear:
         self,
         name: str,
         variant: str,
+        price: float | int | None,
         brand_id: Optional[int] = None,
         size: Optional[str] = None,
         mass_pcs: Optional[int] = None,
-        price: Optional[float] = None,
         amount: int = 1,
         color: Optional[str] = None,
         category_id: Optional[int] = None,
@@ -34,6 +34,7 @@ class Gear:
         self.brand_id = brand_id
         self.size = size
         self.mass_pcs = mass_pcs
+        self._price_cents = None
         self.price = price
         self.amount = amount
         self.color = color
@@ -45,6 +46,41 @@ class Gear:
         self.last_checked = last_checked
         self.lifespan = lifespan
         self.kit_only = kit_only
+
+    @property
+    def price(self) -> float | None:
+        """Return price as float in euros (or None if unset)."""
+        if self._price_cents is None:
+            return None
+        return self._price_cents / 100
+
+    @price.setter
+    def price(self, value: Union[float, int, str, None]):
+        """
+        Accept price as float, int (euros), str, or None;
+        store internally as int cents.
+        """
+        if value is None or value == "":
+            self._price_cents = None
+            return
+
+        try:
+            # Convert strings to float
+            if isinstance(value, str):
+                value = float(value.replace(",", "."))  # handle commas in strings
+
+            float_value = float(value)
+            print(float_value)
+
+            if float_value < 0:
+                raise ValueError("Price cannot be negative")
+
+            # Round to nearest cent to avoid floating-point issues
+            self._price_cents = int(round(float_value * 100))
+
+        except (ValueError, TypeError):
+            raise ValueError(f"Invalid price: {value}")
+
 
     # -----------------------------
     # Core behavior methods

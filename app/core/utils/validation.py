@@ -69,11 +69,14 @@ def is_nonempty_string(value: str) -> bool:
 
 
 def is_positive_number(value: str) -> bool:
-    """Checks if the value is a positive integer or float."""
+    """Returns a positive float if valid, otherwise None."""
     try:
-        return float(value) > 0
+        number = float(value)
+        if number > 0:
+            return number
     except ValueError:
-        return False
+        pass
+    return None
 
 
 def is_yes_no(value: str) -> bool:

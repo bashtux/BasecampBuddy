@@ -22,13 +22,32 @@ def input_gear():
     variant = input(f"{lang.t('gear_functions.cli.gear_variant')}").strip()
     brand = input(f"{lang.t('gear_functions.cli.gear_brand')}").strip()
     size = input(f"{lang.t('gear_functions.cli.gear_size')}").strip()
-    mass_pcs = input(f"{lang.t('gear_functions.cli.gea_mass_pcs')}").strip()
-    price = input(f"{lang.t('gear_functions.cli.gear_price')}").strip()
-    amount = input(f"{lang.t('gear_functions.cli.gear_amount')}").strip()
+
+    mass_pcs = prompt_validated_input(
+            prompt_key="gear_functions.cli.gear_mass_pcs",
+            validator=is_positive_number,
+            allow_empty=True,
+            error_key="gear_functions.error.not_number"
+    )
+
+    price = prompt_validated_input(
+            prompt_key="gear_functions.cli.gear_price",
+            validator=is_positive_number,
+            allow_empty=True,
+            error_key="gear_functions.error.not_number"
+    )
+
+    amount = prompt_validated_input(
+            prompt_key="gear_functions.cli.gear_amount",
+            validator=is_positive_number,
+            allow_empty=True,
+            error_key="gear_functions.error.not_number"
+    )
+
     color = input(f"{lang.t('gear_functions.cli.gear_color')}").strip()
     category = input(f"{lang.t('gear_functions.cli.gear_category')}").strip()
     description = input(f"{lang.t('gear_functions.cli.gear_description')}").strip()
-    
+
     prod_date = prompt_validated_input(
         prompt_key="gear_functions.cli.gear_prod_date",
         validator=is_valid_date,
