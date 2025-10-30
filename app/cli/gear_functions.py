@@ -5,7 +5,8 @@ from app.config_manager import ConfigManager
 from app.lang import lang
 from app.data import db
 
-from app.core.utils.validation import prompt_validated_input, is_positive_number, is_valid_date
+from app.core.utils.validation import prompt_validated_input, is_positive_number, is_valid_date, is_nonempty_string
+from app.core.utils.db_utils import fuzzy_search
 from app.core.gear_item import Gear
 
 #------------------------------
@@ -18,9 +19,9 @@ def input_gear():
     """
 
     print(lang.t("gear_functions.title.new_gear"))
-    name = iprompt_validated_input(
+    name = prompt_validated_input(
             prompt_key="gear_functions.cli.gear_name",
-            validator=is_noneempty_string,
+            validator=is_nonempty_string,
             allow_empty=False,
             error_key="gear_functions.error.is_empty"
     )
@@ -28,6 +29,15 @@ def input_gear():
     variant = input(f"{lang.t('gear_functions.cli.gear_variant')}").strip()
 
     brand = input(f"{lang.t('gear_functions.cli.gear_brand')}").strip()
+    brand_search = fuzzy_search (
+            table="brand",
+            search_columns="name",
+            search_term=brand,
+            return_columns=["id_brand", "name"],
+            sort_by="name",
+            db_name="program_db"
+        )
+    print(brand_search)
 
     size = input(f"{lang.t('gear_functions.cli.gear_size')}").strip()
 
