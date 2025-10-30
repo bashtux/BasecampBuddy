@@ -18,9 +18,17 @@ def input_gear():
     """
 
     print(lang.t("gear_functions.title.new_gear"))
-    name = input(f"{lang.t('gear_functions.cli.gear_name')}").strip()
+    name = iprompt_validated_input(
+            prompt_key="gear_functions.cli.gear_name",
+            validator=is_noneempty_string,
+            allow_empty=False,
+            error_key="gear_functions.error.is_empty"
+    )
+
     variant = input(f"{lang.t('gear_functions.cli.gear_variant')}").strip()
+
     brand = input(f"{lang.t('gear_functions.cli.gear_brand')}").strip()
+
     size = input(f"{lang.t('gear_functions.cli.gear_size')}").strip()
 
     mass_pcs = prompt_validated_input(
@@ -45,7 +53,9 @@ def input_gear():
     )
 
     color = input(f"{lang.t('gear_functions.cli.gear_color')}").strip()
+
     category = input(f"{lang.t('gear_functions.cli.gear_category')}").strip()
+
     description = input(f"{lang.t('gear_functions.cli.gear_description')}").strip()
 
     prod_date = prompt_validated_input(
