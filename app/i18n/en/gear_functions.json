@@ -1,0 +1,22 @@
+{
+	"title": {
+		"new_brand": "\n=== Add New Brand ==="
+	},
+
+	"cli": {
+		"new_url": "Enter new URL, leave empty to keep value: "
+	},
+
+	"msg": {
+		"brand_added": "Brand '{brand_name}' added to database.",
+		"current_values": "Current Values",
+		"success": "Brand is successfully updated."
+	},
+
+	"error": {
+		"no_name": "No brand name provided, try again.",
+		"invalid_url": "Invalid URL, try again.",
+		"invalid_choice": "Invalid choice, try again.",
+		"not_found": "Brand not found."
+	}
+}

@@ -39,6 +39,8 @@ def input_gear():
             db_name="program_db"
         )
     list_brands(brand_search, ["id_brand", "name"])
+    brand_id = input(f"{lang.t('gear_functions.cli.select_brand')}").strip()
+
 
     size = input(f"{lang.t('gear_functions.cli.gear_size')}").strip()
 
@@ -87,7 +89,7 @@ def input_gear():
     gear = Gear(
             name = name,
             variant = variant,
-            brand_id = brand,
+            brand_id = brand_id,
             size = size,
             mass_pcs = mass_pcs,
             price = price,
