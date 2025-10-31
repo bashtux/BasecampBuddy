@@ -1,6 +1,5 @@
 # app/data/initializer.py
 from pathlib import Path
-#from app.data import program_db, user_db
 from app.data import user_db
 from app.data import db
 from app.config_manager import ConfigManager

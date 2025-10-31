@@ -2,7 +2,6 @@ import sqlite3
 from pathlib import Path
 from app.config_manager import ConfigManager
 from app.core.utils.validation import prompt_validated_input, is_valid_url
-#from app.data.program_db import add_brand, get_all_brands, get_brand_by_id, update_brand
 from app.data import db
 from app.lang import lang
 
@@ -33,16 +32,24 @@ def input_brand():
         print(lang.t("brand_functions.error.no_name"))
 
 
-def list_brands():
+def list_brands(brands: list, cols: list):
     """
-    Print all available brands with description and URL
+    Print entries of brands only showing the defined entries of cols.
     """
 
-    brands = db.get_all_brands()
-
-    print(lang.t("brand_functions.title.list_brands"))
-    for brand in brands:
-        print(f"{brand[0]:<3} | {brand[1]}: {brand[2]} \n- {brand[3]}")
+    if isinstance(brands, list):
+        if all(isinstance(brand, dict) for brand in brands):
+            for info in brands:
+                for i in cols:
+                    print(info[i], end=" | ")
+                print()
+        else:
+            for brand in brands:
+                for i in cols:
+                    print(brand[i], end=" | ")
+                print()
+    else:
+        print(lang.t("brand_functions.error.not_list"))
 
 
 def edit_brand():

@@ -8,6 +8,7 @@ from app.data import db
 from app.core.utils.validation import prompt_validated_input, is_positive_number, is_valid_date, is_nonempty_string
 from app.core.utils.db_utils import fuzzy_search
 from app.core.gear_item import Gear
+from app.cli.brand_functions import list_brands
 
 #------------------------------
 # Load config and language
@@ -37,7 +38,7 @@ def input_gear():
             sort_by="name",
             db_name="program_db"
         )
-    print(brand_search)
+    list_brands(brand_search, ["id_brand", "name"])
 
     size = input(f"{lang.t('gear_functions.cli.gear_size')}").strip()
 

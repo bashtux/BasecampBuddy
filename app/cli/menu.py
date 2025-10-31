@@ -1,5 +1,6 @@
 from app.lang import lang
 
+from app.data import db
 from app.cli.gear_functions import input_gear
 from app.cli.category_functions import input_category, list_categories, edit_category
 from app.cli.brand_functions import input_brand, list_brands, edit_brand
@@ -97,7 +98,7 @@ def gear_menu():
                 gear_menu()
                 break
             case "5":
-                list_brands()
+                list_brands(db.get_all_brands(), [0, 1, 2])
                 gear_menu()
                 break
             case "B":
@@ -250,7 +251,7 @@ def edit_base_submenu():
                 edit_base_submenu()
                 break
             case "3":
-                list_brands()
+                list_brands(get_all_brands())
                 edit_base_submenu()
                 break
             case "4":
