@@ -116,3 +116,9 @@ def input_gear():
     else:
         print(lang.t("gear_functions.error.no_name"))
 
+
+def display_full_gear(id: int):
+    gear = db.get_gear_by_id(id)
+
+    print(gear.name)
+    return

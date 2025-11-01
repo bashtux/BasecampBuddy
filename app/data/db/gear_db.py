@@ -54,51 +54,39 @@ def add_gear(gear: Gear) -> int:
 
 
 def get_gear_by_id(gear_id: int) -> Gear | None:
-    """Fetch a gear item by ID and return a Gear object."""
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
+    """
+    Fetches a single gear item by its ID, converts types,
+    and returns a Gear instance or None if not found.
+    """
 
-    cursor.execute("""
-        SELECT id_gear, name, brand_id, category_id, purchase_date, lifespan_years, notes
-        FROM gear_item WHERE id_gear = ?
-    """, (gear_id,))
-    row = cursor.fetchone()
-    conn.close()
+    with sqlite3.connect(DB_PATH) as conn:
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM gear WHERE id_gear = ?", (gear_id,))
+        row = cursor.fetchone()
 
-    if row:
-        return Gear(
-            id_gear=row[0],
-            name=row[1],
-            brand_id=row[2],
-            category_id=row[3],
-            purchase_date=date.fromisoformat(row[4]) if row[4] else None,
-            lifespan_years=row[5],
-            notes=row[6]
+        if row is None:
+            return None
+
+        # Create Gear instance with proper conversions
+        gear = Gear(
+            id_gear=row["id_gear"],
+            name=row["name"],
+            variant=row["variant"],
+            brand_id=row["brand_id"],
+            size=row["size"],
+            mass_pcs=row["mass_pcs"],
+            _price_cents=row["price_cents"],
+            amount=row["amount"],
+            color=row["color"],
+            category_id=row["category_id"],
+            description=row["description"],
+            prod_date=row["prod_date"],
+            checked=row["checked"],
+            last_checked=row["last_checked"],
+            lifespan=row["lifespan"],
+            kit_only=bool(row["kit_only"])
         )
-    return None
 
+        return gear
 
-def get_all_gear() -> list[Gear]:
-    """Return all gear items from the DB."""
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        SELECT id_gear, name, brand_id, category_id, purchase_date, lifespan_years, notes
-        FROM gear_item ORDER BY name
-    """)
-    rows = cursor.fetchall()
-    conn.close()
-
-    return [
-        Gear(
-            id_gear=row[0],
-            name=row[1],
-            brand_id=row[2],
-            category_id=row[3],
-            purchase_date=date.fromisoformat(row[4]) if row[4] else None,
-            lifespan_years=row[5],
-            notes=row[6]
-        )
-        for row in rows
-    ]

@@ -1,7 +1,7 @@
 from app.lang import lang
 
 from app.data import db
-from app.cli.gear_functions import input_gear
+from app.cli.gear_functions import input_gear, display_full_gear
 from app.cli.category_functions import input_category, list_categories, edit_category
 from app.cli.brand_functions import input_brand, list_brands, edit_brand
 from app.cli.consumable_functions import input_consumable, edit_consumable, list_consumables
@@ -93,6 +93,10 @@ def gear_menu():
                 input_gear()
                 gear_menu()
                 break
+            case "3":
+                display_full_gear(3)
+                gear_menu()
+                break
             case "4":
                 list_categories()
                 gear_menu()
@@ -127,6 +131,7 @@ def kit_menu():
         match choice:
             case "1":
                 print(lang.t("menu.general_menu.options.create"))
+                main_menu()
                 break
             case "B":
                 main_menu()
@@ -155,6 +160,7 @@ def trips_menu():
         match choice:
             case "1":
                 print(lang.t("menu.general_menu.options.create"))
+                main_menu()
                 break
             case "B":
                 main_menu()
@@ -181,6 +187,7 @@ def reports_menu():
         match choice:
             case "1":
                 print(lang.t("menu.general_menu.options.create"))
+                main_menu()
                 break
             case "B":
                 main_menu()
@@ -208,6 +215,7 @@ def settings_menu():
         match choice:
             case "1":
                 print(lang.t("menu.general_menu.options.create"))
+                main_menu()
                 break
             case "4":
                 edit_base_submenu()
