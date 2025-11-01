@@ -70,7 +70,6 @@ class Gear:
                 value = float(value.replace(",", "."))  # handle commas in strings
 
             float_value = float(value)
-            print(float_value)
 
             if float_value < 0:
                 raise ValueError("Price cannot be negative")

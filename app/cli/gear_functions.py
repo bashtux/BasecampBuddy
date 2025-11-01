@@ -29,7 +29,7 @@ def input_gear():
 
     variant = input(f"{lang.t('gear_functions.cli.gear_variant')}").strip()
 
-    brand = input(f"{lang.t('gear_functions.cli.gear_brand')}").strip()
+    brand = input(f"{lang.t('gear_functions.cli.search_brand')}").strip()
     brand_search = fuzzy_search (
             table="brand",
             search_columns="name",
@@ -67,7 +67,7 @@ def input_gear():
 
     color = input(f"{lang.t('gear_functions.cli.gear_color')}").strip()
 
-    category = input(f"{lang.t('gear_functions.cli.gear_category')}").strip()
+    category = input(f"{lang.t('gear_functions.cli.search_category')}").strip()
 
     description = input(f"{lang.t('gear_functions.cli.gear_description')}").strip()
 
@@ -84,7 +84,13 @@ def input_gear():
             allow_empty=True,
             error_key="gear_functions.error.not_number"
     )
-    kit_only = input(f"{lang.t('gear_functions.cli.gear_kit_only')}").strip()
+
+    kit_only = prompt_validated_input(
+            prompt_key="gear_functions.cli.gear_kit_only",
+            validator=is_yes_no,
+            allow_empty=False,
+            error_key="gear_functions.error.not_yes_no"
+    )
 
     gear = Gear(
             name = name,
@@ -101,12 +107,12 @@ def input_gear():
             checked = False,
             last_checked = None,
             lifespan = lifespan,
-            kit_only = kit_only,
+            kit_only = int(kit_only)
     )
 
     if gear.name:
         db.add_gear(gear)
-        print(lang.t("gear_functions.msg.gear_added"))
+        print(lang.t("gear_functions.msg.gear_added").format(gear_name=gear.name))
     else:
-        print(lang.t("gear-functions.error.no_name"))
+        print(lang.t("gear_functions.error.no_name"))
 

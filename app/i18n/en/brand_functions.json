@@ -25,6 +25,7 @@
 		"no_name": "No brand name provided, try again.",
 		"invalid_url": "Invalid URL, try again.",
 		"invalid_choice": "Invalid choice, try again.",
-		"not_found": "Brand not found."
+		"not_found": "Brand not found.",
+		"not_list": "Provided variable is not a list"
 	}
 }

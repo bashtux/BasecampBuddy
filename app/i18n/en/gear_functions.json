@@ -1,22 +1,30 @@
 {
 	"title": {
-		"new_brand": "\n=== Add New Brand ==="
+		"new_gear": "\n=== Add New Gear ==="
 	},
 
 	"cli": {
-		"new_url": "Enter new URL, leave empty to keep value: "
+		"gear_name": "Input name of gear: ",
+		"gear_variant": "Specify gear Variant (Model, Typem etc): ",
+		"search_brand": "Search for brand (fuzzy): ",
+		"select_brand": "Input ID of selected brand: ",
+		"gear_size": "Input size (size, length): ",
+		"gear_color": "Input color of gear: ",
+		"search_category": "Search for category: ",
+		"gear_description": "Describe gear: ",
+		"gear_kit_only": "Define if gear can only be part of kit (True/False): ",
+		"gear_mass_pcs": "Input mass of (single) item in grams: ",
+		"gear_price": "Input price of (single) gear: ",
+		"gear_amount": "Input amount of pieces: ",
+		"gear_prod_date": "Input production date of gear (MM/YYYY): ",
+		"gear_lifespan": "Input life span of gear (Y/empty): "
 	},
 
 	"msg": {
-		"brand_added": "Brand '{brand_name}' added to database.",
-		"current_values": "Current Values",
-		"success": "Brand is successfully updated."
+		"gear_added": "Gear '{gear_name}' added to database."
 	},
 
 	"error": {
-		"no_name": "No brand name provided, try again.",
-		"invalid_url": "Invalid URL, try again.",
-		"invalid_choice": "Invalid choice, try again.",
-		"not_found": "Brand not found."
+		"no_name": "No Gear name provided, try again."
 	}
 }

@@ -13,21 +13,6 @@ from app.lang import lang
 from datetime import datetime
 
 # ---------------------------
-# URL Validation
-# ---------------------------
-def is_valid_url(url: str) -> bool:
-    """
-    Validate that the given string is a valid HTTP/HTTPS URL.
-    Returns True if valid, False otherwise.
-    """
-    try:
-        result = urlparse(url)
-        return all([result.scheme in ("http", "https"), result.netloc])
-    except ValueError:
-        return False
-
-
-# ---------------------------
 # Generic Input Prompt with Validation
 # ---------------------------
 def prompt_validated_input(
@@ -52,22 +37,43 @@ def prompt_validated_input(
 
     while True:
         value = input(lang.t(prompt_key)).strip()
+
+        # Allow empty values if permitted
         if not value and allow_empty:
             return None
-        try:
-            return validator(value)
-        except ValueError:
-            print(lang.t(error_key))
 
+        # Validator can return cleaned value or None
+        cleaned = validator(value)
+        if cleaned is not None:
+            return cleaned
+
+        print(lang.t(validation.error.key))
 
 # ---------------------------
 # General Validators
 # ---------------------------
-def is_nonempty_string(value: str) -> bool:
+
+# URL Validation
+# ---------------------------
+def is_valid_url(url: str) -> bool:
+    """
+    Validate that the given string is a valid HTTP/HTTPS URL.
+    Returns True if valid, False otherwise.
+    """
+    try:
+        result = urlparse(url)
+        return all([result.scheme in ("http", "https"), result.netloc])
+    except ValueError:
+        return False
+
+# Non empty string
+# ---------------------------
+def is_nonempty_string(value: str) -> str | None:
     """Checks that the string is not empty or just whitespace."""
-    return bool(value and value.strip())
+    return value.strip() if value and value.strip() else None
 
-
+# Is positive number
+# ---------------------------
 def is_positive_number(value: str) -> bool:
     """Returns a positive float if valid, otherwise None."""
     try:
@@ -78,12 +84,31 @@ def is_positive_number(value: str) -> bool:
         pass
     return None
 
+# Is Yes or No
+# ---------------------------
+def is_yes_no(value: str) -> bool | None:
+    """
+    Validates yes/no or true/false input.
+    Returns True or False (not strings).
+    Returns None if invalid or empty (so prompt_validated_input can retry).
+    """
+    if not value:
+        return None
 
-def is_yes_no(value: str) -> bool:
-    """Checks if the value is a yes/no response (localized variants can be added)."""
-    return value.lower() in ("y", "yes", "n", "no")
+    normalized = value.strip().lower()
 
+    truthy = {"y", "yes", "true", "1"}
+    falsy = {"n", "no", "false", "0"}
 
+    if normalized in truthy:
+        return True
+    elif normalized in falsy:
+        return False
+    else:
+        return None
+
+# Is Valid date of defined format
+# ---------------------------
 def is_valid_date(value: str) -> datetime.date:
     """
     Validate and convert a date string to a date object.

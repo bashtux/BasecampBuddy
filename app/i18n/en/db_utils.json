@@ -1,0 +1,14 @@
+{
+	"title": {
+	},
+
+	"cli": {
+	},
+
+	"msg": {
+	},
+
+	"error": {
+		"query_failed": "Query to database failed."
+	}
+}

@@ -4,6 +4,9 @@
     "invalid_url": "The URL you entered is not valid.",
     "invalid_number": "Please enter a valid number."
   },
+	"error": {
+		"key": "No such key"
+	},
   "brand": {
     "prompt": {
       "name": "Enter brand name: ",

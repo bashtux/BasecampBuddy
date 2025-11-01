@@ -95,5 +95,5 @@ def fuzzy_search(
             return results
 
     except sqlite3.Error as e:
-        print(lang.t("db.error.query_failed"), e)
+        print(lang.t("db_utils.error.query_failed"), e)
         return []
