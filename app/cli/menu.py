@@ -5,6 +5,7 @@ from app.cli.gear_functions import input_gear, display_full_gear
 from app.cli.category_functions import input_category, list_categories, edit_category
 from app.cli.brand_functions import input_brand, list_brands, edit_brand
 from app.cli.consumable_functions import input_consumable, edit_consumable, list_consumables
+from app.cli.comment_functions import input_comment
 
 # ====================================================
 # Print Menu function
@@ -42,6 +43,7 @@ def main_menu():
         "3": "menu.main_menu.options.trips",
         "4": "menu.main_menu.options.reports",
         "5": "menu.main_menu.options.settings",
+        "6": "menu.main_menu.options.debug",
         "E": "menu.general_menu.options.exit"
     }
     while True:
@@ -65,6 +67,9 @@ def main_menu():
                     break
                 case "5":
                     settings_menu()
+                    break
+                case "6":
+                    debug_menu()
                     break
                 case _:
                     print(lang.t("menu.error.invalid_choice"))
@@ -290,6 +295,34 @@ def edit_base_submenu():
                 settings_menu()
                 break
             case "M":
+                main_menu()
+                break
+            case _:
+                print(lang.t("menu.error.invalid_choice"))
+
+
+# ====================================================
+# DEBUG menu function
+# ====================================================
+def debug_menu():
+    """ Displays DEBUG menu """
+    # key -> label_key
+    commands = {
+            "1": "menu.debug_menu.options.add_comment",
+            "2": "menu.debug_menu.options.show_comment",
+            "B": "menu.general_menu.options.back"
+            }
+    while True:
+        choice = print_menu(commands, "menu.debug_menu.title", misc="menu.debug_menu.misc.settings")
+
+        match choice:
+            case "1":
+                print(lang.t("menu.general_menu.options.add_comment"))
+                input_comment()
+                break
+            case "2":
+                print(lang.t("menu.debug_menu.options.show_comment"))
+            case "B":
                 main_menu()
                 break
             case _:

@@ -35,7 +35,7 @@ def list_comments(parent_id: int):
 
     print(lang.t("comment_functions.title.list_comments"))
     for com in comments:
-        print(f"{com[2]:<10}: {com[3]}}")
+        print(f"{com[2]:<10}: {com[3]}")
 
 
 #def edit_comment():

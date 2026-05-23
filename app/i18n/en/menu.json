@@ -16,7 +16,8 @@
       "kit": "Kit",
       "trips": "Trips",
 			"reports": "Reports",
-			"settings": "Settings"
+			"settings": "Settings",
+			"debug": "DEBUG"
     }
   },
 	"gear_menu": {
@@ -79,6 +80,13 @@
 			"addconsumable": "Add Consumable",
 			"editconsumable": "Edit Consumable",
 			"listconsumable": "List Consumables"
+		}
+	},
+	"debug_menu": {
+		"title": "DEBUG Menu",
+		"options": {
+			"add_comment": "Add Comment",
+			"show_comment": "Show comment"
 		}
 	},
 
