@@ -19,16 +19,11 @@
         "gear_price": "Input price of (single) gear: ",
         "gear_amount": "Input amount of pieces: ",
         "gear_prod_date": "Input production date of gear (MM/YYYY): ",
-        "gear_lifespan": "Input life span of gear (Y/empty): ",
-        "toggle_columns": "Toggle # (or C to confirm): ",
-        "select_item": "Select #, N, P, C, B: "
+        "gear_lifespan": "Input life span of gear (Y/empty): "
     },
 
     "msg": {
         "gear_added": "Gear '{gear_name}' added to database.",
-        "last_page": "Already on last page.",
-        "first_page": "Already on first page.",
-        "page_info": "Page {current} / {total}  ({count} items)",
         "enter_to_return": "[Enter to return to list]"
     },
 
@@ -55,15 +50,5 @@
         "checked":     "Checked",
         "last_checked":"Last Checked",
         "description": "Description"
-    },
-
-    "nav": {
-        "next":    "N: next page",
-        "prev":    "P: prev page",
-        "detail":  "<#>: view detail",
-        "columns": "C: configure columns",
-        "back":    "B: back",
-        "confirm": "C: confirm",
-        "toggle_hint": "Toggle columns (* = visible):"
     }
 }

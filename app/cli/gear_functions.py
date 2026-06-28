@@ -11,6 +11,7 @@ from app.core.gear_item import Gear
 from app.cli.brand_functions import list_brands
 from app.data import user_db as db
 from app.cli.comment_functions import list_comments
+from app.cli.cli_utils import paged_list, print_header
 
 #------------------------------
 # Load config and language
@@ -159,100 +160,20 @@ def display_full_gear(gear: dict):
     print(f"  {lang.t(f+'.description'):<14}: {g.get('description') or '—'}")
     print()
 
+def list_gear(page_size: int = 10):
+    """Paginated gear list with drill-down to full detail and comments."""
+    def on_select(item):
+        display_full_gear(item)
+        list_comments(item["id_gear"])
+        input(lang.t("gear_functions.msg.enter_to_return"))
 
-def _pick_list_columns() -> list[str]:
-    """Interactively toggle which columns appear in list view."""
-    selected = list(DEFAULT_LIST_COLS)
-    while True:
-        print(f"\n{lang.t('gear_functions.nav.toggle_hint')}")
-        for i, (key, t_key) in enumerate(GEAR_LIST_COLUMNS.items(), 1):
-            marker = "*" if key in selected else " "
-            print(f"  {i}: [{marker}] {lang.t(t_key)}")
-        print(f"  {lang.t('gear_functions.nav.confirm')}")
+    paged_list(
+        items        = db.get_all_gear(),
+        columns      = GEAR_LIST_COLUMNS,
+        default_cols = DEFAULT_LIST_COLS,
+        on_select    = on_select,
+        page_size    = page_size,
+        title_key    = "gear_functions.title.list_gear",
+        empty_key    = "gear_functions.error.no_gear",
+    )
 
-        choice = input(lang.t("gear_functions.cli.toggle_columns")).strip().upper()
-        if choice == "C":
-            return selected if selected else list(DEFAULT_LIST_COLS)
-        if choice.isdigit():
-            idx = int(choice) - 1
-            keys = list(GEAR_LIST_COLUMNS.keys())
-            if 0 <= idx < len(keys):
-                key = keys[idx]
-                if key in selected:
-                    selected.remove(key)
-                else:
-                    selected.append(key)
-            else:
-                print(lang.t("gear_functions.error.invalid_selection"))
-        else:
-            print(lang.t("gear_functions.error.invalid_selection"))
-
-
-def list_gear(page_size: int = 10, columns: list[str] | None = None):
-    """Paginated gear list with selectable columns and drill-down to full detail."""
-    if columns is None:
-        columns = list(DEFAULT_LIST_COLS)
-
-    all_gear = db.get_all_gear()
-    if not all_gear:
-        print(lang.t("gear_functions.error.no_gear"))
-        return
-
-    total = len(all_gear)
-    page = 0
-
-    while True:
-        start = page * page_size
-        end   = min(start + page_size, total)
-        page_items = all_gear[start:end]
-        total_pages = (total - 1) // page_size + 1
-
-        print(lang.t("gear_functions.title.list_gear"))
-
-        # header
-        col_w  = max(12, 60 // len(columns))
-        labels = [lang.t(GEAR_LIST_COLUMNS[c]) for c in columns]
-        header = f"  {'#':<4}" + "".join(f"{lbl:<{col_w}}" for lbl in labels)
-        print(header)
-        print("  " + "-" * (len(header) - 2))
-
-        for i, gear in enumerate(page_items, 1):
-            g = dict(gear)
-            row = f"  {i:<4}" + "".join(
-                f"{str(g.get(c) or '—'):<{col_w}}" for c in columns
-            )
-            print(row)
-
-        print(f"\n  {lang.t('gear_functions.msg.page_info', current=page+1, total=total_pages, count=total)}")
-        print(f"  {lang.t('gear_functions.nav.next')}  "
-              f"{lang.t('gear_functions.nav.prev')}  "
-              f"{lang.t('gear_functions.nav.detail')}  "
-              f"{lang.t('gear_functions.nav.columns')}  "
-              f"{lang.t('gear_functions.nav.back')}")
-
-        choice = input(lang.t("gear_functions.cli.select_item")).strip().upper()
-
-        if choice == "N":
-            if end < total:
-                page += 1
-            else:
-                print(lang.t("gear_functions.msg.last_page"))
-        elif choice == "P":
-            if page > 0:
-                page -= 1
-            else:
-                print(lang.t("gear_functions.msg.first_page"))
-        elif choice == "C":
-            columns = _pick_list_columns()
-        elif choice == "B":
-            return
-        elif choice.isdigit():
-            idx = int(choice) - 1
-            if 0 <= idx < len(page_items):
-                display_full_gear(page_items[idx])
-                list_comments(page_items[idx]["id_gear"])
-                input(lang.t("gear_functions.msg.enter_to_return"))
-            else:
-                print(lang.t("gear_functions.error.invalid_selection"))
-        else:
-            print(lang.t("gear_functions.error.invalid_selection"))

@@ -1,0 +1,24 @@
+{
+    "title": {
+        "list": "=== List ==="
+    },
+    "msg": {
+        "page_info":  "Page {current} / {total}  ({count} items)",
+        "last_page":  "Already on last page.",
+        "first_page": "Already on first page."
+    },
+    "error": {
+        "empty":             "No items found.",
+        "invalid_selection": "Invalid selection, try again."
+    },
+    "cli": {
+        "select": "Select #, N, P, C, B: ",
+        "toggle": "Toggle # (or C to confirm): ",
+        "confirm": "Confirm? (Y/N): "
+    },
+    "nav": {
+        "hint":        "N: next  P: prev  <#>: select  C: columns  B: back",
+        "toggle_hint": "Toggle columns (* = visible):",
+        "confirm":     "C: confirm"
+    }
+}
