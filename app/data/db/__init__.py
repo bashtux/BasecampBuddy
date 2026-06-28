@@ -4,6 +4,9 @@ from .base_db import table_exists, init_program_db, check_initialized
 # gear functions
 from .gear_db import add_gear, get_gear_by_id
 
+# comment functions
+from .user_db import add_comment, get_comments_by_parent_id, get_comment_by_id
+
 # category functions
 from .program_db import add_category, update_category, get_all_categories, get_category_by_id
 
