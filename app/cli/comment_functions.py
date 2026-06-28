@@ -27,9 +27,9 @@ def input_comment(parent_id: int):
         print(lang.t('comment_functions.error.invalid_choice'))
 
 def list_comments(parent_id: int):
-    """Print all available comments of parent id """
-    comments = db.get_comments_by_parent_id()
-    if not coments:
+    """Print all available comments of parent id"""
+    comments = db.get_comments_by_parent_id(parent_id)
+    if not comments:
         print(lang.t("comment_functions.error.no_comments"))
         return
 

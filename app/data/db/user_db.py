@@ -26,7 +26,7 @@ def add_comment(comment: str, parent_id: int, date: int, db_path: str = DB_PATH)
     """ Add a comment ot the user_db """
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO Comments (parent_id, date, comment) VALUES (?, ?)", (parent_id, date, comment))
+    cursor.execute("INSERT INTO Comments (parent_id, date, comment) VALUES (?, ?, ?)", (parent_id, date, comment))
     conn.commit()
     conn.close()
 
@@ -48,7 +48,7 @@ def get_comments_by_parent_id(parent_id: int):
     """Return a list of all comments with certain parent_id"""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM Comments WHERE parent_id = ? SORT BY date", (parent_id))
+    cursor.execute("SELECT * FROM Comments WHERE parent_id = ? ORDER BY date", (parent_id,))
     results = cursor.fetchall()
     conn.close()
     return results
