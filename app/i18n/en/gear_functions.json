@@ -1,30 +1,69 @@
 {
-	"title": {
-		"new_gear": "\n=== Add New Gear ==="
-	},
+    "title": {
+        "new_gear": "\n=== Add New Gear ===",
+        "list_gear": "\n=== Gear List ===",
+        "full_gear": "\n=== Gear Detail ==="
+    },
 
-	"cli": {
-		"gear_name": "Input name of gear: ",
-		"gear_variant": "Specify gear Variant (Model, Typem etc): ",
-		"search_brand": "Search for brand (fuzzy): ",
-		"select_brand": "Input ID of selected brand: ",
-		"gear_size": "Input size (size, length): ",
-		"gear_color": "Input color of gear: ",
-		"search_category": "Search for category: ",
-		"gear_description": "Describe gear: ",
-		"gear_kit_only": "Define if gear can only be part of kit (True/False): ",
-		"gear_mass_pcs": "Input mass of (single) item in grams: ",
-		"gear_price": "Input price of (single) gear: ",
-		"gear_amount": "Input amount of pieces: ",
-		"gear_prod_date": "Input production date of gear (MM/YYYY): ",
-		"gear_lifespan": "Input life span of gear (Y/empty): "
-	},
+    "cli": {
+        "gear_name": "Input name of gear: ",
+        "gear_variant": "Specify gear Variant (Model, Type, etc): ",
+        "search_brand": "Search for brand (fuzzy): ",
+        "select_brand": "Input ID of selected brand: ",
+        "gear_size": "Input size (size, length): ",
+        "gear_color": "Input color of gear: ",
+        "search_category": "Search for category: ",
+        "gear_description": "Describe gear: ",
+        "gear_kit_only": "Define if gear can only be part of kit (True/False): ",
+        "gear_mass_pcs": "Input mass of (single) item in grams: ",
+        "gear_price": "Input price of (single) gear: ",
+        "gear_amount": "Input amount of pieces: ",
+        "gear_prod_date": "Input production date of gear (MM/YYYY): ",
+        "gear_lifespan": "Input life span of gear (Y/empty): ",
+        "toggle_columns": "Toggle # (or C to confirm): ",
+        "select_item": "Select #, N, P, C, B: "
+    },
 
-	"msg": {
-		"gear_added": "Gear '{gear_name}' added to database."
-	},
+    "msg": {
+        "gear_added": "Gear '{gear_name}' added to database.",
+        "last_page": "Already on last page.",
+        "first_page": "Already on first page.",
+        "page_info": "Page {current} / {total}  ({count} items)",
+        "enter_to_return": "[Enter to return to list]"
+    },
 
-	"error": {
-		"no_name": "No Gear name provided, try again."
-	}
+    "error": {
+        "no_name": "No Gear name provided, try again.",
+        "no_gear": "No gear found in database.",
+        "invalid_selection": "Invalid selection, try again."
+    },
+
+    "fields": {
+        "id":          "ID",
+        "name":        "Name",
+        "variant":     "Variant",
+        "brand":       "Brand",
+        "size":        "Size",
+        "mass":        "Mass (g)",
+        "amount":      "Amount",
+        "color":       "Color",
+        "category":    "Category",
+        "price":       "Price",
+        "prod_date":   "Prod. Date",
+        "lifespan":    "Lifespan",
+        "kit_only":    "Kit Only",
+        "checked":     "Checked",
+        "last_checked":"Last Checked",
+        "description": "Description"
+    },
+
+    "nav": {
+        "next":    "N: next page",
+        "prev":    "P: prev page",
+        "detail":  "<#>: view detail",
+        "columns": "C: configure columns",
+        "back":    "B: back",
+        "confirm": "C: confirm",
+        "toggle_hint": "Toggle columns (* = visible):"
+    }
 }
