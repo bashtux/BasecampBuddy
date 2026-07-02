@@ -2,6 +2,7 @@ import sqlite3
 from pathlib import Path
 from app.config_manager import ConfigManager
 from app.core.utils.validation import prompt_validated_input, is_valid_url
+from app.cli.cli_utils import paged_list, print_table
 from app.data import db
 from app.lang import lang
 
@@ -32,25 +33,62 @@ def input_brand():
         print(lang.t("brand_functions.error.no_name"))
 
 
-def list_brands(brands: list, cols: list):
-    """
-    Print entries of brands only showing the defined entries of cols.
-    """
+BRAND_LIST_COLUMNS = {
+    "id_brand":    "brand_functions.fields.id",
+    "name":        "brand_functions.fields.name",
+    "description": "brand_functions.fields.description",
+    "url":         "brand_functions.fields.url",
+}
 
-    if isinstance(brands, list):
-        if all(isinstance(brand, dict) for brand in brands):
-            for info in brands:
-                for i in cols:
-                    print(info[i], end=" | ")
-                print()
-        else:
-            for brand in brands:
-                for i in cols:
-                    print(brand[i], end=" | ")
-                print()
-    else:
-        print(lang.t("brand_functions.error.not_list"))
+DEFAULT_BRAND_COLS = ["id_brand", "name", "url"]
 
+# tuples from get_all_brands() -> dicts
+BRAND_TUPLE_KEYS = ["id_brand", "name", "description", "url"]
+
+def _brands_to_dicts(brands: list) -> list[dict]:
+    """Normalise tuples or dicts to dicts."""
+    if not brands:
+        return []
+    if isinstance(brands[0], dict):
+        return brands
+    return [dict(zip(BRAND_TUPLE_KEYS, b)) for b in brands]
+
+
+def list_brands(brands: list | None = None, cols: list | None = None):
+    """
+    Display brands using paged_list.
+    - brands: optional pre-fetched list (tuples or dicts); fetches all if None
+    - cols:   optional list of field keys to show (overrides default)
+    """
+    if brands is None:
+        brands = db.get_all_brands()
+
+    brand_dicts = _brands_to_dicts(brands)
+
+    # If specific cols were passed (e.g. from gear search), use print_table
+    # for a quick non-paged inline display
+    if cols is not None:
+        col_keys = [c if isinstance(c, str) else BRAND_TUPLE_KEYS[c] for c in cols]
+        labels   = [lang.t(BRAND_LIST_COLUMNS.get(k, k)) for k in col_keys]
+        print_table(brand_dicts, col_keys, labels)
+        return
+
+    # Full paged list
+    def on_select(item):
+        print(f"\n  {lang.t('brand_functions.fields.id')}: {item.get('id_brand')}")
+        print(f"  {lang.t('brand_functions.fields.name')}: {item.get('name')}")
+        print(f"  {lang.t('brand_functions.fields.description')}: {item.get('description') or '—'}")
+        print(f"  {lang.t('brand_functions.fields.url')}: {item.get('url') or '—'}")
+        input(lang.t("brand_functions.msg.enter_to_return"))
+
+    paged_list(
+        items        = brand_dicts,
+        columns      = BRAND_LIST_COLUMNS,
+        default_cols = DEFAULT_BRAND_COLS,
+        on_select    = on_select,
+        title_key    = "brand_functions.title.list_brands",
+        empty_key    = "brand_functions.error.not_found",
+    )
 
 def edit_brand():
     """Allow user to edit a brand (name, description and URL)."""

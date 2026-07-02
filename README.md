@@ -93,6 +93,10 @@ No subscriptions. No cloud sync. No ads for carabiners. Just a solid piece of so
 
 ---
 
+## Issues
+- [ ] Settings -> Edit base -> Edit Brand: only lists no changing
+
+---
 ## License
 
 Licensed under the [GPL-3.0 License](LICENSE).

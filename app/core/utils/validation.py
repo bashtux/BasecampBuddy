@@ -47,7 +47,7 @@ def prompt_validated_input(
         if cleaned is not None:
             return cleaned
 
-        print(lang.t(validation.error.key))
+        print(lang.t(error_key))
 
 # ---------------------------
 # General Validators
@@ -55,16 +55,18 @@ def prompt_validated_input(
 
 # URL Validation
 # ---------------------------
-def is_valid_url(url: str) -> bool:
+def is_valid_url(url: str) -> str | None:
     """
     Validate that the given string is a valid HTTP/HTTPS URL.
-    Returns True if valid, False otherwise.
+    Returns the url string if valid, None otherwise.
     """
     try:
         result = urlparse(url)
-        return all([result.scheme in ("http", "https"), result.netloc])
+        if all([result.scheme in ("http", "https"), result.netloc]):
+            return url
+        return None
     except ValueError:
-        return False
+        return None
 
 # Non empty string
 # ---------------------------

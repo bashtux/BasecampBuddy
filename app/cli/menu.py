@@ -107,7 +107,7 @@ def gear_menu():
                 gear_menu()
                 break
             case "5":
-                list_brands(db.get_all_brands(), [0, 1, 2])
+                list_brands()
                 gear_menu()
                 break
             case "B":
@@ -264,7 +264,7 @@ def edit_base_submenu():
                 edit_base_submenu()
                 break
             case "3":
-                list_brands(get_all_brands())
+                list_brands()
                 edit_base_submenu()
                 break
             case "4":
