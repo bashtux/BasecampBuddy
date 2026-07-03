@@ -126,3 +126,26 @@ def is_valid_date(value: str) -> datetime.date:
             continue
     raise ValueError("Invalid date format")
 
+# Is positive integer
+# ---------------------------
+def is_positive_integer(value: str) -> int | None:
+    """Returns a positive integer if valid, otherwise None."""
+    try:
+        number = int(value)
+        if number > 0:
+            return number
+    except ValueError:
+        pass
+    return None
+
+# Is valid month (1-12)
+# ---------------------------
+def is_valid_month(value: str) -> int | None:
+    """Returns month as int (1-12) if valid, otherwise None."""
+    try:
+        month = int(value)
+        if 1 <= month <= 12:
+            return month
+    except ValueError:
+        pass
+    return None

@@ -2,6 +2,7 @@ from app.lang import lang
 
 from app.data import db
 from app.cli.gear_functions import input_gear, display_full_gear, list_gear
+from app.cli.trip_functions import input_trip, list_trips
 from app.cli.kit_functions import input_kit, list_kits
 from app.cli.category_functions import input_category, list_categories, edit_category
 from app.cli.brand_functions import input_brand, list_brands, edit_brand
@@ -168,9 +169,12 @@ def trips_menu():
 
         match choice:
             case "1":
-                print(lang.t("menu.general_menu.options.create"))
-                main_menu()
+                input_trip()
+                trips_menu()
                 break
+            case "3":
+                list_trips()
+                trips_menu()
             case "B":
                 main_menu()
                 break

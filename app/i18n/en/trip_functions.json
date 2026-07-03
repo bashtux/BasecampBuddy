@@ -1,0 +1,69 @@
+{
+    "title": {
+        "new_trip":          "\n=== Add New Trip ===",
+        "list_trips":        "\n=== Trips ===",
+        "trip_detail":       "\n=== Trip Detail ===",
+        "gear_selection":    "\n=== Gear & Kit Selection ===",
+        "consumable_selection": "\n=== Consumable Selection ==="
+    },
+    "cli": {
+        "trip_name":         "Trip name: ",
+        "trip_description":  "Trip description: ",
+        "trip_month":        "Trip month (1-12): ",
+        "duration":          "Duration (days): ",
+        "max_altitude":      "Max altitude (m): ",
+        "no_people":         "Number of people: ",
+        "search_items":      "Search gear/kit (fuzzy): ",
+        "search_consumable": "Search consumable (fuzzy): ",
+        "item_amount":       "Amount: ",
+        "mass_correction":   "Gear mass correction (g, +/-): ",
+        "consumable_mass_correction": "Consumable mass correction (g, +/-): ",
+        "continue_items":    "Add more gear/kits? (Y/N): ",
+        "continue_consumables": "Add more consumables? (Y/N): ",
+        "select_item":       "Select # to add: "
+    },
+    "msg": {
+        "item_added":        "Added {name} x{amount}.",
+        "no_items_added":    "No gear or kits added yet.",
+        "current_items":     "Current gear & kits:",
+        "no_consumables":    "No consumables added yet.",
+        "current_consumables": "Current consumables:",
+        "trip_saved":        "Trip '{name}' saved.",
+        "enter_to_return":   "[Enter to return to list]",
+        "gear_section":      "--- Gear & Kits ---",
+        "consumable_section": "--- Consumables ---",
+        "mass_correction":   "Mass correction: {correction}g",
+        "gear_mass":         "Gear total: {mass}g",
+        "consumable_mass":   "Consumable total: {mass}g",
+        "total_mass":        "Grand total: {mass}g"
+    },
+    "error": {
+        "no_name":           "No trip name provided.",
+        "no_results":        "No results found.",
+        "invalid_selection": "Invalid selection, try again.",
+        "invalid_month":     "Please enter a number between 1 and 12.",
+        "invalid_integer":   "Please enter a positive whole number."
+    },
+    "fields": {
+        "id":          "ID",
+        "name":        "Name",
+        "month":       "Month",
+        "duration":    "Duration (d)",
+        "no_people":   "People",
+        "total_mass":  "Total mass (g)"
+    },
+    "months": {
+        "1":  "January",
+        "2":  "February",
+        "3":  "March",
+        "4":  "April",
+        "5":  "May",
+        "6":  "June",
+        "7":  "July",
+        "8":  "August",
+        "9":  "September",
+        "10": "October",
+        "11": "November",
+        "12": "December"
+    }
+}
