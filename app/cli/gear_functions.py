@@ -132,9 +132,6 @@ GEAR_LIST_COLUMNS = {
     "category_id": "gear_functions.fields.category",
 }
 
-DEFAULT_LIST_COLS = ["id_gear", "name", "variant", "size", "mass_pcs"]
-
-
 def display_full_gear(gear: dict):
     """Print all fields of a single gear item."""
     g = dict(gear)
@@ -170,7 +167,7 @@ def list_gear(page_size: int = 10):
     paged_list(
         items        = db.get_all_gear(),
         columns      = GEAR_LIST_COLUMNS,
-        default_cols = DEFAULT_LIST_COLS,
+        default_cols = ["name", "variant", "size", "amount"],
         on_select    = on_select,
         page_size    = page_size,
         title_key    = "gear_functions.title.list_gear",

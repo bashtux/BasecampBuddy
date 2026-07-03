@@ -3,22 +3,34 @@ from pathlib import Path
 
 from app.config_manager import ConfigManager
 from app.lang import lang
-
 from app.data import db
+from app.cli.cli_utils import paged_list
 
-# -----------------------------
-# Load config and language
-# -----------------------------
 config = ConfigManager()
+
+CATEGORY_LIST_COLUMNS = {
+    "id_category": "category_functions.fields.id",
+    "name":        "category_functions.fields.name",
+    "description": "category_functions.fields.description",
+}
+
+
+CATEGORY_TUPLE_KEYS = ["id_category", "name", "description"]
+
+def _categories_to_dicts(categories: list) -> list[dict]:
+    """Normalise tuples or dicts to dicts."""
+    if not categories:
+        return []
+    if isinstance(categories[0], dict):
+        return categories
+    return [dict(zip(CATEGORY_TUPLE_KEYS, c)) for c in categories]
 
 
 def input_category():
-    """
-    Ask the user for a new category and insert it into the program DB.
-    """
+    """Ask the user for a new category and insert it into the program DB."""
     print(lang.t("category_functions.title.new_category"))
     category_name = input(f"{lang.t('category_functions.cli.category_name')}: ").strip()
-    description = input(f"{lang.t('category_functions.cli.category_description')}: ").strip()
+    description   = input(f"{lang.t('category_functions.cli.category_description')}: ").strip()
 
     if category_name:
         db.add_category(category_name, description)
@@ -26,16 +38,26 @@ def input_category():
     else:
         print(lang.t('category_functions.error.invalid_choice'))
 
-def list_categories():
-    """Print all available categories with description."""
-    categories = db.get_all_categories()
-    if not categories:
-        print(lang.t("category_functions.error.no_category"))
-        return
 
-    print(lang.t("category_functions.title.list_categories"))
-    for cat in categories:
-        print(f"{cat[0]:<3} | {cat[1]} — {cat[2]}")
+def list_categories(default_cols: list[str] | None = None):
+    """Paged list of all categories."""
+    categories = db.get_all_categories()
+    cat_dicts  = _categories_to_dicts(categories)
+
+    def on_select(item):
+        print(f"\n  {lang.t('category_functions.fields.id')}: {item.get('id_category')}")
+        print(f"  {lang.t('category_functions.fields.name')}: {item.get('name')}")
+        print(f"  {lang.t('category_functions.fields.description')}: {item.get('description') or '—'}")
+        input(lang.t("category_functions.msg.enter_to_return"))
+
+    paged_list(
+        items        = cat_dicts,
+        columns      = CATEGORY_LIST_COLUMNS,
+        default_cols = ["name", "description"],
+        on_select    = on_select,
+        title_key    = "category_functions.title.list_categories",
+        empty_key    = "category_functions.error.no_category",
+    )
 
 
 def edit_category():
@@ -56,7 +78,7 @@ def edit_category():
 
     print(lang.t("category_functions.msg.current_values").format(name=category[1], desc=category[2]))
 
-    new_name = input(f"{lang.t('category_functions.cli.new_name')} ({category[1]}): ") or category[1]
+    new_name        = input(f"{lang.t('category_functions.cli.new_name')} ({category[1]}): ") or category[1]
     new_description = input(f"{lang.t('category_functions.cli.new_desc')} ({category[2]}): ") or category[2]
 
     db.update_category(category_id, new_name, new_description)

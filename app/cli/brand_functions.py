@@ -32,7 +32,7 @@ def input_brand():
     else:
         print(lang.t("brand_functions.error.no_name"))
 
-
+# column key --> translation key (resolved via lang.t() at display time
 BRAND_LIST_COLUMNS = {
     "id_brand":    "brand_functions.fields.id",
     "name":        "brand_functions.fields.name",
@@ -40,7 +40,6 @@ BRAND_LIST_COLUMNS = {
     "url":         "brand_functions.fields.url",
 }
 
-DEFAULT_BRAND_COLS = ["id_brand", "name", "url"]
 
 # tuples from get_all_brands() -> dicts
 BRAND_TUPLE_KEYS = ["id_brand", "name", "description", "url"]
@@ -84,7 +83,7 @@ def list_brands(brands: list | None = None, cols: list | None = None):
     paged_list(
         items        = brand_dicts,
         columns      = BRAND_LIST_COLUMNS,
-        default_cols = DEFAULT_BRAND_COLS,
+        default_cols = ["name", "url"],
         on_select    = on_select,
         title_key    = "brand_functions.title.list_brands",
         empty_key    = "brand_functions.error.not_found",
