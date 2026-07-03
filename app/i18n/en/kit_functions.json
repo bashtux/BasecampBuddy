@@ -1,0 +1,41 @@
+{
+    "title": {
+        "new_kit":       "\n=== Add New Kit ===",
+        "list_kits":     "\n=== Kits ===",
+        "kit_detail":    "\n=== Kit Detail ===",
+        "gear_selection": "\n=== Gear Selection ==="
+    },
+    "cli": {
+        "kit_name":        "Kit name: ",
+        "kit_description": "Kit description: ",
+        "search_gear":     "Search gear (fuzzy): ",
+        "gear_amount":     "Amount to add: ",
+        "mass_correction": "Mass correction in grams (+/-): ",
+        "continue":        "Add more gear? (Y/N): ",
+        "select_gear":     "Select gear # to add: "
+    },
+    "msg": {
+        "gear_added":       "Added {name} x{amount} to kit.",
+        "amount_warning":   "Warning: only {available} available in stock.",
+        "kit_saved":        "Kit '{name}' saved.",
+        "current_gear":     "Current gear in kit:",
+        "no_gear_added":    "No gear added yet.",
+        "enter_to_return":  "[Enter to return to list]",
+        "total_mass":       "Total mass: {mass}g",
+        "mass_correction":  "Mass correction: {correction}g",
+        "item_count":       "{count} items"
+    },
+    "error": {
+        "no_name":           "No kit name provided.",
+        "no_gear":           "No gear found matching search.",
+        "no_kits":           "No kits found.",
+        "invalid_selection": "Invalid selection, try again."
+    },
+    "fields": {
+        "id":              "ID",
+        "name":            "Name",
+        "description":     "Description",
+        "item_count":      "Items",
+        "total_mass":      "Total mass (g)"
+    }
+}
