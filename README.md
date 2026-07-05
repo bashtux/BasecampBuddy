@@ -94,6 +94,36 @@ BasecampBuddy/
 
 ---
 
+# Feature ideas
+
+## General features
+- [ ] implement sub categories for better sorting
+- [ ] Data import
+- [ ] before saving an editted item, show before and after and confirm
+- [ ] Assign gear in trips to poeple of the crew
+- [ ] Change from kg to lbs
+- [ ] way to sort/search when selecting brand, consumables, gear (partially implemented)
+- [ ] categories for consumables
+- [ ] select localisation for date format
+- [ ] set currency in configuration
+- [ ] general install script
+- [ ] Have sotrage place for gear
+
+
+## Reports / Printing / Checking
+- [ ] LaTex / LO calc / csv export of lists
+- [ ] Check all Brand URL if they're (still) valid
+- [ ] Print contents of strage places
+- [ ] List by category
+- [ ] check if gear / kit is deleted from kit / trip so there's no dangling kits or trips
+- [ ] On startup check what gear has not been checked by now and inform user, possible to turn on/off in settings
+
+## CLI
+- [ ] Get Terminal widht and scale lists accordingly
+ 
+
+---
+
 # Philosophy
 
 BasecampBuddy is deliberately simple. It runs in your terminal, stores data locally, and does one thing well: helps you keep track of your outdoor gear so you can spend less time rummaging and more time out there.
@@ -105,4 +135,5 @@ No subscriptions. No cloud sync. No ads for carabiners. Just a solid piece of so
 # Thanks to:
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 *Happy trails. Check your gear. Come home safe.*
