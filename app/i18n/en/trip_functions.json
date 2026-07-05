@@ -9,6 +9,7 @@
     "cli": {
         "trip_name":         "Trip name: ",
         "trip_description":  "Trip description: ",
+				"trip_tags": "Tags (comma-separated): ",
         "trip_month":        "Trip month (1-12): ",
         "duration":          "Duration (days): ",
         "max_altitude":      "Max altitude (m): ",
@@ -41,12 +42,14 @@
         "no_name":           "No trip name provided.",
         "no_results":        "No results found.",
         "invalid_selection": "Invalid selection, try again.",
+				"invalid_tags": "Tags must be non-empty words separated by commas.",
         "invalid_month":     "Please enter a number between 1 and 12.",
         "invalid_integer":   "Please enter a positive whole number."
     },
     "fields": {
         "id":          "ID",
         "name":        "Name",
+				"tags":					"Tags",
         "month":       "Month",
         "duration":    "Duration (d)",
         "no_people":   "People",

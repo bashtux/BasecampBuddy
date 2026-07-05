@@ -149,3 +149,13 @@ def is_valid_month(value: str) -> int | None:
     except ValueError:
         pass
     return None
+
+# Is valid tag, coma seperated
+# ---------------------------
+def is_valid_tags(value: str) -> list[str] | None:
+    """
+    Validate a comma-separated list of tags.
+    Returns a list of stripped, non-empty strings, or None if nothing valid.
+    """
+    tags = [t.strip().lower() for t in value.split(",") if t.strip()]
+    return tags if tags else None

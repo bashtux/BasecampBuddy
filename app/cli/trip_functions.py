@@ -3,7 +3,7 @@ from app.lang import lang
 from app.data import db
 from app.core.utils.db_utils import fuzzy_search
 from app.core.utils.validation import (
-    prompt_validated_input, is_positive_integer, is_valid_month
+    prompt_validated_input, is_positive_integer, is_valid_month, is_valid_tags
 )
 from app.core.trip import Trip
 from app.core.gear_item import Gear
@@ -214,6 +214,8 @@ def display_full_trip(trip: Trip):
     if trip.description:
         print(f"  {trip.description}")
     print("=" * 40)
+    if trip.tags:
+        print(f"  {lang.t('trip_functions.fields.tags')}: {', '.join(trip.tags)}")
     print(f"  {lang.t('trip_functions.fields.month')}   : {_month_name(trip.trip_month)}")
     print(f"  {lang.t('trip_functions.fields.duration')} : {trip.duration}d")
     print(f"  {lang.t('trip_functions.fields.no_people')}: {trip.no_people}")
@@ -272,6 +274,13 @@ def input_trip():
 
     description = input(lang.t("trip_functions.cli.trip_description")).strip()
 
+    raw_tags = prompt_validated_input(
+        prompt_key = "trip_functions.cli.trip_tags",
+        validator  = is_valid_tags,
+        allow_empty= True,
+        error_key  = "trip_functions.error.invalid_tags",
+    )
+
     trip_month = prompt_validated_input(
         prompt_key = "trip_functions.cli.trip_month",
         validator  = is_valid_month,
@@ -304,6 +313,7 @@ def input_trip():
         id_trip      = None,
         name         = name,
         description  = description,
+        tags = raw_tags or [],
         trip_month   = trip_month,
         duration     = duration or 0,
         max_altitude = max_altitude,
