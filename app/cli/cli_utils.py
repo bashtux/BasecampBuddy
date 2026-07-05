@@ -150,13 +150,13 @@ def paged_list(
 # ==============================
 # Input helpers
 # ==============================
-
-def confirm(prompt_key: str) -> bool:
+def confirm(prompt_key: str, **kwargs) -> bool:
     """Ask a yes/no confirmation. Returns True for Y, False for N."""
     while True:
-        choice = input(lang.t(prompt_key)).strip().upper()
+        choice = input(lang.t(prompt_key, **kwargs)).strip().upper()
         if choice == "Y":
             return True
         if choice == "N":
             return False
         print(lang.t("cli_utils.error.invalid_selection"))
+

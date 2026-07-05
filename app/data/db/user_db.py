@@ -63,3 +63,10 @@ def get_comment_by_id(comment_id: int):
     conn.close()
     return result
 
+
+def delete_comments_by_parent_id(parent_id: int):
+    """Delete all comments for a given parent."""
+    conn = sqlite3.connect(DB_PATH)
+    conn.execute("DELETE FROM Comments WHERE parent_id = ?", (parent_id,))
+    conn.commit()
+    conn.close()

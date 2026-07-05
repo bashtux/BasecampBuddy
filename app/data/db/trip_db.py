@@ -126,3 +126,12 @@ def get_all_trips() -> list[Trip]:
         cursor.execute("SELECT id_trip FROM Trip ORDER BY name")
         ids = [row["id_trip"] for row in cursor.fetchall()]
     return [t for trip_id in ids if (t := get_trip_by_id(trip_id))]
+
+def delete_trip(trip_id: int):
+    """Delete a trip and its comments."""
+    from app.data.db.user_db import delete_comments_by_parent_id
+    delete_comments_by_parent_id(trip_id)
+    conn = sqlite3.connect(DB_PATH)
+    conn.execute("DELETE FROM Trip WHERE id_trip = ?", (trip_id,))
+    conn.commit()
+    conn.close()

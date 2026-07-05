@@ -75,3 +75,12 @@ def get_all_kits() -> list[Kit]:
         ids = [row["id_kit"] for row in cursor.fetchall()]
 
     return [kit for kit_id in ids if (kit := get_kit_by_id(kit_id))]
+
+def delete_kit(kit_id: int):
+    """Delete a kit and its comments."""
+    from app.data.db.user_db import delete_comments_by_parent_id
+    delete_comments_by_parent_id(kit_id)
+    conn = sqlite3.connect(DB_PATH)
+    conn.execute("DELETE FROM Kit WHERE id_kit = ?", (kit_id,))
+    conn.commit()
+    conn.close()

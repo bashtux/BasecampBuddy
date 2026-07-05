@@ -8,6 +8,7 @@ from app.cli.category_functions import input_category, list_categories, edit_cat
 from app.cli.brand_functions import input_brand, list_brands, edit_brand
 from app.cli.consumable_functions import input_consumable, edit_consumable, list_consumables
 from app.cli.comment_functions import input_comment, list_comments
+from app.cli.delete_functions import delete_gear, delete_kit, delete_trip, delete_brand, delete_category, delete_consumable
 
 # ====================================================
 # Print Menu function
@@ -112,6 +113,10 @@ def gear_menu():
                 list_brands()
                 gear_menu()
                 break
+            case "D":
+                delete_gear()
+                gear_menu()
+                break
             case "B":
                 main_menu()
                 break
@@ -143,6 +148,11 @@ def kit_menu():
             case "3":
                 list_kits()
                 kit_menu()
+                break
+            case "D":
+                delete_kit()
+                kit_menu()
+                break
             case "B":
                 main_menu()
                 break
@@ -175,6 +185,11 @@ def trips_menu():
             case "3":
                 list_trips()
                 trips_menu()
+                break
+            case "D":
+                delete_trip()
+                trips_menu()
+                break
             case "B":
                 main_menu()
                 break
@@ -250,12 +265,15 @@ def edit_base_submenu():
             "1": "menu.edit_base_submenu.options.addbrand",
             "2": "menu.edit_base_submenu.options.editbrand",
             "3": "menu.gear_menu.options.brand",
-            "4": "menu.edit_base_submenu.options.addcategory",
-            "5": "menu.edit_base_submenu.options.editcategory",
-            "6": "menu.gear_menu.options.category",
-            "7": "menu.edit_base_submenu.options.addconsumable",
-            "8": "menu.edit_base_submenu.options.editconsumable",
-            "9": "menu.edit_base_submenu.options.listconsumable",
+            "4": "menu.edit_base_submenu.options.deletebrand",
+            "5": "menu.edit_base_submenu.options.addcategory",
+            "6": "menu.edit_base_submenu.options.editcategory",
+            "7": "menu.gear_menu.options.category",
+            "8": "menu.edit_base_submenu.options.deletecategory",
+            "9": "menu.edit_base_submenu.options.addconsumable",
+            "10": "menu.edit_base_submenu.options.editconsumable",
+            "11": "menu.edit_base_submenu.options.listconsumable",
+            "12": "menu.edit_base_submenu.options.deleteconsumable",
             "B": "menu.general_menu.options.back",
             "M": "menu.main_menu.title"
             }
@@ -276,27 +294,39 @@ def edit_base_submenu():
                 edit_base_submenu()
                 break
             case "4":
-                input_category()
+                delete_brand()
                 edit_base_submenu()
                 break
             case "5":
-                edit_category()
+                input_category()
                 edit_base_submenu()
                 break
             case "6":
-                list_categories()
+                edit_category()
                 edit_base_submenu()
                 break
             case "7":
-                input_consumable()
+                list_categories()
                 edit_base_submenu()
                 break
             case "8":
-                edit_consumable()
+                delete_category()
                 edit_base_submenu()
                 break
             case "9":
+                input_consumable()
+                edit_base_submenu()
+                break
+            case "10":
+                edit_consumable()
+                edit_base_submenu()
+                break
+            case "11":
                 list_consumables()
+                edit_base_submenu()
+                break
+            case "12":
+                delete_consumable()
                 edit_base_submenu()
                 break
             case "B":

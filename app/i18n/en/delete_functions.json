@@ -1,0 +1,22 @@
+{
+    "msg": {
+        "confirm":         "Are you sure you want to delete '{name}'? This cannot be undone. (Y/N): ",
+        "deleted":         "'{name}' has been deleted.",
+        "cancelled":       "Delete cancelled.",
+        "has_references":  "Cannot delete '{name}' — it is still referenced by existing items.",
+        "warn_kits":       "Warning: this gear appears in {count} kit(s).",
+        "warn_trips":      "Warning: this item appears in {count} trip(s)."
+    },
+    "error": {
+        "not_found":       "Item not found.",
+        "invalid_choice":  "Invalid selection, try again."
+    },
+    "title": {
+        "delete_gear":        "\n=== Delete Gear ===",
+        "delete_kit":         "\n=== Delete Kit ===",
+        "delete_trip":        "\n=== Delete Trip ===",
+        "delete_brand":       "\n=== Delete Brand ===",
+        "delete_category":    "\n=== Delete Category ===",
+        "delete_consumable":  "\n=== Delete Consumable ==="
+    }
+}

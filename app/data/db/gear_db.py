@@ -90,3 +90,11 @@ def get_gear_by_id(gear_id: int) -> Gear | None:
 
         return gear
 
+def delete_gear(gear_id: int):
+    """Delete a gear item and its comments."""
+    from app.data.db.user_db import delete_comments_by_parent_id
+    delete_comments_by_parent_id(gear_id)
+    conn = sqlite3.connect(DB_PATH)
+    conn.execute("DELETE FROM Gear WHERE id_gear = ?", (gear_id,))
+    conn.commit()
+    conn.close()

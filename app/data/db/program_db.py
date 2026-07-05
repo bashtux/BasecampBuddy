@@ -17,6 +17,8 @@ DB_PATH = (BASE_DIR / program_db_rel).resolve()
 # Ensure parent folder exists
 DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 
+USER_DB_PATH = (BASE_DIR / ConfigManager().get("paths.user_db", "app/data/user_db.sqlite")).resolve()
+
 
 ###############################################################################
 #               Category functions
@@ -62,6 +64,24 @@ def get_category_by_id(category_id: int):
     conn.close()
     return result
 
+
+def delete_category(category_id: int) -> bool:
+    """
+    Delete a category. Returns False if any gear references it.
+    """
+    user_conn = sqlite3.connect(USER_DB_PATH)
+    cursor = user_conn.execute("SELECT COUNT(*) FROM Gear WHERE category_id = ?", (category_id,))
+    count = cursor.fetchone()[0]
+    user_conn.close()
+    if count > 0:
+        return False
+    conn = sqlite3.connect(DB_PATH)
+    conn.execute("DELETE FROM Category WHERE id_category = ?", (category_id,))
+    conn.commit()
+    conn.close()
+    return True
+
+
 ###############################################################################
 #               Brand functions
 ###############################################################################
@@ -105,6 +125,24 @@ def get_brand_by_id(brand_id: int):
     result = cursor.fetchone()
     conn.close()
     return result
+
+
+def delete_brand(brand_id: int) -> bool:
+    """
+    Delete a brand. Returns False if any gear references it.
+    """
+    user_conn = sqlite3.connect(USER_DB_PATH)
+    cursor = user_conn.execute("SELECT COUNT(*) FROM Gear WHERE brand_id = ?", (brand_id,))
+    count = cursor.fetchone()[0]
+    user_conn.close()
+    if count > 0:
+        return False
+    conn = sqlite3.connect(DB_PATH)
+    conn.execute("DELETE FROM Brand WHERE id_brand = ?", (brand_id,))
+    conn.commit()
+    conn.close()
+    return True
+
 
 ###############################################################################
 #               Consumables functions
@@ -151,3 +189,21 @@ def get_consumable_by_id(consumable_id: int):
     conn.close()
     return result
 
+def delete_consumable(consumable_id: int) -> bool:
+    """
+    Delete a consumable. Returns False if any trip references it.
+    """
+    user_conn = sqlite3.connect(USER_DB_PATH)
+    cursor = user_conn.execute("SELECT consumables FROM Trip")
+    rows = cursor.fetchall()
+    user_conn.close()
+    import json
+    for row in rows:
+        ids = json.loads(row[0] or "[]")
+        if consumable_id in ids:
+            return False
+    conn = sqlite3.connect(DB_PATH)
+    conn.execute("DELETE FROM Consumable WHERE id_consumable = ?", (consumable_id,))
+    conn.commit()
+    conn.close()
+    return True
