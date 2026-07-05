@@ -38,26 +38,3 @@ def list_comments(parent_id: int):
         print(f"{com[2]:<10}: {com[3]}")
 
 
-#def edit_comment():
-#    """Allow user to edit a comment (name and description)."""
-#    print(lang.t("comment_functions.title.edit_category"))
-#    list_categories()
-#
-#    try:
-#        comment_id = int(input(lang.t("category_functions.cli.select_id")))
-#    except ValueError:
-#        print(lang.t("comment_functions.error.invalid_choice"))
-#        return
-#
-#    comment = db.get_category_by_id(category_id)
-#    if not comment:
-#        print(lang.t("comment_functions.error.not_found"))
-#        return
-#
-#    print(lang.t("comment_functions.msg.current_values").format(name=category[1], desc=category[2]))
-#
-#    new_name = input(f"{lang.t('comment_functions.cli.new_name')} ({category[1]}): ") or category[1]
-#    new_description = input(f"{lang.t('comment_functions.cli.new_desc')} ({category[2]}): ") or category[2]
-#
-#    db.update_comment(category_id, new_name, new_description)
- #   print(lang.t("comment_functions.msg.success"))

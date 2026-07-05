@@ -1,0 +1,13 @@
+{
+    "title": {
+        "new_comment":   "\n=== Add New Comment ===",
+        "list_comments": "\n=== Comments ==="
+    },
+    "msg": {
+        "comment_added": "Comment added successfully."
+    },
+    "error": {
+        "invalid_choice": "No comment provided, try again.",
+        "no_comments":    "No comments found for this item."
+    }
+}

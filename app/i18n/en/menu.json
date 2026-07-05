@@ -6,7 +6,8 @@
 			"create": "Create {misc}",
 			"edit": "Edit {misc}",
 			"list": "List {misc}",
-			"delete": "Delete {misc}"
+			"delete": "Delete {misc}",
+			"add_comment": "Add comment"
 		}
 	},
 	"main_menu": {

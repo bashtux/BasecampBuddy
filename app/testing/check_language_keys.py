@@ -5,7 +5,6 @@ from collections import defaultdict
 
 CODE_DIR = "app"
 LANG_DIR = "app/i18n"
-
 LANG_KEYS_PATTERN = re.compile(r'lang\.t\(["\']([\w\.\- ]+)["\']\)')
 
 def flatten_json_keys(d, prefix="", file_map=None, file_path=""):
@@ -59,33 +58,60 @@ def get_used_lang_keys():
                             used[key_clean][path].append(lineno)
     return used
 
+def infer_target_file(key):
+    """Infer which JSON file a key should go into based on its prefix.
+    
+    Examples:
+        'user_db.msg.db_initialized' -> 'user_db.json'
+        'some.nested.key' -> 'some.json'
+    """
+    parts = key.split('.')
+    if len(parts) > 0:
+        return f"{parts[0]}.json"
+    return "general.json"  # fallback
+
 def check_language_keys():
     lang_keys = get_lang_file_keys(LANG_DIR)
     used_keys = get_used_lang_keys()
-
+    
     for lang, keys in lang_keys.items():
-        print(f"\nChecking language: {lang}")
+        print(f"\n{'='*80}")
+        print(f"Checking language: {lang.upper()}")
+        print(f"{'='*80}")
+        
         all_ok = True
-
+        
         # Missing keys: keys used in code but not defined in JSON
         missing = []
         for code_key, files in used_keys.items():
             if code_key not in keys:
                 missing.append((code_key, files))
-
+        
         if missing:
             print(f"\n❌ Missing in {lang}: {len(missing)} keys")
-            for key, file_map in missing:
+            print(f"Press Enter to view each key...\n")
+            
+            for idx, (key, file_map) in enumerate(sorted(missing), 1):
+                input(f"[{idx}/{len(missing)}] Press Enter to see next key...")
+                print()
+                
+                target_file = infer_target_file(key)
+                print(f"  Key: {key}")
+                print(f"  → Add to: {os.path.join(LANG_DIR, lang, target_file)}")
+                print(f"  → JSON path: \"{key}\"")
                 for file_path, lines in file_map.items():
                     line_str = ", ".join(str(l) for l in lines)
-                    print(f"{key} : {file_path} : lines {line_str}")
+                    print(f"  → Used in: {file_path}:{line_str}")
+                print()
+                print(f"  {'-'*76}")
+            
             all_ok = False
+            print()  # Extra spacer after last entry
         else:
             print(f"\n✅ {lang}: all used keys exist!")
-
+        
         if all_ok:
-            print(f"\n✅ All keys exist and are used in {lang}!")
+            print(f"\n✅ Language '{lang}' is complete!")
 
 if __name__ == "__main__":
     check_language_keys()
-

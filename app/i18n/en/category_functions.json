@@ -6,6 +6,7 @@
     },
     "cli": {
         "category_name":        "Enter category name: ",
+				"comment":							"Comment: ",
         "category_description": "Enter category description: ",
         "select_id":            "Select category ID to edit: ",
         "new_name":             "Enter new name, Enter for no changes: ",
