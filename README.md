@@ -1,5 +1,3 @@
-# BasecampBuddy
-
 > *Retire gear before it retires you.*
 
 You've got ropes that have seen better days, a helmet that might be older than your nephew, and a backpack stuffed with gear you can't quite account for. BasecampBuddy is the trusty logbook you always meant to keep — except it lives on your computer, doesn't get wet in the rain, and actually reminds you when something needs checking.
@@ -8,21 +6,18 @@ Born out of 10 years of iteration, false starts, and the occasional "why did I b
 
 ---
 
-- [BasecampBuddy](#basecampbuddy)
-  * [Features](#features)
-  * [Getting Started](#getting-started)
-    + [Prerequisites](#prerequisites)
-    + [Installation](#installation)
-    + [Running the App](#running-the-app)
-  * [Project Structure](#project-structure)
-  * [Philosophy](#philosophy)
-
-<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
-
+- [Features](#features)
+- [Getting Started](#getting-started)
+  * [Prerequisites](#prerequisites)
+  * [Installation](#installation)
+  * [Running the App](#running-the-app)
+- [Project Structure](#project-structure)
+- [Philosophy](#philosophy)
+- [Thanks to:](#thanks-to-)
 
 ---
 
-## Features
+# Features
 - **Gear inventory** — catalogue equipment by brand and category, with purchase dates and notes
 - **Consumables tracking** — separate management for items that get used up (gas canisters, batteries, fuel) rather than just worn out
 - **Age tracking** — know at a glance how long each piece of kit has been in service
@@ -38,14 +33,14 @@ Born out of 10 years of iteration, false starts, and the occasional "why did I b
 
 ---
 
-## Getting Started
+# Getting Started
 
-### Prerequisites
+## Prerequisites
 
 - Python 3.8+
 - No external services required — this runs fully offline
 
-### Installation
+## Installation
 
 ```bash
 git clone https://github.com/bashtux/BasecampBuddy.git
@@ -53,7 +48,7 @@ cd BasecampBuddy
 pip install -r requirements.txt   # if a requirements file is present
 ```
 
-### Running the App
+## Running the App
 
 ```bash
 python -m main
@@ -63,7 +58,7 @@ That's it. The app will initialise your data store on first run and drop you int
 
 ---
 
-## Project Structure
+# Project Structure
 
 ```
 BasecampBuddy/
@@ -99,7 +94,7 @@ BasecampBuddy/
 
 ---
 
-## Philosophy
+# Philosophy
 
 BasecampBuddy is deliberately simple. It runs in your terminal, stores data locally, and does one thing well: helps you keep track of your outdoor gear so you can spend less time rummaging and more time out there.
 
@@ -107,4 +102,7 @@ No subscriptions. No cloud sync. No ads for carabiners. Just a solid piece of so
 
 ---
 
+# Thanks to:
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 *Happy trails. Check your gear. Come home safe.*
