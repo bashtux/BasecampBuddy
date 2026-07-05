@@ -109,7 +109,6 @@ BasecampBuddy/
 - [ ] general install script
 - [ ] Have sotrage place for gear
 
-
 ## Reports / Printing / Checking
 - [ ] LaTex / LO calc / csv export of lists
 - [ ] Check all Brand URL if they're (still) valid
@@ -117,10 +116,17 @@ BasecampBuddy/
 - [ ] List by category
 - [ ] check if gear / kit is deleted from kit / trip so there's no dangling kits or trips
 - [ ] On startup check what gear has not been checked by now and inform user, possible to turn on/off in settings
+- [ ] LaTex (pdf) export of trips and kits
 
 ## CLI
 - [ ] Get Terminal widht and scale lists accordingly
- 
+- [ ]  nicer layout for lists and gear, kit, trips
+
+## TUI
+> not started at the moment, happy to take requests
+
+## GUI 
+> not started at the moment, happy to take requests
 
 ---
 
