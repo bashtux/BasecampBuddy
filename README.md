@@ -1,10 +1,24 @@
 # BasecampBuddy
 
-> *Because "I think the carabiner is somewhere in the garage" is not a gear management strategy.*
+> *Retire gear before it retires you.*
 
 You've got ropes that have seen better days, a helmet that might be older than your nephew, and a backpack stuffed with gear you can't quite account for. BasecampBuddy is the trusty logbook you always meant to keep — except it lives on your computer, doesn't get wet in the rain, and actually reminds you when something needs checking.
 
 Born out of 10 years of iteration, false starts, and the occasional "why did I build it like *that*" moment, BasecampBuddy is a no-frills, terminal-based Python tool for climbers, campers, and outdoor enthusiasts who want to know exactly what's in their kit, how old it is, and whether it's ready for the next adventure — before they're halfway up a crag wondering.
+
+---
+
+- [BasecampBuddy](#basecampbuddy)
+  * [Features](#features)
+  * [Getting Started](#getting-started)
+    + [Prerequisites](#prerequisites)
+    + [Installation](#installation)
+    + [Running the App](#running-the-app)
+  * [Project Structure](#project-structure)
+  * [Philosophy](#philosophy)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 
 ---
 
@@ -90,16 +104,6 @@ BasecampBuddy/
 BasecampBuddy is deliberately simple. It runs in your terminal, stores data locally, and does one thing well: helps you keep track of your outdoor gear so you can spend less time rummaging and more time out there.
 
 No subscriptions. No cloud sync. No ads for carabiners. Just a solid piece of software for people who take their kit seriously.
-
----
-
-## Issues
-- [ ] Settings -> Edit base -> Edit Brand: only lists no changing
-
----
-## License
-
-Licensed under the [GPL-3.0 License](LICENSE).
 
 ---
 
