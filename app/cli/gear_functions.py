@@ -9,6 +9,7 @@ from app.core.utils.validation import prompt_validated_input, is_positive_number
 from app.core.utils.db_utils import fuzzy_search
 from app.core.gear_item import Gear
 from app.cli.brand_functions import list_brands
+from app.cli.category_functions import pick_category
 from app.data import user_db as db
 from app.cli.comment_functions import list_comments
 from app.cli.cli_utils import paged_list, print_header
@@ -70,7 +71,8 @@ def input_gear():
 
     color = input(f"{lang.t('gear_functions.cli.gear_color')}").strip()
 
-    category = input(f"{lang.t('gear_functions.cli.search_category')}").strip()
+    category = pick_category()
+
 
     description = input(f"{lang.t('gear_functions.cli.gear_description')}").strip()
 
