@@ -60,6 +60,30 @@ def list_categories(default_cols: list[str] | None = None):
     )
 
 
+def pick_category() -> int | None:
+    """Display categories and return the selected id_category, or None."""
+    categories = db.get_all_categories()
+    cat_dicts  = _categories_to_dicts(categories)
+
+    if not cat_dicts:
+        print(lang.t("category_functions.error.no_category"))
+        return None
+
+    print(lang.t("category_functions.title.list_categories"))
+    col_w = 20
+    print(f"  {'#':<4}{'ID':<6}{'Name':<{col_w}}")
+    print("  " + "-" * (4 + 6 + col_w))
+    for i, cat in enumerate(cat_dicts, 1):
+        print(f"  {i:<4}{cat['id_category']:<6}{cat['name']:<{col_w}}")
+
+    raw = input(lang.t("category_functions.cli.select_id")).strip()
+    if not raw.isdigit() or not (0 <= int(raw) - 1 < len(cat_dicts)):
+        print(lang.t("category_functions.error.invalid_choice"))
+        return None
+
+    return cat_dicts[int(raw) - 1]["id_category"]
+
+
 def edit_category():
     """Allow user to edit a category (name and description)."""
     print(lang.t("category_functions.title.edit_category"))
