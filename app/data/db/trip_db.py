@@ -88,16 +88,27 @@ def get_trip_by_id(trip_id: int) -> Trip | None:
     comments   = json.loads(row["comment"]           or "[]")
     tags       = json.loads(row["tag"]               or "[]")
 
-    items = []
-    for ref in item_ids:
+    items        = []
+    item_amounts = []
+    for ref, amt in zip(item_ids, amounts):
         if ref.startswith("K:"):
             obj = get_kit_by_id(int(ref[2:]))
         else:
             obj = get_gear_by_id(int(ref[2:]))
         if obj:
             items.append(obj)
+            item_amounts.append(amt)
 
-    consumables = [c for cid in con_ids if (c := _load_consumable_as_gear(cid))]
+    con_ids  = json.loads(row["consumables"]       or "[]")
+    con_amts = json.loads(row["consumable_amount"] or "[]")
+
+    consumables        = []
+    consumable_amounts = []
+    for cid, amt in zip(con_ids, con_amts):
+        c = _load_consumable_as_gear(cid)
+        if c:
+            consumables.append(c)
+            consumable_amounts.append(amt)
 
     return Trip(
         id_trip                    = row["id_trip"],
@@ -110,10 +121,10 @@ def get_trip_by_id(trip_id: int) -> Trip | None:
         max_altitude               = row["max_altitude"],
         no_people                  = row["no_people"],
         items                      = items,
-        item_amounts               = amounts,
+        item_amounts               = item_amounts,
         gear_mass_correction       = row["gear_mass_correction"] or 0,
         consumables                = consumables,
-        consumable_amounts         = con_amts,
+        consumable_amounts         = consumable_amounts,
         consumable_mass_correction = row["consumable_mass_correction"] or 0,
     )
 
