@@ -4,13 +4,12 @@ from pathlib import Path
 from app.config_manager import ConfigManager
 from app.lang import lang
 from app.data import db
-
-from app.core.utils.validation import prompt_validated_input, is_positive_number, is_valid_date, is_nonempty_string
+from app.data.db import add_gear
+from app.core.utils.validation import prompt_validated_input, is_positive_number, is_valid_date, is_nonempty_string, is_positive_integer_or_empty, is_yes_no
 from app.core.utils.db_utils import fuzzy_search
 from app.core.gear_item import Gear
 from app.cli.brand_functions import list_brands
 from app.cli.category_functions import pick_category
-from app.data import user_db as db
 from app.cli.comment_functions import list_comments
 from app.cli.cli_utils import paged_list, print_header
 
@@ -84,10 +83,10 @@ def input_gear():
     )
 
     lifespan = prompt_validated_input(
-            prompt_key="gear_functions.cli.gear_lifespan",
-            validator=is_positive_number,
-            allow_empty=True,
-            error_key="gear_functions.error.not_number"
+        prompt_key = "gear_functions.cli.gear_lifespan",
+        validator  = is_positive_integer_or_empty,
+        allow_empty= True,
+        error_key  = "gear_functions.error.not_number"
     )
 
     kit_only = prompt_validated_input(
