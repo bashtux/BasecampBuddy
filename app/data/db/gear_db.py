@@ -98,3 +98,12 @@ def delete_gear(gear_id: int):
     conn.execute("DELETE FROM Gear WHERE id_gear = ?", (gear_id,))
     conn.commit()
     conn.close()
+
+def get_all_gear() -> list[dict]:
+    """Fetch all gear from the database, ordered by name."""
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.execute("SELECT * FROM Gear ORDER BY name")
+    rows = [dict(r) for r in cursor.fetchall()]
+    conn.close()
+    return rows

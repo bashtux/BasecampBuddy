@@ -159,3 +159,22 @@ def is_valid_tags(value: str) -> list[str] | None:
     """
     tags = [t.strip().lower() for t in value.split(",") if t.strip()]
     return tags if tags else None
+
+
+# Is positive integer or empty
+# ---------------------------
+def is_positive_integer_or_empty(value: str) -> int | None:
+    """
+    Returns a positive integer if valid.
+    Returns 0 for empty (meaning infinite lifespan).
+    Returns None if invalid (triggers retry).
+    """
+    if not value.strip():
+        return 0
+    try:
+        number = int(value)
+        if number > 0:
+            return number
+    except ValueError:
+        pass
+    return None
