@@ -44,16 +44,15 @@ def _pick_gear() -> tuple | None:
         db_name        = "user_db",
     )
 
-    print(f"DEBUG results: {results[:2]}")
-
     if not results:
         print(lang.t("kit_functions.error.no_gear"))
         return None
 
+    numbered = [{**r, "idx": i+1} for i, r in enumerate(results)]
     print_table(
-        items   = results,
-        columns = ["id_gear", "name", "variant", "mass_pcs", "amount"],
-        labels  = ["ID", "Name", "Variant", "Mass(g)", "Stock"],
+        items   = numbered,
+        columns = ["idx", "name", "variant", "mass_pcs", "amount"],
+        labels  = ["#", "Name", "Variant", "Mass(g)", "Stock"],
     )
 
     raw = input(lang.t("kit_functions.cli.select_gear")).strip()
