@@ -108,6 +108,8 @@ BasecampBuddy/
 - [ ] set currency in configuration
 - [ ] general install script
 - [ ] Have sotrage place for gear
+- [ ] Add comments to items (partially implemented)
+- [ ] list tags, then list trips from selected tags
 
 ## Reports / Printing / Checking
 - [ ] LaTex / LO calc / csv export of lists
@@ -120,7 +122,8 @@ BasecampBuddy/
 
 ## CLI
 - [ ] Get Terminal widht and scale lists accordingly
-- [ ]  nicer layout for lists and gear, kit, trips
+- [ ] nicer layout for lists and gear, kit, trips
+- [ ] define column width per table display
 
 ## TUI
 > not started at the moment, happy to take requests
