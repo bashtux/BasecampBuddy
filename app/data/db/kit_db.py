@@ -45,15 +45,17 @@ def get_kit_by_id(kit_id: int) -> Kit | None:
         if row is None:
             return None
 
-    gear_ids  = json.loads(row["gear_list"]  or "[]")
-    amounts   = json.loads(row["gear_amount"] or "[]")
-    comments  = json.loads(row["comments"]   or "[]")
+    gear_ids = json.loads(row["gear_list"]  or "[]")
+    amounts  = json.loads(row["gear_amount"] or "[]")
+    comments = json.loads(row["comments"]   or "[]")
 
-    gear_list = []
-    for gear_id in gear_ids:
+    gear_list    = []
+    gear_amounts = []
+    for gear_id, amt in zip(gear_ids, amounts):
         gear = get_gear_by_id(gear_id)
         if gear:
             gear_list.append(gear)
+            gear_amounts.append(amt)
 
     return Kit(
         id_kit          = row["id_kit"],
@@ -62,7 +64,7 @@ def get_kit_by_id(kit_id: int) -> Kit | None:
         comments        = comments,
         gear_list       = gear_list,
         mass_correction = row["mass_correction"] or 0,
-        gear_amount     = amounts,
+        gear_amount     = gear_amounts,
     )
 
 
@@ -75,6 +77,7 @@ def get_all_kits() -> list[Kit]:
         ids = [row["id_kit"] for row in cursor.fetchall()]
 
     return [kit for kit_id in ids if (kit := get_kit_by_id(kit_id))]
+
 
 def delete_kit(kit_id: int):
     """Delete a kit and its comments."""

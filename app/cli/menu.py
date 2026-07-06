@@ -55,25 +55,25 @@ def main_menu():
             match choice:
                 case "E":
                     print(lang.t("menu.msg.goodbye"))
-                    break
+                    continue
                 case "1":
                     gear_menu()
-                    break
+                    continue
                 case "2":
                     kit_menu()
-                    break
+                    continue
                 case "3":
                     trips_menu()
-                    break
+                    continue
                 case "4":
                     reports_menu()
-                    break
+                    continue
                 case "5":
                     settings_menu()
-                    break
+                    continue
                 case "6":
                     debug_menu()
-                    break
+                    continue
                 case _:
                     print(lang.t("menu.error.invalid_choice"))
 
@@ -99,27 +99,22 @@ def gear_menu():
         match choice:
             case "1":
                 input_gear()
-                gear_menu()
-                break
+                continue
             case "3":
                 list_gear()
-                gear_menu()
-                break
+                continue
             case "4":
                 list_categories()
-                gear_menu()
-                break
+                continue
             case "5":
                 list_brands()
-                gear_menu()
-                break
+                continue
             case "D":
                 delete_gear()
-                gear_menu()
-                break
+                continue
             case "B":
                 main_menu()
-                break
+                return
             case _:
                 print(lang.t("menu.error.invalid_choice"))
 
@@ -143,19 +138,16 @@ def kit_menu():
         match choice:
             case "1":
                 input_kit()
-                kit_menu()
-                break
+                continue
             case "3":
                 list_kits()
-                kit_menu()
-                break
+                continue
             case "D":
                 delete_kit()
-                kit_menu()
-                break
+                continue
             case "B":
                 main_menu()
-                break
+                return
             case _:
                 print(lang.t("menu.error.invalid_choice"))
 
@@ -180,19 +172,16 @@ def trips_menu():
         match choice:
             case "1":
                 input_trip()
-                trips_menu()
-                break
+                continue
             case "3":
                 list_trips()
-                trips_menu()
-                break
+                continue
             case "D":
                 delete_trip()
-                trips_menu()
-                break
+                continue
             case "B":
                 main_menu()
-                break
+                return
             case _:
                 print(lang.t("menu.error.invalid_choice"))
 
@@ -215,11 +204,10 @@ def reports_menu():
         match choice:
             case "1":
                 print(lang.t("menu.general_menu.options.create"))
-                main_menu()
-                break
+                continue
             case "B":
                 main_menu()
-                break
+                return
             case _:
                 print(lang.t("menu.error.invalid_choice"))
 
@@ -243,14 +231,13 @@ def settings_menu():
         match choice:
             case "1":
                 print(lang.t("menu.general_menu.options.create"))
-                main_menu()
-                break
+                continue
             case "4":
                 edit_base_submenu()
-                break
+                continue
             case "B":
                 main_menu()
-                break
+                return
             case _:
                 print(lang.t("menu.error.invalid_choice"))
 
@@ -283,58 +270,46 @@ def edit_base_submenu():
         match choice:
             case "1":
                 input_brand()
-                edit_base_submenu()
-                break
+                continue
             case "2":
                 edit_brand()
-                edit_base_submenu()
-                break
+                continue
             case "3":
                 list_brands()
-                edit_base_submenu()
-                break
+                continue
             case "4":
                 delete_brand()
-                edit_base_submenu()
-                break
+                continue
             case "5":
                 input_category()
-                edit_base_submenu()
-                break
+                continue
             case "6":
                 edit_category()
-                edit_base_submenu()
-                break
+                continue
             case "7":
                 list_categories()
-                edit_base_submenu()
-                break
+                continue
             case "8":
                 delete_category()
-                edit_base_submenu()
-                break
+                continue
             case "9":
                 input_consumable()
-                edit_base_submenu()
-                break
+                continue
             case "10":
                 edit_consumable()
-                edit_base_submenu()
-                break
+                continue
             case "11":
                 list_consumables()
-                edit_base_submenu()
-                break
+                continue
             case "12":
+                continue
                 delete_consumable()
-                edit_base_submenu()
-                break
             case "B":
                 settings_menu()
-                break
+                return
             case "M":
                 main_menu()
-                break
+                return
             case _:
                 print(lang.t("menu.error.invalid_choice"))
 
@@ -367,7 +342,7 @@ def debug_menu():
                     list_comments(parent_id)
             case "B":
                 main_menu()
-                break
+                return
             case _:
                 print(lang.t("menu.error.invalid_choice"))
 
