@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/header.png" alt="BasecampBuddy" width="100%">
+</p>
+
 > *Retire gear before it retires you.*
 
 You've got ropes that have seen better days, a helmet that might be older than your nephew, and a backpack stuffed with gear you can't quite account for. BasecampBuddy is the trusty logbook you always meant to keep — except it lives on your computer, doesn't get wet in the rain, and actually reminds you when something needs checking.
