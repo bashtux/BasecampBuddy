@@ -1,5 +1,5 @@
 # Custom exlusions
-_rawdate/
+_rawdata/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
