@@ -52,6 +52,35 @@ def add_gear(gear: Gear) -> int:
     conn.close()
     return gear_id
 
+def update_gear(gear: Gear):
+    """Update all fields of an existing gear item."""
+    conn = sqlite3.connect(DB_PATH)
+    conn.execute("""
+        UPDATE Gear SET
+            name=?, variant=?, brand_id=?, size=?, mass_pcs=?, price_cents=?,
+            amount=?, color=?, category_id=?, description=?, prod_date=?,
+            checked=?, last_checked=?, lifespan=?, kit_only=?
+        WHERE id_gear=?
+    """, (
+        gear.name,
+        gear.variant,
+        gear.brand_id,
+        gear.size,
+        gear.mass_pcs,
+        gear._price_cents,
+        gear.amount,
+        gear.color,
+        gear.category_id,
+        gear.description,
+        gear.prod_date.isoformat() if gear.prod_date else None,
+        gear.checked,
+        gear.last_checked,
+        gear.lifespan,
+        gear.kit_only,
+        gear.id_gear,
+    ))
+    conn.commit()
+    conn.close()
 
 def get_gear_by_id(gear_id: int) -> Gear | None:
     """

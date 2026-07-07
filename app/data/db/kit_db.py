@@ -34,6 +34,25 @@ def add_kit(kit: Kit) -> int:
     conn.close()
     return kit_id
 
+def update_kit(kit: Kit):
+    """Update all fields of an existing kit."""
+    conn = sqlite3.connect(DB_PATH)
+    conn.execute("""
+        UPDATE Kit SET
+            name=?, description=?, comments=?, gear_list=?,
+            mass_correction=?, gear_amount=?
+        WHERE id_kit=?
+    """, (
+        kit.name,
+        kit.description,
+        json.dumps(kit.comments),
+        json.dumps([g.id_gear for g in kit.gear_list]),
+        kit.mass_correction,
+        json.dumps(kit.gear_amount),
+        kit.id_kit,
+    ))
+    conn.commit()
+    conn.close()
 
 def get_kit_by_id(kit_id: int) -> Kit | None:
     """Fetch a single kit by ID, returning a Kit instance with Gear objects."""

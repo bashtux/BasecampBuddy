@@ -7,6 +7,7 @@ from app.cli.kit_functions import input_kit, list_kits
 from app.cli.category_functions import input_category, list_categories, edit_category
 from app.cli.brand_functions import input_brand, list_brands, edit_brand
 from app.cli.consumable_functions import input_consumable, edit_consumable, list_consumables
+from app.cli.edit_functions import edit_gear, edit_kit, edit_trip
 from app.cli.comment_functions import input_comment, list_comments
 from app.cli.delete_functions import delete_gear, delete_kit, delete_trip, delete_brand, delete_category, delete_consumable
 
@@ -100,6 +101,9 @@ def gear_menu():
             case "1":
                 input_gear()
                 continue
+            case "2":
+                edit_gear()
+                continue
             case "3":
                 list_gear()
                 continue
@@ -139,6 +143,9 @@ def kit_menu():
             case "1":
                 input_kit()
                 continue
+            case "2":
+                edit_kit()
+                continue
             case "3":
                 list_kits()
                 continue
@@ -172,6 +179,9 @@ def trips_menu():
         match choice:
             case "1":
                 input_trip()
+                continue
+            case "2":
+                edit_trip()
                 continue
             case "3":
                 list_trips()

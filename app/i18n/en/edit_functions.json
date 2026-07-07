@@ -1,0 +1,32 @@
+{
+    "title": {
+        "edit_gear":       "\n=== Edit Gear ===",
+        "edit_kit":        "\n=== Edit Kit ===",
+        "edit_trip":       "\n=== Edit Trip ===",
+        "edit_brand":      "\n=== Edit Brand ===",
+        "edit_category":   "\n=== Edit Category ===",
+        "edit_consumable": "\n=== Edit Consumable ===",
+        "changes":         "\n--- Changes ---",
+        "no_changes":      "No changes made.",
+        "gear_items":      "\n--- Gear Items ---",
+        "consumables":     "\n--- Consumables ---"
+    },
+    "cli": {
+        "pick_field":       "Pick field to edit (# or S to save, D to discard): ",
+        "new_value":        "New value (Enter to keep current): ",
+        "confirm_save":     "Save these changes? (Y/N): ",
+        "add_more":         "Add more? (Y/N): ",
+        "remove_item":      "Remove item # (or Enter to skip): "
+    },
+    "msg": {
+        "saved":            "Changes saved.",
+        "discarded":        "Changes discarded.",
+        "field_changed":    "{field}: '{old}'  →  '{new}'",
+        "item_removed":     "Removed {name} from list.",
+        "item_added":       "Added {name}."
+    },
+    "error": {
+        "not_found":        "Item not found.",
+        "invalid_choice":   "Invalid selection, try again."
+    }
+}

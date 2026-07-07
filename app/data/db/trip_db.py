@@ -58,6 +58,43 @@ def add_trip(trip: Trip) -> int:
     conn.close()
     return trip_id
 
+def update_trip(trip: Trip):
+    """Update all fields of an existing trip."""
+    item_ids = []
+    for item in trip.items:
+        if isinstance(item, Kit):
+            item_ids.append(f"K:{item.id_kit}")
+        else:
+            item_ids.append(f"G:{item.id_gear}")
+
+    consumable_ids = [c.id_consumable for c in trip.consumables]
+
+    conn = sqlite3.connect(DB_PATH)
+    conn.execute("""
+        UPDATE Trip SET
+            name=?, description=?, comment=?, tag=?, trip_month=?, duration=?,
+            max_altitude=?, no_people=?, gear=?, gear_amount=?, gear_mass_correction=?,
+            consumables=?, consumable_amount=?, consumable_mass_correction=?
+        WHERE id_trip=?
+    """, (
+        trip.name,
+        trip.description,
+        json.dumps(trip.comments),
+        json.dumps(trip.tags),
+        int(trip.trip_month) if trip.trip_month else None,
+        trip.duration,
+        trip.max_altitude,
+        trip.no_people,
+        json.dumps(item_ids),
+        json.dumps(trip.item_amounts),
+        trip.gear_mass_correction,
+        json.dumps(consumable_ids),
+        json.dumps(trip.consumable_amounts),
+        trip.consumable_mass_correction,
+        trip.id_trip,
+    ))
+    conn.commit()
+    conn.close()
 
 def _load_consumable_as_gear(consumable_id: int) -> Gear | None:
     """Load a consumable from program_db and wrap it as a Gear-like object."""

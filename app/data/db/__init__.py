@@ -1,11 +1,12 @@
 # base functions
 from .base_db import table_exists, init_program_db, check_initialized
 # gear functions
-from .gear_db import add_gear, get_gear_by_id, delete_gear, get_all_gear
+from .gear_db import add_gear, get_gear_by_id, get_all_gear, delete_gear, update_gear
+
 # kit functions
-from .kit_db import add_kit, get_kit_by_id, get_all_kits, delete_kit
+from .kit_db  import add_kit,  get_kit_by_id,  get_all_kits,  delete_kit,  update_kit
 # trip functions
-from .trip_db import add_trip, get_trip_by_id, get_all_trips, delete_trip
+from .trip_db import add_trip, get_trip_by_id, get_all_trips, delete_trip, update_trip
 # comment functions
 from .user_db import add_comment, get_comments_by_parent_id, get_comment_by_id, delete_comments_by_parent_id
 # brand functions
