@@ -17,22 +17,31 @@ def print_divider(width: int = 40):
     print("-" * width)
 
 
-def print_table(items: list[dict], columns: list[str], labels: list[str] | None = None, col_w: int = 16):
+def print_table(
+    items: list[object],
+    columns: list[str],
+    labels: list[str] | None = None,
+    col_w: int = 16,
+):
     """
     Print a simple non-paged table.
-    columns: list of dict keys to display
-    labels:  optional list of column headers; defaults to column names
+
+    columns: list of attribute names to display
+    labels: optional list of column headers; defaults to column names
     """
     if labels is None:
         labels = columns
 
-    header = "  " + "".join(f"{lbl:<{col_w}}" for lbl in labels)
+    header = "  " + "".join(f"{label:<{col_w}}" for label in labels)
     print(header)
     print("  " + "-" * (len(header) - 2))
-    for item in items:
-        row = "  " + "".join(f"{str(item.get(c) or '—'):<{col_w}}" for c in columns)
-        print(row)
 
+    for item in items:
+        row = "  " + "".join(
+            f"{str(getattr(item, col, '—')):<{col_w}}"
+            for col in columns
+        )
+        print(row)
 
 # ==============================
 # Paged list
@@ -114,7 +123,7 @@ def paged_list(
 
         for i, item in enumerate(page_items, 1):
             row = f"  {i:<4}" + "".join(
-                f"{str(item.get(c) or '—'):<{col_w}}" for c in active_cols
+                f"{str(getattr(item, c, None) or '—'):<{col_w}}" for c in active_cols
             )
             print(row)
 

@@ -4,7 +4,7 @@ from pathlib import Path
 from app.config_manager import ConfigManager
 from app.lang import lang
 from app.data import db
-from app.data.db import add_gear
+from app.data.db import add_gear, get_gear_by_id
 from app.core.utils.validation import prompt_validated_input, is_positive_number, is_valid_date, is_nonempty_string, is_positive_integer_or_empty, is_yes_no
 from app.core.utils.db_utils import fuzzy_search
 from app.core.gear_item import Gear
@@ -99,7 +99,7 @@ def input_gear():
     gear = Gear(
             name = name,
             variant = variant,
-            brand_id = brand_id,
+            brand = brand_id,
             size = size,
             mass_pcs = mass_pcs,
             price = price,
@@ -125,7 +125,7 @@ GEAR_LIST_COLUMNS = {
     "id_gear":     "gear_functions.fields.id",
     "name":        "gear_functions.fields.name",
     "variant":     "gear_functions.fields.variant",
-    "brand_id":    "gear_functions.fields.brand",
+    "brand":    "gear_functions.fields.brand",
     "size":        "gear_functions.fields.size",
     "mass_pcs":    "gear_functions.fields.mass",
     "amount":      "gear_functions.fields.amount",
@@ -133,35 +133,38 @@ GEAR_LIST_COLUMNS = {
     "category_id": "gear_functions.fields.category",
 }
 
-def display_full_gear(gear: dict):
+def display_full_gear(gear_id: int):
     """Print all fields of a single gear item."""
-    g = dict(gear)
+#    g = dict(gear)
+    gear = get_gear_by_id(gear_id)
     f = "gear_functions.fields"
+
+    brand_name = gear.brand.name if gear.brand else "—"
+
     print(lang.t("gear_functions.title.full_gear"))
     print("=" * 40)
-    print(f"  {g.get('name', '—')}  —  {g.get('variant', '—')}")
+    print(f"  {gear.name}  —  {gear.variant}")
     print("=" * 40)
-    print(f"  {lang.t(f+'.id'):<14}: {g.get('id_gear')}")
-    print(f"  {lang.t(f+'.brand'):<14}: {g.get('brand_id') or '—'}")
-    print(f"  {lang.t(f+'.category'):<14}: {g.get('category_id') or '—'}")
-    print(f"  {lang.t(f+'.size'):<14}: {g.get('size') or '—'}")
-    print(f"  {lang.t(f+'.color'):<14}: {g.get('color') or '—'}")
-    print(f"  {lang.t(f+'.mass'):<14}: {g.get('mass_pcs') or '—'}")
-    print(f"  {lang.t(f+'.amount'):<14}: {g.get('amount') or '—'}")
-    price = g.get('price_cents')
-    print(f"  {lang.t(f+'.price'):<14}: {price / 100:.2f}" if price else f"  {lang.t(f+'.price'):<14}: —")
-    print(f"  {lang.t(f+'.prod_date'):<14}: {g.get('prod_date') or '—'}")
-    print(f"  {lang.t(f+'.lifespan'):<14}: {g.get('lifespan') or '∞'}")
-    print(f"  {lang.t(f+'.kit_only'):<14}: {g.get('kit_only') or '—'}")
-    print(f"  {lang.t(f+'.checked'):<14}: {'Yes' if g.get('checked') else 'No'}")
-    print(f"  {lang.t(f+'.last_checked'):<14}: {g.get('last_checked') or '—'}")
-    print(f"  {lang.t(f+'.description'):<14}: {g.get('description') or '—'}")
+    print(f"  {lang.t(f+'.id'):<14}: {gear.id_gear}")
+    print(f"  {lang.t(f+'.brand'):<14}: {gear.brand.name}")
+    print(f"  {lang.t(f+'.category'):<14}: {gear.category_id}") # FIX category
+    print(f"  {lang.t(f+'.size'):<14}: {gear.size or '—'}")
+    print(f"  {lang.t(f+'.color'):<14}: {gear.color or '—'}")
+    print(f"  {lang.t(f+'.mass'):<14}: {gear.mass_pcs or '—'}")
+    print(f"  {lang.t(f+'.amount'):<14}: {gear.amount or '—'}")
+    print(f"  {lang.t(f+'.price'):<14}: {gear.price}") # FIX price
+    print(f"  {lang.t(f+'.prod_date'):<14}: {gear.prod_date or '—'}")
+    print(f"  {lang.t(f+'.lifespan'):<14}: {gear.lifespan or '∞'}")
+    print(f"  {lang.t(f+'.kit_only'):<14}: {gear.kit_only}")
+    print(f"  {lang.t(f+'.checked'):<14}: {'Yes' if gear.checked else 'No'}")
+    print(f"  {lang.t(f+'.last_checked'):<14}: {gear.last_checked or '—'}")
+    print(f"  {lang.t(f+'.description'):<14}: {gear.description or '—'}")
     print()
 
 def list_gear(page_size: int = 10):
     """Paginated gear list with drill-down to full detail and comments."""
     def on_select(item):
-        display_full_gear(item)
+        display_full_gear(item["id_gear"])
         list_comments(item["id_gear"])
         input(lang.t("gear_functions.msg.enter_to_return"))
 

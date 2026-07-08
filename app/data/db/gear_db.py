@@ -3,6 +3,7 @@ from pathlib import Path
 from datetime import date
 
 from app.core.gear_item import Gear
+from app.data.db.program_db import get_brand_by_id
 
 from app.config_manager import ConfigManager  # assuming you have this
 from app.lang import lang
@@ -32,7 +33,7 @@ def add_gear(gear: Gear) -> int:
     """, (
         gear.name,
         gear.variant,
-        gear.brand_id,
+        gear.brand,
         gear.size,
         gear.mass_pcs,
         gear._price_cents,
@@ -97,12 +98,16 @@ def get_gear_by_id(gear_id: int) -> Gear | None:
         if row is None:
             return None
 
+        brand = None
+        if row["brand_id"] is not None:
+            brand = get_brand_by_id(row["brand_id"])
+
         # Create Gear instance with proper conversions
         gear = Gear(
             id_gear=row["id_gear"],
             name=row["name"],
             variant=row["variant"],
-            brand_id=row["brand_id"],
+            brand=brand,
             size=row["size"],
             mass_pcs=row["mass_pcs"],
             _price_cents=row["price_cents"],

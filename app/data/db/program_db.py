@@ -3,6 +3,7 @@ from pathlib import Path
 
 from app.config_manager import ConfigManager  # assuming you have this
 from app.lang import lang
+from app.core.brand import Brand
 
 # Load config once
 config = ConfigManager()  # reads defaults + user config
@@ -112,9 +113,18 @@ def get_all_brands():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("SELECT id_brand, name, description, url FROM brand ORDER BY name")
-    results = cursor.fetchall()
+   # results = cursor.fetchall()
+
+    return [
+        Brand(
+            id_brand=results[0],
+            name=results[1],
+            description=results[2],
+            url=results[3],
+        )
+        for results in cursor.fetchall()
+    ]
     conn.close()
-    return results
 
 
 def get_brand_by_id(brand_id: int):
@@ -124,7 +134,13 @@ def get_brand_by_id(brand_id: int):
     cursor.execute("SELECT id_brand, name, description, url FROM brand WHERE id_brand = ?", (brand_id,))
     result = cursor.fetchone()
     conn.close()
-    return result
+    
+    return Brand(
+            id_brand=result[0],
+            name=result[1],
+            description=result[2],
+            url=result[3]
+            )
 
 
 def delete_brand(brand_id: int) -> bool:

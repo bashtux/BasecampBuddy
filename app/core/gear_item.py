@@ -12,7 +12,7 @@ class Gear:
         self,
         name: str,
         variant: str,
-        brand_id: Optional[int] = None,
+        brand: Brand | None = None,
         price: float | int | None = None,
         _price_cents = None,
         size: Optional[str] = None,
@@ -32,7 +32,7 @@ class Gear:
         self.id_gear = id_gear
         self.name = name
         self.variant = variant
-        self.brand_id = brand_id
+        self.brand = brand
         self.size = size
         self.mass_pcs = mass_pcs
         self._price_cents = None
