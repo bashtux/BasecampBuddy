@@ -1,4 +1,5 @@
 from app.lang import lang
+from typing import TypeVar, Generic, Any
 
 
 # ==============================
@@ -17,31 +18,44 @@ def print_divider(width: int = 40):
     print("-" * width)
 
 
-def print_table(
-    items: list[object],
-    columns: list[str],
-    labels: list[str] | None = None,
-    col_w: int = 16,
-):
+def print_table(items: list, columns: list[str], labels: list[str] | None = None, col_w: int = 16):
     """
-    Print a simple non-paged table.
-
+    Print a simple non-paged table from a list of objects.
     columns: list of attribute names to display
-    labels: optional list of column headers; defaults to column names
+    labels:  optional list of column headers; defaults to column names
     """
     if labels is None:
         labels = columns
 
-    header = "  " + "".join(f"{label:<{col_w}}" for label in labels)
+    header = "  " + "".join(f"{lbl:<{col_w}}" for lbl in labels)
     print(header)
     print("  " + "-" * (len(header) - 2))
-
+    
     for item in items:
         row = "  " + "".join(
-            f"{str(getattr(item, col, '—')):<{col_w}}"
-            for col in columns
+            f"{str(_get_display_value(item, c) or '—'):<{col_w}}" for c in columns
         )
         print(row)
+
+
+def _get_display_value(item, attr: str):
+    """
+    Get a value from an object.
+    Handles nested attributes like "brand.name".
+    """
+    try:
+        if "." in attr:
+            parts = attr.split(".")
+            value = item
+            for part in parts:
+                value = getattr(value, part, None)
+                if value is None:
+                    return None
+            return value
+        
+        return getattr(item, attr, None)
+    except AttributeError:
+        return None
 
 # ==============================
 # Paged list
@@ -79,11 +93,13 @@ def pick_columns(columns: dict[str, str], current: list[str]) -> list[str]:
             print(lang.t("cli_utils.error.invalid_selection"))
 
 
+T = TypeVar('T')  # Generic type variable
+
 def paged_list(
-    items: list[dict],
-    columns: dict[str, str],
+    items: list[Any],  # list of objects (Gear, Brand, Trip, Kit, Category, etc.)
+    columns: dict[str, str],  # {attribute_name: translation_key}
     default_cols: list[str],
-    on_select,
+    on_select,  # callable(item: T) called when user picks a row
     page_size: int = 10,
     title_key: str = "cli_utils.title.list",
     empty_key: str = "cli_utils.error.empty",
@@ -91,13 +107,21 @@ def paged_list(
     """
     Generic paginated list with selectable columns.
 
-    items:        list of dicts to display
-    columns:      all available columns as {field_key: translation_key}
+    items:        list of objects (Gear, Brand, Trip, Kit, Category, Consumable, etc.)
+    columns:      {attribute_name: translation_key} — maps object attributes to labels
     default_cols: which columns to show initially
-    on_select:    callable(item: dict) called when user picks a row
+    on_select:    callable(item) called when user picks a row
     page_size:    rows per page
     title_key:    translation key for the list title
     empty_key:    translation key shown when items is empty
+
+    Example usage:
+        paged_list(
+            items=[gear1, gear2, gear3],
+            columns={"name": "gear.fields.name", "variant": "gear.fields.variant"},
+            default_cols=["name", "variant"],
+            on_select=lambda g: display_full_gear(g),
+        )
     """
     if not items:
         print(lang.t(empty_key))
@@ -123,7 +147,7 @@ def paged_list(
 
         for i, item in enumerate(page_items, 1):
             row = f"  {i:<4}" + "".join(
-                f"{str(getattr(item, c, None) or '—'):<{col_w}}" for c in active_cols
+                f"{str(_get_display_value(item, c) or '—'):<{col_w}}" for c in active_cols
             )
             print(row)
 
@@ -154,6 +178,40 @@ def paged_list(
                 print(lang.t("cli_utils.error.invalid_selection"))
         else:
             print(lang.t("cli_utils.error.invalid_selection"))
+
+
+def _get_display_value(item: Any, attr: str) -> str:
+    """
+    Safely get an attribute from an object, handling nested attributes.
+    Supports both direct attributes and properties.
+
+    Examples:
+        _get_display_value(gear, "name") → gear.name
+        _get_display_value(gear, "brand.name") → gear.brand.name
+        _get_display_value(trip, "trip_month") → trip.trip_month (or formatted)
+    """
+    try:
+        # Handle nested attributes like "brand.name"
+        if "." in attr:
+            parts = attr.split(".")
+            value = item
+            for part in parts:
+                value = getattr(value, part, None)
+                if value is None:
+                    return None
+            return value
+
+        # Simple attribute
+        value = getattr(item, attr, None)
+
+        # Special handling for certain types
+        if attr == "trip_month" and value is not None:
+            from app.cli.trip_functions import _month_name
+            return _month_name(value)
+
+        return value
+    except (AttributeError, TypeError):
+        return None
 
 
 # ==============================

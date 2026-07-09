@@ -133,20 +133,16 @@ GEAR_LIST_COLUMNS = {
     "category_id": "gear_functions.fields.category",
 }
 
-def display_full_gear(gear_id: int):
+def display_full_gear(gear: Gear):  # receives Gear object directly
     """Print all fields of a single gear item."""
-#    g = dict(gear)
-    gear = get_gear_by_id(gear_id)
     f = "gear_functions.fields"
-
-    brand_name = gear.brand.name if gear.brand else "—"
-
     print(lang.t("gear_functions.title.full_gear"))
     print("=" * 40)
-    print(f"  {gear.name}  —  {gear.variant}")
+    print(f"  {gear.name}  —  {gear.variant or '—'}")
     print("=" * 40)
     print(f"  {lang.t(f+'.id'):<14}: {gear.id_gear}")
-    print(f"  {lang.t(f+'.brand'):<14}: {gear.brand.name}")
+    brand_name = gear.brand.name if gear.brand else "—"
+    print(f"  {lang.t(f+'.brand'):<14}: {brand_name}")
     print(f"  {lang.t(f+'.category'):<14}: {gear.category_id}") # FIX category
     print(f"  {lang.t(f+'.size'):<14}: {gear.size or '—'}")
     print(f"  {lang.t(f+'.color'):<14}: {gear.color or '—'}")
@@ -172,7 +168,7 @@ def list_gear(page_size: int = 10):
         items        = db.get_all_gear(),
         columns      = GEAR_LIST_COLUMNS,
         default_cols = ["name", "variant", "size", "amount"],
-        on_select    = on_select,
+        on_select    = lambda g: display_full_gear(g),
         page_size    = page_size,
         title_key    = "gear_functions.title.list_gear",
         empty_key    = "gear_functions.error.no_gear",

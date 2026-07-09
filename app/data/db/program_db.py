@@ -126,22 +126,23 @@ def get_all_brands():
     ]
     conn.close()
 
-
-def get_brand_by_id(brand_id: int):
+def get_brand_by_id(brand_id: int) -> Brand | None:
     """Return a single brand by ID."""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("SELECT id_brand, name, description, url FROM brand WHERE id_brand = ?", (brand_id,))
     result = cursor.fetchone()
     conn.close()
-    
-    return Brand(
-            id_brand=result[0],
-            name=result[1],
-            description=result[2],
-            url=result[3]
-            )
 
+    if result is None:
+        return None
+
+    return Brand(
+        id_brand=result[0],
+        name=result[1],
+        description=result[2],
+        url=result[3]
+    )
 
 def delete_brand(brand_id: int) -> bool:
     """

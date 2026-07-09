@@ -33,7 +33,7 @@ def add_gear(gear: Gear) -> int:
     """, (
         gear.name,
         gear.variant,
-        gear.brand,
+        gear.brand.id_brand if gear.brand else None,  # extract ID from Brand object
         gear.size,
         gear.mass_pcs,
         gear._price_cents,
@@ -53,6 +53,7 @@ def add_gear(gear: Gear) -> int:
     conn.close()
     return gear_id
 
+
 def update_gear(gear: Gear):
     """Update all fields of an existing gear item."""
     conn = sqlite3.connect(DB_PATH)
@@ -65,7 +66,7 @@ def update_gear(gear: Gear):
     """, (
         gear.name,
         gear.variant,
-        gear.brand_id,
+        gear.brand.id_brand if gear.brand else None,
         gear.size,
         gear.mass_pcs,
         gear._price_cents,
@@ -133,11 +134,39 @@ def delete_gear(gear_id: int):
     conn.commit()
     conn.close()
 
-def get_all_gear() -> list[dict]:
+def get_all_gear() -> list[Gear]:
     """Fetch all gear from the database, ordered by name."""
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     cursor = conn.execute("SELECT * FROM Gear ORDER BY name")
-    rows = [dict(r) for r in cursor.fetchall()]
+    rows = cursor.fetchall()
     conn.close()
-    return rows
+    
+    gear_list = []
+    for row in rows:
+        # Resolve brand object if present
+        brand = None
+        if row["brand_id"]:
+            brand = get_brand_by_id(row["brand_id"])
+        
+        gear = Gear(
+            id_gear=row["id_gear"],
+            name=row["name"],
+            variant=row["variant"],
+            brand = get_brand_by_id(row["brand_id"]) if row["brand_id"] else None,
+            size=row["size"],
+            mass_pcs=row["mass_pcs"],
+            _price_cents=row["price_cents"],
+            amount=row["amount"],
+            color=row["color"],
+            category_id=row["category_id"],
+            description=row["description"],
+            prod_date=row["prod_date"],
+            checked=row["checked"],
+            last_checked=row["last_checked"],
+            lifespan=row["lifespan"],
+            kit_only=bool(row["kit_only"])
+        )
+        gear_list.append(gear)
+    
+    return gear_list

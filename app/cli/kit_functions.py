@@ -48,9 +48,16 @@ def _pick_gear() -> tuple | None:
         print(lang.t("kit_functions.error.no_gear"))
         return None
 
-    numbered = [{**r, "idx": i+1} for i, r in enumerate(results)]
+    # Convert dicts to Gear objects and add index
+    gear_objects = []
+    for i, r in enumerate(results, 1):
+        gear = db.get_gear_by_id(r["id_gear"])
+        if gear:
+            gear.idx = i  # add index as attribute
+            gear_objects.append(gear)
+
     print_table(
-        items   = numbered,
+        items   = gear_objects,
         columns = ["idx", "name", "variant", "mass_pcs", "amount"],
         labels  = ["#", "Name", "Variant", "Mass(g)", "Stock"],
     )
