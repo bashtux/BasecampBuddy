@@ -99,7 +99,7 @@ def input_gear():
     gear = Gear(
             name = name,
             variant = variant,
-            brand = brand_id,
+            brand_id = brand_id,
             size = size,
             mass_pcs = mass_pcs,
             price = price,
@@ -114,6 +114,8 @@ def input_gear():
             kit_only = int(kit_only)
     )
 
+    print(gear)
+
     if gear.name:
         db.add_gear(gear)
         print(lang.t("gear_functions.msg.gear_added").format(gear_name=gear.name))
@@ -125,7 +127,7 @@ GEAR_LIST_COLUMNS = {
     "id_gear":     "gear_functions.fields.id",
     "name":        "gear_functions.fields.name",
     "variant":     "gear_functions.fields.variant",
-    "brand":    "gear_functions.fields.brand",
+    "brand":       "gear_functions.fields.brand",
     "size":        "gear_functions.fields.size",
     "mass_pcs":    "gear_functions.fields.mass",
     "amount":      "gear_functions.fields.amount",
@@ -141,8 +143,7 @@ def display_full_gear(gear: Gear):  # receives Gear object directly
     print(f"  {gear.name}  —  {gear.variant or '—'}")
     print("=" * 40)
     print(f"  {lang.t(f+'.id'):<14}: {gear.id_gear}")
-    brand_name = gear.brand.name if gear.brand else "—"
-    print(f"  {lang.t(f+'.brand'):<14}: {brand_name}")
+    print(f"  {lang.t(f+'.brand'):<14}: {gear.brand.name}")
     print(f"  {lang.t(f+'.category'):<14}: {gear.category_id}") # FIX category
     print(f"  {lang.t(f+'.size'):<14}: {gear.size or '—'}")
     print(f"  {lang.t(f+'.color'):<14}: {gear.color or '—'}")

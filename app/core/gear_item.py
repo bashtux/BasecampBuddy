@@ -1,20 +1,21 @@
 from __future__ import annotations
 from datetime import date, timedelta
-from typing import Optional, List
+from typing import Optional, List, Union
+import json
+from pathlib import Path
 
+from app.core.brand import Brand
 
 class Gear:
     """
     Represents a single gear item in the system.
     """
-
     def __init__(
         self,
         name: str,
         variant: str,
-        brand: Brand | None = None,
+        brand_id: int | None = None,
         price: float | int | None = None,
-        _price_cents = None,
         size: Optional[str] = None,
         mass_pcs: Optional[int] = None,
         amount: int = 1,
@@ -32,11 +33,12 @@ class Gear:
         self.id_gear = id_gear
         self.name = name
         self.variant = variant
-        self.brand = brand
+        self.brand_id = brand_id  # Store only the ID
+        self._brand = None  # Cache for lazy-loaded Brand object
         self.size = size
         self.mass_pcs = mass_pcs
         self._price_cents = None
-        self.price = price
+        self.price = price  # Use the setter
         self.amount = amount
         self.color = color
         self.category_id = category_id
@@ -47,14 +49,51 @@ class Gear:
         self.last_checked = last_checked
         self.lifespan = lifespan
         self.kit_only = kit_only
-
+    
+    @property
+    def brand(self) -> Brand | None:
+        """
+        Lazy-load and return the Brand object for this gear.
+        Returns None if brand_id is not set or brand not found.
+        
+        Usage:
+            gear = Gear(name="Harness", brand_id=4)
+            print(gear.brand.name)  # "Petzl"
+        """
+        if self.brand_id is None:
+            return None
+        
+        # Return cached brand if already loaded
+        if self._brand is not None:
+            return self._brand
+        
+        # Load from file and cache
+        self._brand = Brand.get_by_id(self.brand_id)
+        return self._brand
+    
+    @brand.setter
+    def brand(self, value: Brand | None):
+        """
+        Set the brand and update brand_id accordingly.
+        
+        Usage:
+            gear.brand = Brand(name="Mammut", id_brand=1)
+            # Now gear.brand_id is automatically 1
+        """
+        if value is None:
+            self.brand_id = None
+            self._brand = None
+        else:
+            self.brand_id = value.id_brand
+            self._brand = value
+    
     @property
     def price(self) -> float | None:
         """Return price as float in euros (or None if unset)."""
         if self._price_cents is None:
             return None
         return self._price_cents / 100
-
+    
     @price.setter
     def price(self, value: Union[float, int, str, None]):
         """
@@ -64,28 +103,21 @@ class Gear:
         if value is None or value == "":
             self._price_cents = None
             return
-
         try:
             # Convert strings to float
             if isinstance(value, str):
                 value = float(value.replace(",", "."))  # handle commas in strings
-
             float_value = float(value)
-
             if float_value < 0:
                 raise ValueError("Price cannot be negative")
-
             # Round to nearest cent to avoid floating-point issues
             self._price_cents = int(round(float_value * 100))
-
         except (ValueError, TypeError):
             raise ValueError(f"Invalid price: {value}")
-
-
+    
     # -----------------------------
     # Core behavior methods
     # -----------------------------
-
     def is_expired(self) -> bool:
         """
         Return True if the gear is expired based on prod_date + lifespan.
@@ -93,25 +125,22 @@ class Gear:
         """
         if not self.prod_date or not self.lifespan or self.lifespan == 0:
             return False
-
         expiry_date = self.prod_date + timedelta(days=self.lifespan * 365)
         return date.today() > expiry_date
-
+    
     def check(self):
         """
         Mark the gear as checked today.
         """
         self.checked = True
         self.last_checked = date.today()
-
-
+    
     # -----------------------------
     # Utility and representation
     # -----------------------------
-
     def __repr__(self) -> str:
+        brand_name = self.brand.name if self.brand else "Unknown"
         return (
-            f"<Gear id={self.id_gear}, name={self.name}, type={self.type}, "
-            f"expired={self.is_expired()}, checked={self.checked}>"
+            f"<Gear id={self.id_gear}, name={self.name}, variant={self.variant}, "
+            f"brand={brand_name}, expired={self.is_expired()}, checked={self.checked}>"
         )
-

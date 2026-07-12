@@ -30,27 +30,24 @@ class Kit:
         if len(self.gear_list) != len(self.gear_amount):
             raise ValueError("gear_list and gear_amount must have the same length")
 
-    # -----------------------------
-    # Core behavior methods
-    # -----------------------------
 
+    @property
     def total_mass(self) -> float:
         """
         Returns the total mass of the kit.
-
-        Each gear's `mass_pcs` is multiplied by its corresponding
-        quantity from `gear_amount`, then summed up and adjusted
-        by `mass_correction`.
-
-        If any gear has no mass defined, it is treated as 0.
+        ...
         """
         total = 0.0
         for gear, amount in zip(self.gear_list, self.gear_amount):
             gear_mass = gear.mass_pcs or 0
             total += gear_mass * amount
-
         total += self.mass_correction
         return total
+
+    @property
+    def item_count(self) -> int:
+        """Return the number of items in the kit."""
+        return len(self.gear_list)
 
     # -----------------------------
     # Utility methods

@@ -16,19 +16,6 @@ KIT_LIST_COLUMNS = {
 DEFAULT_KIT_COLS = ["id_kit", "name", "item_count", "total_mass"]
 
 
-def _kits_to_display_rows(kits: list[Kit]) -> list[dict]:
-    """Convert Kit objects to display dicts with computed fields."""
-    return [
-        {
-            "id_kit":     kit.id_kit,
-            "name":       kit.name,
-            "item_count": len(kit.gear_list),
-            "total_mass": kit.total_mass(),
-        }
-        for kit in kits
-    ]
-
-
 def _pick_gear() -> tuple | None:
     """Fuzzy-search gear, let user pick one and enter amount."""
     term = input(lang.t("kit_functions.cli.search_gear")).strip()
@@ -96,7 +83,6 @@ def _show_current_gear(kit: Kit):
         mass = (gear.mass_pcs or 0) * amt
         print(f"  {gear.name} {gear.variant or ''}  x{amt}  — {mass}g")
 
-
 def display_full_kit(kit: Kit):
     """Print full detail of a kit."""
     print(lang.t("kit_functions.title.kit_detail"))
@@ -106,13 +92,21 @@ def display_full_kit(kit: Kit):
         print(f"  {kit.description}")
     print("=" * 40)
 
+    # Create simple objects with the computed fields
+    class GearDisplay:
+        def __init__(self, name, variant, amount, mass):
+            self.name = name
+            self.variant = variant
+            self.amount = amount
+            self.mass = mass
+    
     gear_rows = [
-        {
-            "name":    g.name,
-            "variant": g.variant or "—",
-            "amount":  amt,
-            "mass":    f"{(g.mass_pcs or 0) * amt}g",
-        }
+        GearDisplay(
+            name=g.name,
+            variant=g.variant or "—",
+            amount=amt,
+            mass=f"{(g.mass_pcs or 0) * amt}g",
+        )
         for g, amt in zip(kit.gear_list, kit.gear_amount)
     ]
 
@@ -124,7 +118,7 @@ def display_full_kit(kit: Kit):
 
     print()
     print(f"  {lang.t('kit_functions.msg.mass_correction', correction=kit.mass_correction)}")
-    print(f"  {lang.t('kit_functions.msg.total_mass', mass=kit.total_mass())}")
+    print(f"  {lang.t('kit_functions.msg.total_mass', mass=kit.total_mass)}")
     print()
 
 
@@ -168,17 +162,16 @@ def list_kits():
     """Paged list of all kits."""
     kits = db.get_all_kits()
 
-    def on_select(item):
-        kit = db.get_kit_by_id(item["id_kit"])
-        display_full_kit(kit)
-        list_comments(item["id_kit"])
+    def on_select(item: Kit):
+        display_full_kit(item)
+        list_comments(item.id_kit)
         input(lang.t("kit_functions.msg.enter_to_return"))
 
     paged_list(
-        items        = _kits_to_display_rows(kits),
+        items        = kits,
         columns      = KIT_LIST_COLUMNS,
         default_cols = DEFAULT_KIT_COLS,
         on_select    = on_select,
         title_key    = "kit_functions.title.list_kits",
         empty_key    = "kit_functions.error.no_kits",
-    )
+        )

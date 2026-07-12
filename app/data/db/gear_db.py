@@ -33,7 +33,7 @@ def add_gear(gear: Gear) -> int:
     """, (
         gear.name,
         gear.variant,
-        gear.brand.id_brand if gear.brand else None,  # extract ID from Brand object
+        gear.brand_id,
         gear.size,
         gear.mass_pcs,
         gear._price_cents,
@@ -108,10 +108,10 @@ def get_gear_by_id(gear_id: int) -> Gear | None:
             id_gear=row["id_gear"],
             name=row["name"],
             variant=row["variant"],
-            brand=brand,
+            brand_id=row["brand_id"],
             size=row["size"],
             mass_pcs=row["mass_pcs"],
-            _price_cents=row["price_cents"],
+            price=row["price_cents"] / 100 if row["price_cents"] else None,
             amount=row["amount"],
             color=row["color"],
             category_id=row["category_id"],
@@ -134,8 +134,15 @@ def delete_gear(gear_id: int):
     conn.commit()
     conn.close()
 
+
 def get_all_gear() -> list[Gear]:
     """Fetch all gear from the database, ordered by name."""
+    import sqlite3
+    from pathlib import Path
+    
+    # Update this to your actual DB_PATH
+    DB_PATH = Path("app/data/user_db.sqlite")
+    
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     cursor = conn.execute("SELECT * FROM Gear ORDER BY name")
@@ -144,25 +151,21 @@ def get_all_gear() -> list[Gear]:
     
     gear_list = []
     for row in rows:
-        # Resolve brand object if present
-        brand = None
-        if row["brand_id"]:
-            brand = get_brand_by_id(row["brand_id"])
-        
         gear = Gear(
             id_gear=row["id_gear"],
             name=row["name"],
             variant=row["variant"],
-            brand = get_brand_by_id(row["brand_id"]) if row["brand_id"] else None,
+            brand_id=row["brand_id"],  # ← ADD THIS
             size=row["size"],
             mass_pcs=row["mass_pcs"],
-            _price_cents=row["price_cents"],
+            price=row["price_cents"] / 100 if row["price_cents"] else None,  # Convert cents to euros
             amount=row["amount"],
             color=row["color"],
             category_id=row["category_id"],
+            comments=None,  # TODO: parse from JSON if stored as string
             description=row["description"],
             prod_date=row["prod_date"],
-            checked=row["checked"],
+            checked=bool(row["checked"]),
             last_checked=row["last_checked"],
             lifespan=row["lifespan"],
             kit_only=bool(row["kit_only"])
@@ -170,3 +173,5 @@ def get_all_gear() -> list[Gear]:
         gear_list.append(gear)
     
     return gear_list
+
+
