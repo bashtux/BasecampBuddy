@@ -107,3 +107,24 @@ def edit_category():
 
     db.update_category(category_id, new_name, new_description)
     print(lang.t("category_functions.msg.success"))
+
+
+def delete_category():
+    print(lang.t("delete_functions.title.delete_category"))
+    row = _list_pick(
+        db.get_all_categories(),
+        ["id_category", "category", "description"],
+        ["ID", "Name", "Description"],
+    )
+    if not row:
+        return
+
+    if not confirm("delete_functions.msg.confirm", name=row["name"]):
+        print(lang.t("delete_functions.msg.cancelled"))
+        return
+
+    success = db.delete_category(row["id_category"])
+    if success:
+        print(lang.t("delete_functions.msg.deleted", name=row["category"]))
+    else:
+        print(lang.t("delete_functions.msg.has_references", name=row["category"]))

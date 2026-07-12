@@ -3,7 +3,7 @@ from app.lang import lang
 from app.data import db
 from app.core.utils.db_utils import fuzzy_search
 from app.core.kit_item import Kit
-from app.cli.cli_utils import paged_list, print_table
+from app.cli.cli_utils import paged_list, print_table, show_diff, prompt_field
 from app.cli.comment_functions import list_comments
 
 KIT_LIST_COLUMNS = {
@@ -82,6 +82,13 @@ def _show_current_gear(kit: Kit):
     for gear, amt in zip(kit.gear_list, kit.gear_amount):
         mass = (gear.mass_pcs or 0) * amt
         print(f"  {gear.name} {gear.variant or ''}  x{amt}  — {mass}g")
+
+
+def _count_kit_references(gear_id: int) -> int:
+    """Count how many kits reference this gear."""
+    kits = db.get_all_kits()
+    return sum(1 for k in kits if gear_id in [g.id_gear for g in k.gear_list])
+
 
 def display_full_kit(kit: Kit):
     """Print full detail of a kit."""
@@ -175,3 +182,98 @@ def list_kits():
         title_key    = "kit_functions.title.list_kits",
         empty_key    = "kit_functions.error.no_kits",
         )
+
+def edit_kit():
+    print(lang.t("edit_functions.title.edit_kit"))
+    row = _fuzzy_pick("Kit", "user_db", ["id_kit", "name"], ["ID", "Name"])
+    if not row:
+        return
+
+    kit = db.get_kit_by_id(row["id_kit"])
+    if not kit:
+        print(lang.t("edit_functions.error.not_found"))
+        return
+
+    # Metadata fields
+    fields = [
+        ("name",            "kit_functions.fields.name",        kit.name,            is_nonempty_string),
+        ("description",     "kit_functions.fields.description",  kit.description,     None),
+        ("mass_correction", "kit_functions.fields.mass_correction", kit.mass_correction, None),
+    ]
+
+    while True:
+        print()
+        for i, (_, t_key, current, _v) in enumerate(fields, 1):
+            print(f"  {i:<3} {lang.t(t_key):<20}: {current}")
+
+        # Show gear items
+        print(lang.t("edit_functions.title.gear_items"))
+        if kit.gear_list:
+            for i, (g, amt) in enumerate(zip(kit.gear_list, kit.gear_amount), 1):
+                print(f"  G{i:<2} {g.name} {g.variant or ''}  x{amt}  — {(g.mass_pcs or 0)*amt}g")
+        else:
+            print("  (none)")
+
+        print(f"\n  S. Save    D. Discard    A. Add gear    R. Remove gear")
+        choice = input(lang.t("edit_functions.cli.pick_field")).strip().upper()
+
+        if choice == "D":
+            print(lang.t("edit_functions.msg.discarded"))
+            return
+        if choice == "S":
+            break
+        if choice == "A":
+            result = _pick_gear()
+            if result:
+                g, amt = result
+                kit.add_gear(g, amt)
+                print(lang.t("edit_functions.msg.item_added", name=g.name))
+        if choice == "R":
+            raw = input(lang.t("edit_functions.cli.remove_item")).strip()
+            if raw.startswith("G") and raw[1:].isdigit():
+                idx = int(raw[1:]) - 1
+                if 0 <= idx < len(kit.gear_list):
+                    name = kit.gear_list[idx].name
+                    kit.remove_gear(kit.gear_list[idx].id_gear)
+                    print(lang.t("edit_functions.msg.item_removed", name=name))
+        if choice.isdigit() and 0 <= int(choice) - 1 < len(fields):
+            idx = int(choice) - 1
+            key, t_key, current, validator = fields[idx]
+            new_val = _prompt_field(lang.t(t_key), current, validator)
+            fields[idx] = (key, t_key, new_val, validator)
+
+    # Diff metadata only
+    original = db.get_kit_by_id(kit.id_kit)
+    orig_vals = {"name": original.name, "description": original.description, "mass_correction": original.mass_correction}
+    changes = {}
+    for key, t_key, new_val, _ in fields:
+        old_val = orig_vals[key]
+        if new_val != old_val:
+            changes[t_key] = (old_val, new_val)
+            setattr(kit, key, new_val)
+
+    _show_diff(changes)
+    if confirm("edit_functions.cli.confirm_save"):
+        db.update_kit(kit)
+        print(lang.t("edit_functions.msg.saved"))
+    else:
+        print(lang.t("edit_functions.msg.discarded"))
+
+
+def delete_kit():
+    print(lang.t("delete_functions.title.delete_kit"))
+    row = _fuzzy_pick("Kit", "user_db", ["id_kit", "name"], ["ID", "Name"])
+    if not row:
+        return
+
+    trip_count = _count_trip_references_kit(row["id_kit"])
+    if trip_count:
+        print(lang.t("delete_functions.msg.warn_trips", count=trip_count))
+
+    if not confirm("delete_functions.msg.confirm", name=row["name"]):
+        print(lang.t("delete_functions.msg.cancelled"))
+        return
+
+    db.delete_kit(row["id_kit"])
+    print(lang.t("delete_functions.msg.deleted", name=row["name"]))
+

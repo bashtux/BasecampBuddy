@@ -11,7 +11,7 @@ from app.core.gear_item import Gear
 from app.cli.brand_functions import list_brands
 from app.cli.category_functions import pick_category
 from app.cli.comment_functions import list_comments
-from app.cli.cli_utils import paged_list, print_header
+from app.cli.cli_utils import paged_list, print_header, show_diff, prompt_field, fuzzy_pick, list_pick, confirm
 
 #------------------------------
 # Load config and language
@@ -135,6 +135,79 @@ GEAR_LIST_COLUMNS = {
     "category_id": "gear_functions.fields.category",
 }
 
+def edit_gear():
+    print(lang.t("edit_functions.title.edit_gear"))
+    row = fuzzy_pick("Gear", "user_db", ["id_gear", "name", "variant"], ["ID", "Name", "Variant"])
+    if not row:
+        return
+
+    gear = db.get_gear_by_id(row["id_gear"])
+    if not gear:
+        print(lang.t("edit_functions.error.not_found"))
+        return
+
+    fields = [
+        ("name",        "gear_functions.fields.name",     gear.name,        is_nonempty_string),
+        ("variant",     "gear_functions.fields.variant",  gear.variant,     None),
+        ("brand_id",    "gear_functions.fields.brand",    gear.brand_id,    None),
+        ("size",        "gear_functions.fields.size",     gear.size,        None),
+        ("color",       "gear_functions.fields.color",    gear.color,       None),
+        ("mass_pcs",    "gear_functions.fields.mass",     gear.mass_pcs,    is_positive_number),
+        ("amount",      "gear_functions.fields.amount",   gear.amount,      is_positive_number),
+        ("price",       "gear_functions.fields.price",    gear.price,       is_positive_number),
+        ("lifespan",    "gear_functions.fields.lifespan", gear.lifespan,    is_positive_integer_or_empty),
+        ("description", "gear_functions.fields.description", gear.description, None),
+        ("kit_only",    "gear_functions.fields.kit_only", gear.kit_only,    is_yes_no),
+    ]
+
+    while True:
+        print()
+        for i, (_, t_key, current, _v) in enumerate(fields, 1):
+            print(f"  {i:<3} {lang.t(t_key):<16}: {current}")
+        print(f"  S. Save    D. Discard")
+
+        choice = input(lang.t("edit_functions.cli.pick_field")).strip().upper()
+
+        if choice == "D":
+            print(lang.t("edit_functions.msg.discarded"))
+            return
+        if choice == "S":
+            break
+        if choice.isdigit() and 0 <= int(choice) - 1 < len(fields):
+            idx = int(choice) - 1
+            key, t_key, current, validator = fields[idx]
+            new_val = prompt_field(lang.t(t_key), current, validator)
+            fields[idx] = (key, t_key, new_val, validator)
+
+    # Build diff and apply
+    original = db.get_gear_by_id(gear.id_gear)
+    changes  = {}
+    orig_vals = {
+        "name": original.name, "variant": original.variant,
+        "brand_id": original.brand_id,
+        "size": original.size, "color": original.color,
+        "mass_pcs": original.mass_pcs, "amount": original.amount,
+        "price": original.price, "lifespan": original.lifespan,
+        "description": original.description, "kit_only": original.kit_only,
+    }
+
+    for key, t_key, new_val, _ in fields:
+        old_val = orig_vals[key]
+        if new_val != old_val:
+            changes[t_key] = (old_val, new_val)
+            setattr(gear, key, new_val)
+
+    show_diff(changes)
+    if not changes:
+        return
+
+    if confirm("edit_functions.cli.confirm_save"):
+        db.update_gear(gear)
+        print(lang.t("edit_functions.msg.saved"))
+    else:
+        print(lang.t("edit_functions.msg.discarded"))
+
+
 def display_full_gear(gear: Gear):  # receives Gear object directly
     """Print all fields of a single gear item."""
     f = "gear_functions.fields"
@@ -174,4 +247,25 @@ def list_gear(page_size: int = 10):
         title_key    = "gear_functions.title.list_gear",
         empty_key    = "gear_functions.error.no_gear",
     )
+
+
+def delete_gear():
+    print(lang.t("delete_functions.title.delete_gear"))
+    row = fuzzy_pick("Gear", "user_db", ["id_gear", "name", "variant"], ["ID", "Name", "Variant"])
+    if not row:
+        return
+
+    kit_count  = count_kit_references(row["id_gear"])
+    trip_count = count_trip_references_gear(row["id_gear"])
+
+    if kit_count:
+        print(lang.t("delete_functions.msg.warn_kits", count=kit_count))
+    if trip_count:
+        print(lang.t("delete_functions.msg.warn_trips", count=trip_count))
+    if not confirm("delete_functions.msg.confirm", name=row["name"]):
+        print(lang.t("delete_functions.msg.cancelled"))
+        return
+
+    db.delete_gear(row["id_gear"])
+    print(lang.t("delete_functions.msg.deleted", name=row["name"]))
 

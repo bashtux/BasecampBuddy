@@ -1,15 +1,13 @@
 from app.lang import lang
 
 from app.data import db
-from app.cli.gear_functions import input_gear, display_full_gear, list_gear
-from app.cli.trip_functions import input_trip, list_trips
-from app.cli.kit_functions import input_kit, list_kits
-from app.cli.category_functions import input_category, list_categories, edit_category
-from app.cli.brand_functions import input_brand, list_brands, edit_brand
-from app.cli.consumable_functions import input_consumable, edit_consumable, list_consumables
-from app.cli.edit_functions import edit_gear, edit_kit, edit_trip
+from app.cli.gear_functions import input_gear, edit_gear, display_full_gear, list_gear, delete_gear
+from app.cli.trip_functions import input_trip, edit_trip, list_trips, delete_trip
+from app.cli.kit_functions import input_kit, edit_kit, list_kits, delete_kit
+from app.cli.category_functions import input_category, list_categories, edit_category, delete_category
+from app.cli.brand_functions import input_brand, list_brands, edit_brand, delete_brand
+from app.cli.consumable_functions import input_consumable, edit_consumable, list_consumables, delete_consumable
 from app.cli.comment_functions import input_comment, list_comments
-from app.cli.delete_functions import delete_gear, delete_kit, delete_trip, delete_brand, delete_category, delete_consumable
 
 # ====================================================
 # Print Menu function

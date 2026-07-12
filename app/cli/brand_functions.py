@@ -129,3 +129,24 @@ def edit_brand():
     # Clear cache so updated brand is reloaded
     Brand.clear_cache()
     return
+
+def delete_brand():
+    print(lang.t("delete_functions.title.delete_brand"))
+    row = _list_pick(
+        db.get_all_brands(),
+        ["id_brand", "name", "description"],
+        ["ID", "Name", "Description"],
+    )
+    if not row:
+        return
+
+    if not confirm("delete_functions.msg.confirm"):
+        print(lang.t("delete_functions.msg.cancelled"))
+        return
+
+    success = db.delete_brand(row["id_brand"])
+    if success:
+        print(lang.t("delete_functions.msg.deleted", name=row["name"]))
+    else:
+        print(lang.t("delete_functions.msg.has_references", name=row["name"]))
+

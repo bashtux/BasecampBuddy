@@ -1,5 +1,6 @@
 from app.lang import lang
 from typing import TypeVar, Generic, Any
+from app.core.utils.db_utils import fuzzy_search
 
 
 # ==============================
@@ -56,6 +57,76 @@ def _get_display_value(item, attr: str):
         return getattr(item, attr, None)
     except AttributeError:
         return None
+
+def fuzzy_pick(entity: str, db_name: str, columns: list[str], labels: list[str]) -> dict | None:
+    """Fuzzy search an entity and return the chosen row as dict, or None."""
+    term = input(f"Search {entity} (fuzzy): ").strip()
+    if not term:
+        return None
+ 
+    results = fuzzy_search(
+        table          = entity,
+        search_columns = "name",
+        search_term    = term,
+        return_columns = columns,
+        sort_by        = "name",
+        db_name        = db_name,
+    ) or []
+ 
+    if not results:
+        print(lang.t("delete_functions.error.not_found"))
+        return None
+ 
+    # Convert dicts to objects with attributes for print_table
+    class SearchResult:
+        def __init__(self, idx, **kwargs):
+            self._idx = idx
+            for k, v in kwargs.items():
+                setattr(self, k, v)
+    
+    numbered = [SearchResult(i + 1, **r) for i, r in enumerate(results)]
+    print_table(
+        items   = numbered,
+        columns = ["_idx"] + columns,
+        labels  = ["#"] + labels,
+    )
+ 
+    raw = input(lang.t("menu.cli.prompt") + " ").strip()
+    if not raw.isdigit() or not (0 <= int(raw) - 1 < len(results)):
+        print(lang.t("delete_functions.error.invalid_choice"))
+        return None
+ 
+    return results[int(raw) - 1]
+
+
+def list_pick(items: list[tuple], columns: list[str], labels: list[str]) -> dict | None:
+    """Show a simple list and let user pick by number."""
+    if not items:
+        print(lang.t("delete_functions.error.not_found"))
+        return None
+ 
+    rows = [dict(zip(columns, row)) for row in items]
+    
+    # Convert dicts to objects with attributes for print_table
+    class ListResult:
+        def __init__(self, idx, **kwargs):
+            self._idx = idx
+            for k, v in kwargs.items():
+                setattr(self, k, v)
+    
+    numbered = [ListResult(i + 1, **r) for i, r in enumerate(rows)]
+    print_table(
+        items   = numbered,
+        columns = ["_idx"] + columns,
+        labels  = ["#"] + labels,
+    )
+ 
+    raw = input(lang.t("menu.cli.prompt") + " ").strip()
+    if not raw.isdigit() or not (0 <= int(raw) - 1 < len(rows)):
+        print(lang.t("delete_functions.error.invalid_choice"))
+        return None
+ 
+    return rows[int(raw) - 1]
 
 # ==============================
 # Paged list
@@ -212,6 +283,33 @@ def _get_display_value(item: Any, attr: str) -> str:
         return value
     except (AttributeError, TypeError):
         return None
+
+
+# ==============================
+# Edit helpers
+# ==============================
+
+def show_diff(changes: dict):
+    """Print only the changed fields."""
+    if not changes:
+        print(lang.t("edit_functions.title.no_changes"))
+        return
+    print(lang.t("edit_functions.title.changes"))
+    for field, (old, new) in changes.items():
+        print(f"  {lang.t(field)}: '{old}'  →  '{new}'")
+
+def prompt_field(label: str, current, validator=None, allow_empty=True):
+    """Show current value, prompt for new one."""
+    raw = input(f"  {label} [{current}]: ").strip()
+    if not raw:
+        return current
+    if validator:
+        cleaned = validator(raw)
+        if cleaned is None:
+            print(lang.t("edit_functions.error.invalid_choice"))
+            return current
+        return cleaned
+    return raw
 
 
 # ==============================

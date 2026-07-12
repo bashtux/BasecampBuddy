@@ -81,3 +81,25 @@ def edit_consumable():
     db.update_consumable(consumable_id, new_name, new_description, new_weight)
     print(lang.t("consumable_functions.msg.success"))
     return
+
+
+def delete_consumable():
+    print(lang.t("delete_functions.title.delete_consumable"))
+    row = _list_pick(
+        db.get_all_consumables(),
+        ["id_consumable", "name", "description"],
+        ["ID", "Name", "Description"],
+    )
+    if not row:
+        return
+
+    if not confirm("delete_functions.msg.confirm", name=row["name"]):
+        print(lang.t("delete_functions.msg.cancelled"))
+        return
+
+    success = db.delete_consumable(row["id_consumable"])
+    if success:
+        print(lang.t("delete_functions.msg.deleted", name=row["name"]))
+    else:
+        print(lang.t("delete_functions.msg.has_references", name=row["name"]))
+

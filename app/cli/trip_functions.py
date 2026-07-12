@@ -8,7 +8,7 @@ from app.core.utils.validation import (
 from app.core.trip import Trip
 from app.core.gear_item import Gear
 from app.core.kit_item import Kit
-from app.cli.cli_utils import paged_list, print_table
+from app.cli.cli_utils import paged_list, print_table, show_diff, prompt_field
 from app.cli.comment_functions import list_comments
 
 
@@ -43,6 +43,23 @@ def _trips_to_display_rows(trips: list[Trip]) -> list[dict]:
         }
         for t in trips
     ]
+
+def _count_trip_references_gear(gear_id: int) -> int:
+    """Count how many trips reference this gear."""
+    trips = db.get_all_trips()
+    return sum(
+        1 for t in trips
+        if any(hasattr(item, "id_gear") and item.id_gear == gear_id for item in t.items)
+    )
+
+
+def _count_trip_references_kit(kit_id: int) -> int:
+    """Count how many trips reference this kit."""
+    trips = db.get_all_trips()
+    return sum(
+        1 for t in trips
+        if any(hasattr(item, "id_kit") and item.id_kit == kit_id for item in t.items)
+    )
 
 
 # -----------------------------------------------
@@ -364,6 +381,118 @@ def input_trip():
     print(lang.t("trip_functions.msg.trip_saved", name=name))
     display_full_trip(db.get_trip_by_id(trip_id))
 
+def edit_trip():
+    print(lang.t("edit_functions.title.edit_trip"))
+    row = _fuzzy_pick("Trip", "user_db", ["id_trip", "name"], ["ID", "Name"])
+    if not row:
+        return
+
+    trip = db.get_trip_by_id(row["id_trip"])
+    if not trip:
+        print(lang.t("edit_functions.error.not_found"))
+        return
+
+    fields = [
+        ("name",            "trip_functions.fields.name",       trip.name,            is_nonempty_string),
+        ("description",     "gear_functions.fields.description", trip.description,     None),
+        ("trip_month",      "trip_functions.fields.month",       trip.trip_month,      is_valid_month),
+        ("duration",        "trip_functions.fields.duration",    trip.duration,        is_positive_integer),
+        ("max_altitude",    "trip_functions.fields.no_people",   trip.max_altitude,    is_positive_integer),
+        ("no_people",       "trip_functions.fields.no_people",   trip.no_people,       is_positive_integer),
+        ("tags",            "trip_functions.fields.tags",        trip.tags,            is_valid_tags),
+        ("gear_mass_correction",       "trip_functions.msg.mass_correction", trip.gear_mass_correction,       None),
+        ("consumable_mass_correction", "trip_functions.msg.mass_correction", trip.consumable_mass_correction, None),
+    ]
+
+    while True:
+        print()
+        for i, (_, t_key, current, _v) in enumerate(fields, 1):
+            print(f"  {i:<3} {lang.t(t_key):<24}: {current}")
+
+        # Gear & kit items
+        print(lang.t("edit_functions.title.gear_items"))
+        if trip.items:
+            for i, (item, amt) in enumerate(zip(trip.items, trip.item_amounts), 1):
+                marker = "[K]" if isinstance(item, Kit) else "[G]"
+                print(f"  I{i:<2} {marker} {item.name}  x{amt}")
+        else:
+            print("  (none)")
+
+        # Consumables
+        print(lang.t("edit_functions.title.consumables"))
+        if trip.consumables:
+            for i, (c, amt) in enumerate(zip(trip.consumables, trip.consumable_amounts), 1):
+                print(f"  C{i:<2} {c.name}  x{amt}")
+        else:
+            print("  (none)")
+
+        print(f"\n  S. Save    D. Discard    AI. Add item    RI. Remove item    AC. Add consumable    RC. Remove consumable")
+        choice = input(lang.t("edit_functions.cli.pick_field")).strip().upper()
+
+        if choice == "D":
+            print(lang.t("edit_functions.msg.discarded"))
+            return
+        if choice == "S":
+            break
+        if choice == "AI":
+            result = _pick_item()
+            if result:
+                obj, amt = result
+                trip.add_item(obj, amt)
+                print(lang.t("edit_functions.msg.item_added", name=obj.name))
+        elif choice == "RI":
+            raw = input(lang.t("edit_functions.cli.remove_item")).strip().upper()
+            if raw.startswith("I") and raw[1:].isdigit():
+                idx = int(raw[1:]) - 1
+                if 0 <= idx < len(trip.items):
+                    name = trip.items[idx].name
+                    del trip.items[idx]
+                    del trip.item_amounts[idx]
+                    print(lang.t("edit_functions.msg.item_removed", name=name))
+        elif choice == "AC":
+            result = _pick_consumable()
+            if result:
+                c, amt = result
+                trip.add_consumable(c, amt)
+                print(lang.t("edit_functions.msg.item_added", name=c.name))
+        elif choice == "RC":
+            raw = input(lang.t("edit_functions.cli.remove_item")).strip().upper()
+            if raw.startswith("C") and raw[1:].isdigit():
+                idx = int(raw[1:]) - 1
+                if 0 <= idx < len(trip.consumables):
+                    name = trip.consumables[idx].name
+                    del trip.consumables[idx]
+                    del trip.consumable_amounts[idx]
+                    print(lang.t("edit_functions.msg.item_removed", name=name))
+        elif choice.isdigit() and 0 <= int(choice) - 1 < len(fields):
+            idx = int(choice) - 1
+            key, t_key, current, validator = fields[idx]
+            new_val = _prompt_field(lang.t(t_key), current, validator)
+            fields[idx] = (key, t_key, new_val, validator)
+
+    # Diff metadata
+    original  = db.get_trip_by_id(trip.id_trip)
+    orig_vals = {
+        "name": original.name, "description": original.description,
+        "trip_month": original.trip_month, "duration": original.duration,
+        "max_altitude": original.max_altitude, "no_people": original.no_people,
+        "tags": original.tags, "gear_mass_correction": original.gear_mass_correction,
+        "consumable_mass_correction": original.consumable_mass_correction,
+    }
+    changes = {}
+    for key, t_key, new_val, _ in fields:
+        old_val = orig_vals[key]
+        if new_val != old_val:
+            changes[t_key] = (old_val, new_val)
+            setattr(trip, key, new_val)
+
+    _show_diff(changes)
+    if confirm("edit_functions.cli.confirm_save"):
+        db.update_trip(trip)
+        print(lang.t("edit_functions.msg.saved"))
+    else:
+        print(lang.t("edit_functions.msg.discarded"))
+
 
 def list_trips():
     """Paged list of all trips."""
@@ -383,3 +512,17 @@ def list_trips():
         title_key    = "trip_functions.title.list_trips",
         empty_key    = "trip_functions.error.no_results",
     )
+
+def delete_trip():
+    print(lang.t("delete_functions.title.delete_trip"))
+    row = _fuzzy_pick("Trip", "user_db", ["id_trip", "name"], ["ID", "Name"])
+    if not row:
+        return
+
+    if not confirm("delete_functions.msg.confirm", name=row["name"]):
+        print(lang.t("delete_functions.msg.cancelled"))
+        return
+
+    db.delete_trip(row["id_trip"])
+    print(lang.t("delete_functions.msg.deleted", name=row["name"]))
+
