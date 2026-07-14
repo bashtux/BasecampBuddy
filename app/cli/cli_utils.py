@@ -298,17 +298,18 @@ def show_diff(changes: dict):
     for field, (old, new) in changes.items():
         print(f"  {lang.t(field)}: '{old}'  →  '{new}'")
 
+
 def prompt_field(label: str, current, validator=None, allow_empty=True):
     """Show current value, prompt for new one."""
     raw = input(f"  {label} [{current}]: ").strip()
     if not raw:
-        return current
+        return current  # Return current as-is if no input
     if validator:
         cleaned = validator(raw)
         if cleaned is None:
             print(lang.t("edit_functions.error.invalid_choice"))
-            return current
-        return cleaned
+            return current  # Return current if validation fails
+        return cleaned  # Return validated value
     return raw
 
 

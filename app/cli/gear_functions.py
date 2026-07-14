@@ -150,11 +150,13 @@ def edit_gear():
         ("name",        "gear_functions.fields.name",     gear.name,        is_nonempty_string),
         ("variant",     "gear_functions.fields.variant",  gear.variant,     None),
         ("brand_id",    "gear_functions.fields.brand",    gear.brand_id,    None),
+        ("category_id", "gear_functions.fields.category_id", gear.category_id, None),
         ("size",        "gear_functions.fields.size",     gear.size,        None),
         ("color",       "gear_functions.fields.color",    gear.color,       None),
         ("mass_pcs",    "gear_functions.fields.mass",     gear.mass_pcs,    is_positive_number),
         ("amount",      "gear_functions.fields.amount",   gear.amount,      is_positive_number),
         ("price",       "gear_functions.fields.price",    gear.price,       is_positive_number),
+        ("prod_date",   "gear_functions.fields.prod_date",gear.prod_date,   None),
         ("lifespan",    "gear_functions.fields.lifespan", gear.lifespan,    is_positive_integer_or_empty),
         ("description", "gear_functions.fields.description", gear.description, None),
         ("kit_only",    "gear_functions.fields.kit_only", gear.kit_only,    is_yes_no),
@@ -182,14 +184,7 @@ def edit_gear():
     # Build diff and apply
     original = db.get_gear_by_id(gear.id_gear)
     changes  = {}
-    orig_vals = {
-        "name": original.name, "variant": original.variant,
-        "brand_id": original.brand_id,
-        "size": original.size, "color": original.color,
-        "mass_pcs": original.mass_pcs, "amount": original.amount,
-        "price": original.price, "lifespan": original.lifespan,
-        "description": original.description, "kit_only": original.kit_only,
-    }
+    orig_vals = {key: getattr(original, key) for key, _, _, _ in fields}
 
     for key, t_key, new_val, _ in fields:
         old_val = orig_vals[key]

@@ -111,20 +111,14 @@ def is_yes_no(value: str) -> bool | None:
 
 # Is Valid date of defined format
 # ---------------------------
-def is_valid_date(value: str) -> date | None:
-    """
-    Validate and convert a date string to a date object.
-    Supports multiple common formats.
-    Returns None if invalid instead of raising.
-    """
-    if not value:
+def is_valid_date(value: str):
+    """Validate date string and return date object."""
+    if not value or value.strip() == "":
         return None
-    for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%d-%m-%Y", "%m/%Y", "%m-%Y"):
-        try:
-            return datetime.strptime(value, fmt).date()
-        except ValueError:
-            continue
-    return None
+    try:
+        return datetime.strptime(value, "%Y-%m-%d").date()
+    except ValueError:
+        return None
 
 # Is positive integer
 # ---------------------------

@@ -1,6 +1,7 @@
 import sqlite3
 from pathlib import Path
 from datetime import date
+from datetime import datetime
 
 from app.core.gear_item import Gear
 from app.data.db.program_db import get_brand_by_id
@@ -84,6 +85,15 @@ def update_gear(gear: Gear):
     conn.commit()
     conn.close()
 
+def _convert_prod_date(date_str: str):
+    """Convert prod_date string to date object, return None if invalid."""
+    if not date_str:
+        return None
+    try:
+        return datetime.strptime(date_str, "%Y-%m-%d").date()
+    except (ValueError, TypeError):
+        return None
+
 def get_gear_by_id(gear_id: int) -> Gear | None:
     """
     Fetches a single gear item by its ID, converts types,
@@ -116,7 +126,7 @@ def get_gear_by_id(gear_id: int) -> Gear | None:
             color=row["color"],
             category_id=row["category_id"],
             description=row["description"],
-            prod_date=row["prod_date"],
+            prod_date=_convert_prod_date(row["prod_date"]),
             checked=row["checked"],
             last_checked=row["last_checked"],
             lifespan=row["lifespan"],
@@ -164,7 +174,7 @@ def get_all_gear() -> list[Gear]:
             category_id=row["category_id"],
             comments=None,  # TODO: parse from JSON if stored as string
             description=row["description"],
-            prod_date=row["prod_date"],
+            prod_date=_convert_prod_date(row["prod_date"]),
             checked=bool(row["checked"]),
             last_checked=row["last_checked"],
             lifespan=row["lifespan"],
