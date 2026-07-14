@@ -135,6 +135,7 @@ GEAR_LIST_COLUMNS = {
     "category_id": "gear_functions.fields.category",
 }
 
+
 def edit_gear():
     print(lang.t("edit_functions.title.edit_gear"))
     row = fuzzy_pick("Gear", "user_db", ["id_gear", "name", "variant"], ["ID", "Name", "Variant"])
@@ -149,14 +150,12 @@ def edit_gear():
     fields = [
         ("name",        "gear_functions.fields.name",     gear.name,        is_nonempty_string),
         ("variant",     "gear_functions.fields.variant",  gear.variant,     None),
-        ("brand_id",    "gear_functions.fields.brand",    gear.brand_id,    None),
-        ("category_id", "gear_functions.fields.category_id", gear.category_id, None),
+        ("brand_id",    "gear_functions.fields.brand",    gear.brand.name if gear.brand else "—",    None),  # ✅ Show brand name
         ("size",        "gear_functions.fields.size",     gear.size,        None),
         ("color",       "gear_functions.fields.color",    gear.color,       None),
         ("mass_pcs",    "gear_functions.fields.mass",     gear.mass_pcs,    is_positive_number),
         ("amount",      "gear_functions.fields.amount",   gear.amount,      is_positive_number),
         ("price",       "gear_functions.fields.price",    gear.price,       is_positive_number),
-        ("prod_date",   "gear_functions.fields.prod_date",gear.prod_date,   None),
         ("lifespan",    "gear_functions.fields.lifespan", gear.lifespan,    is_positive_integer_or_empty),
         ("description", "gear_functions.fields.description", gear.description, None),
         ("kit_only",    "gear_functions.fields.kit_only", gear.kit_only,    is_yes_no),
@@ -178,19 +177,43 @@ def edit_gear():
         if choice.isdigit() and 0 <= int(choice) - 1 < len(fields):
             idx = int(choice) - 1
             key, t_key, current, validator = fields[idx]
-            new_val = prompt_field(lang.t(t_key), current, validator)
-            fields[idx] = (key, t_key, new_val, validator)
+            
+            # Special handling for brand_id and category_id
+            if key == "brand_id":
+                new_val = _pick_brand_for_edit()
+                if new_val is not None:
+                    fields[idx] = (key, t_key, new_val["name"], validator)
+            elif key == "category_id":
+                new_val = _pick_category_for_edit()
+                if new_val is not None:
+                    fields[idx] = (key, t_key, new_val["name"], validator)
+            else:
+                new_val = prompt_field(lang.t(t_key), current, validator)
+                fields[idx] = (key, t_key, new_val, validator)
 
     # Build diff and apply
     original = db.get_gear_by_id(gear.id_gear)
-    changes  = {}
+    
+    # Auto-generate orig_vals from fields
     orig_vals = {key: getattr(original, key) for key, _, _, _ in fields}
-
+    # But for brand and category, show the names not IDs
+    if original.brand:
+        orig_vals["brand_id"] = original.brand.name
+    if original.category_id:
+        orig_vals["category_id"] = original.category_id  # You'll need to lookup category name
+    
+    changes = {}
     for key, t_key, new_val, _ in fields:
-        old_val = orig_vals[key]
+        old_val = orig_vals.get(key)
         if new_val != old_val:
             changes[t_key] = (old_val, new_val)
-            setattr(gear, key, new_val)
+            # Convert back to ID for brand_id before setting
+            if key == "brand_id" and isinstance(new_val, dict):
+                setattr(gear, key, new_val["id_brand"])
+            elif key == "category_id" and isinstance(new_val, dict):
+                setattr(gear, key, new_val["id_category"])
+            else:
+                setattr(gear, key, new_val)
 
     show_diff(changes)
     if not changes:
@@ -264,3 +287,81 @@ def delete_gear():
     db.delete_gear(row["id_gear"])
     print(lang.t("delete_functions.msg.deleted", name=row["name"]))
 
+
+def _pick_brand_for_edit() -> dict | None:
+    """Let user search and pick a brand, return dict with id_brand and name."""
+    from app.core.utils.db_utils import fuzzy_search
+    
+    term = input(f"{lang.t('gear_functions.cli.search_brand')}").strip()
+    if not term:
+        return None
+
+    results = fuzzy_search(
+        table="Brand",
+        search_columns="name",
+        search_term=term,
+        return_columns=["id_brand", "name"],
+        sort_by="name",
+        db_name="program_db",
+    ) or []
+
+    if not results:
+        print(lang.t("delete_functions.error.not_found"))
+        return None
+
+    # Convert to objects for print_table
+    class BrandResult:
+        def __init__(self, idx, **kwargs):
+            self._idx = idx
+            for k, v in kwargs.items():
+                setattr(self, k, v)
+    
+    numbered = [BrandResult(i + 1, **r) for i, r in enumerate(results)]
+    print_table(
+        items=numbered,
+        columns=["_idx", "id_brand", "name"],
+        labels=["#", "ID", "Name"],
+    )
+
+    raw = input(lang.t("menu.cli.prompt") + " ").strip()
+    if not raw.isdigit() or not (0 <= int(raw) - 1 < len(results)):
+        print(lang.t("delete_functions.error.invalid_choice"))
+        return None
+
+    return results[int(raw) - 1]
+
+
+def _pick_category_for_edit() -> dict | None:
+    """Let user search and pick a category, return dict with id_category and name."""
+    categories = db.get_all_categories()
+    
+    if not categories:
+        print(lang.t("delete_functions.error.not_found"))
+        return None
+
+    # Convert to objects for print_table
+    class CategoryResult:
+        def __init__(self, idx, id_category, category, description):
+            self._idx = idx
+            self.id_category = id_category
+            self.name = category
+            self.description = description
+    
+    numbered = [
+        CategoryResult(i + 1, cat[0], cat[1], cat[2]) 
+        for i, cat in enumerate(categories)
+    ]
+    
+    print_table(
+        items=numbered,
+        columns=["_idx", "id_category", "name"],
+        labels=["#", "ID", "Name"],
+    )
+
+    raw = input(lang.t("menu.cli.prompt") + " ").strip()
+    if not raw.isdigit() or not (0 <= int(raw) - 1 < len(categories)):
+        print(lang.t("delete_functions.error.invalid_choice"))
+        return None
+
+    cat = categories[int(raw) - 1]
+    return {"id_category": cat[0], "name": cat[1]}
