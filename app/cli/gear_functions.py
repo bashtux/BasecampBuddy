@@ -150,7 +150,8 @@ def edit_gear():
     fields = [
         ("name",        "gear_functions.fields.name",     gear.name,        is_nonempty_string),
         ("variant",     "gear_functions.fields.variant",  gear.variant,     None),
-        ("brand_id",    "gear_functions.fields.brand",    gear.brand.name if gear.brand else "—",    None),  # ✅ Show brand name
+        ("brand_id",    "gear_functions.fields.brand",    gear.brand.name if gear.brand else "—",    None),
+        ("category_id", "gear_functions.fields.category", gear.category.name if gear.category else "—", None),
         ("size",        "gear_functions.fields.size",     gear.size,        None),
         ("color",       "gear_functions.fields.color",    gear.color,       None),
         ("mass_pcs",    "gear_functions.fields.mass",     gear.mass_pcs,    is_positive_number),

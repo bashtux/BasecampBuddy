@@ -42,6 +42,7 @@ class Gear:
         self.amount = amount
         self.color = color
         self.category_id = category_id
+        self._category = None,
         self.comments = comments or []
         self.description = description
         self.prod_date = prod_date
@@ -86,7 +87,37 @@ class Gear:
         else:
             self.brand_id = value.id_brand
             self._brand = value
+   
+@property
+def category(self) -> Category | None:
+    """
+    Lazy-load and return the Category object for this gear.
+    Returns None if category_id is not set or category not found.
+    """
+    if self.category_id is None:
+        return None
     
+    # Return cached category if already loaded
+    if self._category is not None:
+        return self._category
+    
+    # Load from database and cache
+    from app.data.db.program_db import get_category_by_id
+    self._category = get_category_by_id(self.category_id)
+    return self._category
+
+@category.setter
+def category(self, value) -> None:
+    """
+    Set the category and update category_id accordingly.
+    """
+    if value is None:
+        self.category_id = None
+        self._category = None
+    else:
+        self.category_id = value["id_category"]
+        self._category = value
+
     @property
     def price(self) -> float | None:
         """Return price as float in euros (or None if unset)."""

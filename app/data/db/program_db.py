@@ -56,14 +56,23 @@ def get_all_categories():
     return results
 
 
-def get_category_by_id(category_id: int):
+def get_category_by_id(category_id: int) -> Category | None:
     """Return a single category by ID."""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("SELECT id_category, category, description FROM category WHERE id_category = ?", (category_id,))
     result = cursor.fetchone()
     conn.close()
-    return result
+    
+    if result is None:
+        return None
+    
+    from app.core.category_item import Category
+    return Category(
+        id_category=result[0],
+        name=result[1],
+        description=result[2]
+    )
 
 
 def delete_category(category_id: int) -> bool:
