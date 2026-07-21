@@ -67,7 +67,7 @@ def update_gear(gear: Gear):
     """, (
         gear.name,
         gear.variant,
-        gear.brand.id_brand if gear.brand else None,
+        gear.brand_id,
         gear.size,
         gear.mass_pcs,
         gear._price_cents,
