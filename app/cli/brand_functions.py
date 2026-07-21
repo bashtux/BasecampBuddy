@@ -37,10 +37,10 @@ def input_brand():
 
 # column key --> translation key (resolved via lang.t() at display time
 BRAND_LIST_COLUMNS = {
-    "id_brand":    "brand.id_brand",
-    "name":        "brand.name",
-    "description": "brand.description",
-    "url":         "brand.url",
+    "id_brand":    "brand_functions.fields.id",
+    "name":        "brand_functions.fields.name",
+    "description": "brand_functions.fields.description",
+    "url":         "brand_functions.fields.url",
 }
 
 def list_brands(all_brands: list | None = None, cols: list | None = None):
@@ -63,10 +63,10 @@ def list_brands(all_brands: list | None = None, cols: list | None = None):
     # Full paged list
     def on_select(brand: Brand):
         """Display full details for selected brand"""
-        print(f"\n  {lang.t('brand.id_brand')}: {brand.id_brand}")
-        print(f"  {lang.t('brand.name')}: {brand.name}")
-        print(f"  {lang.t('brand.description')}: {brand.description or '—'}")
-        print(f"  {lang.t('brand.url')}: {brand.url or '—'}")
+        print(f"\n  {lang.t('brand_functions.fields.id')}: {brand.id_brand}")
+        print(f"  {lang.t('brand_functions.cli.brand_name')}: {brand.name}")
+        print(f"  {lang.t('brand_functions.cli.description')}: {brand.description or '—'}")
+        print(f"  {lang.t('brand_functions.cli.url')}: {brand.url or '—'}")
         input(lang.t("brand_functions.msg.enter_to_return"))
 
     paged_list(
