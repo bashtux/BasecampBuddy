@@ -186,15 +186,17 @@ def edit_gear():
             idx = int(choice) - 1
             key, t_key, current, validator, original_id = fields[idx]
             
-            # Special handling for brand_id and category_id
+
             if key == "brand_id":
                 new_val = _pick_brand_for_edit()
                 if new_val is not None:
-                    fields[idx] = (key, t_key, new_val["name"], validator, original_id)
+                    new_id = new_val["id_brand"]  # Extract the new ID
+                    fields[idx] = (key, t_key, new_val["name"], validator, new_id)
             elif key == "category_id":
                 new_val = _pick_category_for_edit()
                 if new_val is not None:
-                    fields[idx] = (key, t_key, new_val["name"], validator, original_id)
+                    new_id = new_val["id_category"]  # Extract the new ID
+                    fields[idx] = (key, t_key, new_val["name"], validator, new_id)
             else:
                 new_val = prompt_field(lang.t(t_key), current, validator)
                 fields[idx] = (key, t_key, new_val, validator, original_id)
@@ -238,7 +240,6 @@ def edit_gear():
     show_diff(changes)
     if not changes:
         return
-
     if confirm("edit_functions.cli.confirm_save"):
         db.update_gear(gear)
         print(lang.t("edit_functions.msg.saved"))
@@ -255,7 +256,7 @@ def display_full_gear(gear: Gear):  # receives Gear object directly
     print("=" * 40)
     print(f"  {lang.t(f+'.id'):<14}: {gear.id_gear}")
     print(f"  {lang.t(f+'.brand'):<14}: {gear.brand.name}")
-    print(f"  {lang.t(f+'.category'):<14}: {gear.category_id}") # FIX category
+    print(f"  {lang.t(f+'.category'):<14}: {gear.category.name}")
     print(f"  {lang.t(f+'.size'):<14}: {gear.size or '—'}")
     print(f"  {lang.t(f+'.color'):<14}: {gear.color or '—'}")
     print(f"  {lang.t(f+'.mass'):<14}: {gear.mass_pcs or '—'}")
