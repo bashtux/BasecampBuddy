@@ -42,16 +42,19 @@ def input_category():
 def list_categories(default_cols: list[str] | None = None):
     """Paged list of all categories."""
     categories = db.get_all_categories()
-    cat_dicts  = _categories_to_dicts(categories)
+    
+    # Convert tuples to Category objects
+    from app.core.category_item import Category
+    cat_objects = [Category(id_category=cat[0], name=cat[1], description=cat[2]) for cat in categories]
 
-    def on_select(item):
-        print(f"\n  {lang.t('category_functions.fields.id')}: {item.get('id_category')}")
-        print(f"  {lang.t('category_functions.fields.name')}: {item.get('name')}")
-        print(f"  {lang.t('category_functions.fields.description')}: {item.get('description') or '—'}")
+    def on_select(item: Category):
+        print(f"\n  {lang.t('category_functions.fields.id')}: {item.id_category}")
+        print(f"  {lang.t('category_functions.fields.name')}: {item.name}")
+        print(f"  {lang.t('category_functions.fields.description')}: {item.description or '—'}")
         input(lang.t("category_functions.msg.enter_to_return"))
 
     paged_list(
-        items        = cat_dicts,
+        items        = cat_objects,
         columns      = CATEGORY_LIST_COLUMNS,
         default_cols = ["name", "description"],
         on_select    = on_select,
