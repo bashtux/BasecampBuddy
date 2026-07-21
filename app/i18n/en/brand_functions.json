@@ -28,7 +28,7 @@
     },
     "fields": {
         "id":          "ID",
-        "name":        "Name",
+        "name":        "Brand Name",
         "description": "Description",
         "url":         "URL"
     }
