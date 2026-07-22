@@ -106,6 +106,7 @@ def delete_gear(gear_id: int):
 
 def get_all_gear() -> list[Gear]:
     """Fetch all gear from the database, ordered by name."""
+
     import sqlite3
     from pathlib import Path
     
