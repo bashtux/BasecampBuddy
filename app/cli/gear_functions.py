@@ -4,7 +4,7 @@ from pathlib import Path
 from app.config_manager import ConfigManager
 from app.lang import lang
 from app.data import db
-from app.data.db import add_gear, get_gear_by_id
+from app.data.db import add_gear, get_gear_by_id, get_overdue_gear
 from app.core.utils.validation import prompt_validated_input, is_positive_number, is_valid_date, is_nonempty_string, is_positive_integer_or_empty, is_yes_no
 from app.core.utils.db_utils import fuzzy_search
 from app.core.gear_item import Gear
@@ -133,6 +133,7 @@ GEAR_LIST_COLUMNS = {
     "amount":      "gear_functions.fields.amount",
     "color":       "gear_functions.fields.color",
     "category_id": "gear_functions.fields.category",
+    "last_checked":"gear_functions.fields.last_checked",
 }
 
 def _get_category_name(category_id):
@@ -296,9 +297,9 @@ def list_unchecked_gear(page_size: int = 10):
         input(lang.t("gear_functions.msg.enter_to_return"))
 
     paged_list(
-        items        = db.get_gear_by_filter(checked=0),
+        items        = db.get_overdue_gear(),
         columns      = GEAR_LIST_COLUMNS,
-        default_cols = ["name", "variant", "size", "amount"],
+        default_cols = ["name", "variant", "last_checked"],
         on_select    = lambda g: display_full_gear(g),
         page_size    = page_size,
         title_key    = "gear_functions.title.list_gear",

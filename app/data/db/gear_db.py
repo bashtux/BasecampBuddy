@@ -83,17 +83,6 @@ def update_gear(gear: Gear):
     ))
     conn.commit()
     conn.close()
-
-def _convert_prod_date(date_str: str):
-    """Convert prod_date string to date object, return None if invalid."""
-    if not date_str:
-        return None
-    try:
-        return datetime.strptime(date_str, "%Y-%m-%d").date()
-    except (ValueError, TypeError):
-        return None
-
-
 def delete_gear(gear_id: int):
     """Delete a gear item and its comments."""
     from app.data.db.user_db import delete_comments_by_parent_id
@@ -118,31 +107,8 @@ def get_all_gear() -> list[Gear]:
     cursor = conn.execute("SELECT * FROM Gear ORDER BY name")
     rows = cursor.fetchall()
     conn.close()
-    
-    gear_list = []
-    for row in rows:
-        gear = Gear(
-            id_gear=row["id_gear"],
-            name=row["name"],
-            variant=row["variant"],
-            brand_id=row["brand_id"],
-            size=row["size"],
-            mass_pcs=row["mass_pcs"],
-            price=row["price_cents"] / 100 if row["price_cents"] else None,  # Convert cents to euros
-            amount=row["amount"],
-            color=row["color"],
-            category_id=row["category_id"],
-            comments=None,  # TODO: parse from JSON if stored as string
-            description=row["description"],
-            prod_date=_convert_prod_date(row["prod_date"]),
-            checked=bool(row["checked"]),
-            last_checked=row["last_checked"],
-            lifespan=row["lifespan"],
-            kit_only=bool(row["kit_only"])
-        )
-        gear_list.append(gear)
-    
-    return gear_list
+
+    return [_row_to_gear(row) for row in rows]
 
 
 def get_gear_by_id(gear_id: int) -> Gear | None:
@@ -164,27 +130,7 @@ def get_gear_by_id(gear_id: int) -> Gear | None:
         if row["brand_id"] is not None:
             brand = get_brand_by_id(row["brand_id"])
 
-        # Create Gear instance with proper conversions
-        gear = Gear(
-            id_gear=row["id_gear"],
-            name=row["name"],
-            variant=row["variant"],
-            brand_id=row["brand_id"],
-            size=row["size"],
-            mass_pcs=row["mass_pcs"],
-            price=row["price_cents"] / 100 if row["price_cents"] else None,
-            amount=row["amount"],
-            color=row["color"],
-            category_id=row["category_id"],
-            description=row["description"],
-            prod_date=_convert_prod_date(row["prod_date"]),
-            checked=row["checked"],
-            last_checked=row["last_checked"],
-            lifespan=row["lifespan"],
-            kit_only=bool(row["kit_only"])
-        )
-
-        return gear
+        return _row_to_gear(row) if row else None
 
 
 def get_gear_by_filter(**kwargs):
@@ -233,29 +179,58 @@ def get_gear_by_filter(**kwargs):
     rows = cursor.fetchall()
     conn.close()
 
-    gear_list = []
-    for row in rows:
-        gear = Gear(
-            id_gear=row["id_gear"],
-            name=row["name"],
-            variant=row["variant"],
-            brand_id=row["brand_id"],
-            size=row["size"],
-            mass_pcs=row["mass_pcs"],
-            price=row["price_cents"] / 100 if row["price_cents"] else None,  # Convert cents to euros
-            amount=row["amount"],
-            color=row["color"],
-            category_id=row["category_id"],
-            comments=None,  # TODO: parse from JSON if stored as string
-            description=row["description"],
-            prod_date=_convert_prod_date(row["prod_date"]),
-            checked=bool(row["checked"]),
-            last_checked=row["last_checked"],
-            lifespan=row["lifespan"],
-            kit_only=bool(row["kit_only"])
-        )
-        gear_list.append(gear)
+    return [_row_to_gear(row) for row in rows]
+
+
+def get_overdue_gear():
+    """Get all gear not checked in over a year."""
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
     
-    return gear_list
+    cursor.execute("""
+        SELECT
+            *,
+            COALESCE(julianday('now') - julianday(last_checked), 99999) as days_overdue
+        FROM Gear 
+        WHERE last_checked IS NULL 
+           OR julianday('now') - julianday(last_checked) > 365
+        ORDER BY days_overdue DESC
+    """)
+    
+    rows = cursor.fetchall()
+    conn.close()
+
+    return [_row_to_gear(row) for row in rows]
 
 
+def _convert_prod_date(date_str: str):
+    """Convert prod_date string to date object, return None if invalid."""
+    if not date_str:
+        return None
+    try:
+        return datetime.strptime(date_str, "%Y-%m-%d").date()
+    except (ValueError, TypeError):
+        return None
+
+
+def _row_to_gear(row: sqlite3.Row) -> Gear:
+    """Convert a database row to a Gear instance."""
+    return Gear(
+        id_gear=row["id_gear"],
+        name=row["name"],
+        variant=row["variant"],
+        brand_id=row["brand_id"],
+        size=row["size"],
+        mass_pcs=row["mass_pcs"],
+        price=row["price_cents"] / 100 if row["price_cents"] else None,
+        amount=row["amount"],
+        color=row["color"],
+        category_id=row["category_id"],
+        description=row["description"],
+        prod_date=_convert_prod_date(row["prod_date"]),
+        checked=bool(row["checked"]),
+        last_checked=row["last_checked"],
+        lifespan=row["lifespan"],
+        kit_only=bool(row["kit_only"])
+    )
