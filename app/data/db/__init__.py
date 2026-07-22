@@ -1,7 +1,7 @@
 # base functions
 from .base_db import table_exists, init_program_db, check_initialized
 # gear functions
-from .gear_db import add_gear, get_gear_by_id, get_all_gear, delete_gear, update_gear
+from .gear_db import add_gear, get_gear_by_id, get_all_gear, delete_gear, update_gear, get_gear_by_filter
 
 # kit functions
 from .kit_db  import add_kit,  get_kit_by_id,  get_all_kits,  delete_kit,  update_kit

@@ -1,7 +1,7 @@
 from app.lang import lang
 
 from app.data import db
-from app.cli.gear_functions import input_gear, edit_gear, display_full_gear, list_gear, delete_gear
+from app.cli.gear_functions import input_gear, edit_gear, display_full_gear, list_gear, delete_gear, list_unchecked_gear
 from app.cli.trip_functions import input_trip, edit_trip, list_trips, delete_trip
 from app.cli.kit_functions import input_kit, edit_kit, list_kits, delete_kit
 from app.cli.category_functions import input_category, list_categories, edit_category, delete_category
@@ -211,7 +211,7 @@ def reports_menu():
 
         match choice:
             case "1":
-                print(lang.t("menu.general_menu.options.create"))
+                list_unchecked_gear()
                 continue
             case "B":
                 main_menu()

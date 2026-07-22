@@ -288,6 +288,25 @@ def list_gear(page_size: int = 10):
     )
 
 
+def list_unchecked_gear(page_size: int = 10):
+    """Paginated gear list with drill-down to full detail and comments."""
+    def on_select(item):
+        display_full_gear(item["id_gear"])
+        list_comments(item["id_gear"])
+        input(lang.t("gear_functions.msg.enter_to_return"))
+
+    paged_list(
+        items        = db.get_gear_by_filter(checked=0),
+        columns      = GEAR_LIST_COLUMNS,
+        default_cols = ["name", "variant", "size", "amount"],
+        on_select    = lambda g: display_full_gear(g),
+        page_size    = page_size,
+        title_key    = "gear_functions.title.list_gear",
+        empty_key    = "gear_functions.error.no_gear",
+    )
+
+
+
 def delete_gear():
     print(lang.t("delete_functions.title.delete_gear"))
     row = fuzzy_pick("Gear", "user_db", ["id_gear", "name", "variant"], ["ID", "Name", "Variant"])
