@@ -4,7 +4,7 @@ from pathlib import Path
 from app.config_manager import ConfigManager
 from app.lang import lang
 from app.data import db
-from app.data.db import add_gear, get_gear_by_id, get_overdue_gear
+from app.data.db import add_gear, get_gear_by_id, get_overdue_inspection_gear, get_end_of_life_gear
 from app.core.utils.validation import prompt_validated_input, is_positive_number, is_valid_date, is_nonempty_string, is_positive_integer_or_empty, is_yes_no
 from app.core.utils.db_utils import fuzzy_search
 from app.core.gear_item import Gear
@@ -133,7 +133,9 @@ GEAR_LIST_COLUMNS = {
     "amount":      "gear_functions.fields.amount",
     "color":       "gear_functions.fields.color",
     "category_id": "gear_functions.fields.category",
+    "prod_date":   "gear_functions.fields.prod_date",
     "last_checked":"gear_functions.fields.last_checked",
+    "lifespan":    "gear_functions.fields.lifespan"
 }
 
 def _get_category_name(category_id):
@@ -297,9 +299,27 @@ def list_unchecked_gear(page_size: int = 10):
         input(lang.t("gear_functions.msg.enter_to_return"))
 
     paged_list(
-        items        = db.get_overdue_gear(),
+        items        = db.get_overdue_inspection_gear(),
         columns      = GEAR_LIST_COLUMNS,
         default_cols = ["name", "variant", "last_checked"],
+        on_select    = lambda g: display_full_gear(g),
+        page_size    = page_size,
+        title_key    = "gear_functions.title.list_gear",
+        empty_key    = "gear_functions.error.no_gear",
+    )
+
+
+def list_overdue_gear(page_size: int = 10):
+    """Paginated gear list with drill-down to full detail and comments."""
+    def on_select(item):
+        display_full_gear(item["id_gear"])
+        list_comments(item["id_gear"])
+        input(lang.t("gear_functions.msg.enter_to_return"))
+
+    paged_list(
+        items        = db.get_end_of_life_gear(),
+        columns      = GEAR_LIST_COLUMNS,
+        default_cols = ["name", "variant", "prod_date", "lifespan"],
         on_select    = lambda g: display_full_gear(g),
         page_size    = page_size,
         title_key    = "gear_functions.title.list_gear",

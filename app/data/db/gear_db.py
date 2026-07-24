@@ -182,7 +182,7 @@ def get_gear_by_filter(**kwargs):
     return [_row_to_gear(row) for row in rows]
 
 
-def get_overdue_gear():
+def get_overdue_inspection_gear():
     """Get all gear not checked in over a year."""
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
@@ -196,6 +196,29 @@ def get_overdue_gear():
         WHERE last_checked IS NULL 
            OR julianday('now') - julianday(last_checked) > 365
         ORDER BY days_overdue DESC
+    """)
+    
+    rows = cursor.fetchall()
+    conn.close()
+
+    return [_row_to_gear(row) for row in rows]
+
+
+def get_end_of_life_gear():
+    """Get all gear past its lifespan (production date + lifespan years >= today)."""
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    
+    cursor.execute("""
+        SELECT
+            *,
+            julianday('now') - julianday(date(prod_date, '+' || lifespan || ' years')) as days_past_lifespan
+        FROM Gear 
+        WHERE lifespan IS NOT NULL 
+           AND lifespan > 0
+           AND date(prod_date, '+' || lifespan || ' years') <= date('now')
+        ORDER BY days_past_lifespan DESC
     """)
     
     rows = cursor.fetchall()

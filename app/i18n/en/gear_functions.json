@@ -50,6 +50,7 @@
         "kit_only":    "Kit Only",
         "checked":     "Checked",
         "last_checked":"Last Checked",
+				"lifespan":		 "Life span",
         "description": "Description"
     }
 }
