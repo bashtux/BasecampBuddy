@@ -230,8 +230,8 @@ def settings_menu():
     """ Displays settings menu """
     # key -> label_key
     commands = {
-            "1": "menu.settings_menu.options.create_db",
-            "2": "menu.settings_menu.options.set_db",
+            "1": "",
+            "2": "",
             "3": "menu.settings_menu.options.language",
             "4": "menu.settings_menu.options.edit",
             "B": "menu.general_menu.options.back"
@@ -240,9 +240,6 @@ def settings_menu():
         choice = print_menu(commands, "menu.settings_menu.title", misc="menu.settings_menu.misc.settings")
 
         match choice:
-            case "1":
-                print(lang.t("menu.general_menu.options.create"))
-                continue
             case "4":
                 edit_base_submenu()
                 continue
