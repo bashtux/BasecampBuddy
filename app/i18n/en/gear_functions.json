@@ -18,7 +18,7 @@
         "gear_mass_pcs": "Input mass of (single) item in grams: ",
         "gear_price": "Input price of (single) gear: ",
         "gear_amount": "Input amount of pieces: ",
-        "gear_prod_date": "Input production date of gear (MM/YYYY): ",
+        "gear_prod_date": "Input production date of gear (DD.MM.YYYY): ",
         "gear_lifespan": "Input life span of gear (Y/empty): "
     },
 
@@ -50,6 +50,7 @@
         "kit_only":    "Kit Only",
         "checked":     "Checked",
         "last_checked":"Last Checked",
+				"lifespan":		 "Life span",
         "description": "Description"
     }
 }

@@ -1,7 +1,7 @@
 from app.lang import lang
 
 from app.data import db
-from app.cli.gear_functions import input_gear, edit_gear, display_full_gear, list_gear, delete_gear
+from app.cli.gear_functions import input_gear, edit_gear, display_full_gear, list_gear, delete_gear, list_unchecked_gear, list_overdue_gear
 from app.cli.trip_functions import input_trip, edit_trip, list_trips, delete_trip
 from app.cli.kit_functions import input_kit, edit_kit, list_kits, delete_kit
 from app.cli.category_functions import input_category, list_categories, edit_category, delete_category
@@ -211,7 +211,10 @@ def reports_menu():
 
         match choice:
             case "1":
-                print(lang.t("menu.general_menu.options.create"))
+                list_unchecked_gear()
+                continue
+            case "2":
+                list_overdue_gear()
                 continue
             case "B":
                 main_menu()
@@ -227,8 +230,8 @@ def settings_menu():
     """ Displays settings menu """
     # key -> label_key
     commands = {
-            "1": "menu.settings_menu.options.create_db",
-            "2": "menu.settings_menu.options.set_db",
+            "1": "",
+            "2": "",
             "3": "menu.settings_menu.options.language",
             "4": "menu.settings_menu.options.edit",
             "B": "menu.general_menu.options.back"
@@ -237,9 +240,6 @@ def settings_menu():
         choice = print_menu(commands, "menu.settings_menu.title", misc="menu.settings_menu.misc.settings")
 
         match choice:
-            case "1":
-                print(lang.t("menu.general_menu.options.create"))
-                continue
             case "4":
                 edit_base_submenu()
                 continue

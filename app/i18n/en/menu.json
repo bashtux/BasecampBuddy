@@ -62,8 +62,6 @@
 	"settings_menu": {
 		"title": "Settings Menu",
 		"options": {
-			"create_db": "Create database",
-			"set_db": "Set database",
 			"language": "Select language",
 			"edit": "Edit base"
 		},

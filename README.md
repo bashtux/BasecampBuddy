@@ -103,7 +103,6 @@ BasecampBuddy/
 ## General features
 - [ ] implement sub categories for better sorting
 - [ ] Data import
-- [ ] before saving an editted item, show before and after and confirm
 - [ ] Assign gear in trips to poeple of the crew
 - [ ] Change from kg to lbs
 - [ ] way to sort/search when selecting brand, consumables, gear (partially implemented)
@@ -134,6 +133,9 @@ BasecampBuddy/
 
 ## GUI 
 > not started at the moment, happy to take requests
+
+## Implemented features
+- [x] before saving an editted item, show before and after and confirm
 
 ---
 

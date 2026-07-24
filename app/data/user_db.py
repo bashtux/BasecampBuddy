@@ -60,7 +60,7 @@ def init_user_db(db_path: Path | str = DB_PATH):
                 description TEXT,                   -- description of the gear
                 prod_date TEXT,                     -- production/manufacture date
                 checked INTEGER,                    -- boolean flag (0/1) if checked
-                last_checked TEXT,                  -- last checked date
+                last_checked ,TEXT DEFAULT CURRENT_TIMESTAMP -- last checked date
                 lifespan INTEGER,                   -- lifespan in years (0 or NULL = infinite)
                 kit_only INTEGER                     -- boolean (0/1) if only in kits
             )

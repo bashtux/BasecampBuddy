@@ -116,7 +116,7 @@ def is_valid_date(value: str):
     if not value or value.strip() == "":
         return None
     try:
-        return datetime.strptime(value, "%Y-%m-%d").date()
+        return datetime.strptime(value, "%d.%m.%Y").date()
     except ValueError:
         return None
 
