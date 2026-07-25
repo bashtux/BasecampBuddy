@@ -113,8 +113,6 @@ def input_gear():
             kit_only = int(kit_only)
     )
 
-    print(gear)
-
     if gear.name:
         db.add_gear(gear)
         print(lang.t("gear_functions.msg.gear_added").format(gear_name=gear.name))
