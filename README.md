@@ -127,6 +127,7 @@ BasecampBuddy/
 - [ ] Get Terminal widht and scale lists accordingly
 - [ ] nicer layout for lists and gear, kit, trips
 - [ ] define column width per table display
+- [ ] when searching for gear, have a choice between just list stuff and key word search
 
 ## TUI
 > not started at the moment, happy to take requests
