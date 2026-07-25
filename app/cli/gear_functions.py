@@ -4,6 +4,7 @@ from pathlib import Path
 from app.config_manager import ConfigManager
 from app.lang import lang
 from app.data import db
+from app.core.brand import Brand
 from app.data.db import add_gear, get_gear_by_id, get_overdue_inspection_gear, get_end_of_life_gear
 from app.core.utils.validation import prompt_validated_input, is_positive_number, is_valid_date, is_nonempty_string, is_positive_integer_or_empty, is_yes_no
 from app.core.utils.db_utils import fuzzy_search
@@ -37,9 +38,7 @@ def input_gear():
             table="brand",
             search_columns="name",
             search_term=brand,
-            return_columns=["id_brand", "name"],
-            sort_by="name",
-            db_name="program_db"
+            object_class=Brand,
         )
     list_brands(brand_search, ["id_brand", "name"])
     brand_id = input(f"{lang.t('gear_functions.cli.select_brand')}").strip()

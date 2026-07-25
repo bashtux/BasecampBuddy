@@ -68,22 +68,19 @@ def _count_trip_references_kit(kit_id: int) -> int:
 
 def _search_items(term: str) -> list[dict]:
     """Search gear and kits simultaneously, return combined list with type marker."""
+
     gear_results = fuzzy_search(
-        table          = "Gear",
-        search_columns = "name",
-        search_term    = term,
-        return_columns = ["id_gear", "name", "variant", "mass_pcs"],
-        sort_by        = "name",
-        db_name        = "user_db",
+        table           = "Gear",
+        search_columns  = "name",
+        search_term     = term,
+        object_class    = Gear,
     ) or []
 
     kit_results = fuzzy_search(
-        table          = "Kit",
-        search_columns = "name",
-        search_term    = term,
-        return_columns = ["id_kit", "name", "description"],
-        sort_by        = "name",
-        db_name        = "user_db",
+        table           = "Kit",
+        search_columns  = "name",
+        search_term     = term,
+        objectt_class   = Kit,
     ) or []
 
     combined = []

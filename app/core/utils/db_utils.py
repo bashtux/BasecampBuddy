@@ -24,24 +24,15 @@ def fuzzy_search(
     sort_by: str | list[str] | None = None,
     sort_order: str = "ASC",
     min_similarity: int = 60,
-    db_name: str = "program_db",  # can be "program_db" or "user_db"
-) -> list[dict]:
+    db_name: str = "program_db",
+    object_class = None,  # NEW: Pass the class to instantiate
+) -> list:
     """
-    Perform a fuzzy search on any table/column in a database.
-
+    Returns a list of objects (Brand, Gear, etc.) instead of dicts.
+    
     Args:
-        table: name of the table to search
-        search_columns: column name(s) to search within
-        search_term: user-provided string to match
-        return_columns: optional list of columns to return (default: all)
-        limit: max results (default 10)
-        sort_by: column(s) to sort results by
-        sort_order: ASC or DESC
-        min_similarity: fuzzy match threshold (0–100)
-        db_name: name of the DB key in config (e.g. "program_db", "user_db")
-
-    Returns:
-        A list of matching rows as dicts, sorted by similarity.
+        object_class: The class to instantiate (Brand, Gear, etc.)
+                     If None, returns dicts (backward compat)
     """
 
     # Determine DB path via config manager
@@ -92,7 +83,11 @@ def fuzzy_search(
             if limit:
                 results = results[:limit]
 
-            return results
+            if object_class is None:
+                    return results  # Return dicts as before
+        
+        # Convert dicts to objects
+        return [object_class(**{k: v for k, v in row.items() if k != "_similarity"}) for row in results]
 
     except sqlite3.Error as e:
         print(lang.t("db_utils.error.query_failed"), e)
