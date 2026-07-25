@@ -145,12 +145,11 @@ def get_brand_by_id(brand_id: int) -> Brand | None:
 
     if result is None:
         return None
-
     return Brand(
-        id_brand=result[0],
-        name=result[1],
-        description=result[2],
-        url=result[3]
+        name=results[1],
+        description=results[2],
+        url=results[3],
+        id_brand=results[0],
     )
 
 def delete_brand(brand_id: int) -> bool:

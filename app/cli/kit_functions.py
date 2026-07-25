@@ -23,12 +23,10 @@ def _pick_gear() -> tuple | None:
         return None
 
     results = fuzzy_search(
-        table          = "Gear",
-        search_columns = "name",
-        search_term    = term,
-        return_columns = ["id_gear", "name", "variant", "mass_pcs", "amount"],
-        sort_by        = "name",
-        db_name        = "user_db",
+        table           = "Gear",
+        search_columns  = "name",
+        search_term     = term,
+        object_class    = Gear,
     )
 
     if not results:
